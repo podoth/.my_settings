@@ -1,0 +1,29 @@
+2010-08-06  IRIE Shinsuke <irieshinsuke@yahoo.co.jp>
+        * Version 0.96
+        * Fixed bug: `rmail' and `compose-mail' are not updated dynamically
+2010-06-30  IRIE Shinsuke <irieshinsuke@yahoo.co.jp>
+        * Version 0.95
+        * Updated for Emacs 23.2
+        * Added functions `menu-tree-convert', `menu-tree-get', `menu-tree-pp'
+        * Modified Japanese translations
+2010-04-20  IRIE Shinsuke <irieshinsuke@yahoo.co.jp>
+        * Version0.94
+        * Changed license to GPL3
+        * Rewrote all functions
+        * Made translations for calendar-mode more configurable
+        * Added/modified Japanese translations
+        * Fixed bug: Can't override ispell menu in Emacs 23
+        * Changed file encoding to UTF-8
+2008-11-09  IRIE Shinsuke <irieshinsuke@yahoo.co.jp>
+        * Version0.93
+        * Added Japanese translations
+        * Fixed bug: An error occurs in a certain revision of Emacs 23
+2008-05-15  IRIE Shinsuke <irieshinsuke@yahoo.co.jp>
+        * Version0.92
+        * Modified Japanese translations
+2008-05-08  IRIE Shinsuke <irieshinsuke@yahoo.co.jp>
+        * Version0.91
+        * Chanded to use different `menu-tree-alist' according to Emacs version
+2008-03-26  IRIE Shinsuke <irieshinsuke@yahoo.co.jp>
+        * Version0.90
+        * Supported GNU Emacs 22,23

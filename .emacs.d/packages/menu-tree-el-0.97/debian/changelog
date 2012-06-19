@@ -1,0 +1,25 @@
+menu-tree-el (0.97) maverick; urgency=low
+
+  * New release
+  * Changed installation directory to site-lisp/menu-tree/
+  * debian/rules: Leave symlink to .el file in the same directory as .elc file
+
+ -- IRIE Shinsuke <irieshinsuke@yahoo.co.jp>  Tue, 30 Nov 2010 21:48:24 +0900
+
+menu-tree-el (0.96) lucid; urgency=low
+
+  * New release
+
+ -- IRIE Shinsuke <irieshinsuke@yahoo.co.jp>  Sat, 07 Aug 2010 00:49:24 +0900
+
+menu-tree-el (0.95) lucid; urgency=low
+
+  * New release
+
+ -- IRIE Shinsuke <irieshinsuke@yahoo.co.jp>  Wed, 30 Jun 2010 20:41:34 +0900
+
+menu-tree-el (0.94) lucid; urgency=low
+
+  * Initial release
+
+ -- IRIE Shinsuke <irieshinsuke@yahoo.co.jp>  Tue, 20 Apr 2010 19:30:22 +0900

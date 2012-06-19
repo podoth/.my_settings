@@ -1,0 +1,67 @@
+menu-tree.el README
+
+----------------------------------------------------------------------
+0. Introduction
+----------------------------------------------------------------------
+
+Loading menu-tree.el replaces the texts of Emacs' menu-bar items
+with the various languages' translations. By default, Japanese
+translation data are applied.
+
+This program, originally written by YAGI Tatsuya in 1999
+(http://www.ysnb.net/meadow/meadow-users-jp/1999/msg01278.html),
+has been rewritten completely by current maintainer, and now
+can be used for GNU Emacs 22 and 23. (Emacs 21 or earlier is no
+longer supported.)
+
+----------------------------------------------------------------------
+1. License
+----------------------------------------------------------------------
+
+GNU General Public License version 3
+
+----------------------------------------------------------------------
+2. Requirement
+----------------------------------------------------------------------
+
+emacs23 | emacs22-gtk | emacs22-nox | emacs-snapshot
+
+----------------------------------------------------------------------
+3. Installation
+----------------------------------------------------------------------
+
+Save this file as menu-tree.el in a directory listed in
+load-path, and put the following into your .emacs file:
+
+  (require 'menu-tree)
+
+If many unreadable characters appear in menu-bar, set
+`menu-tree-coding-system' the appropriate coding system
+before loading this program. For example,
+
+  (if (and (= emacs-major-version 22)
+           (eq window-system 'x))
+      (setq menu-tree-coding-system 'utf-8))
+  (require 'menu-tree)
+
+----------------------------------------------------------------------
+4. Web sites
+----------------------------------------------------------------------
+
+Home page (in Japanese):
+
+ http://www11.atwiki.jp/s-irie/pages/13.html
+
+Wiki:
+
+ http://www.emacswiki.org/emacs/MenuTree
+
+Development:
+
+ https://launchpad.net/~irie/+junk/menu-tree.el
+
+----------------------------------------------------------------------
+5. Author
+----------------------------------------------------------------------
+
+IRIE Shinsuke <irieshinsuke@yahoo.co.jp>

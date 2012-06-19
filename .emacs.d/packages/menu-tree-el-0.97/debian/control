@@ -1,0 +1,16 @@
+Source: menu-tree-el
+Section: lisp
+Priority: extra
+Maintainer: IRIE Shinsuke <irieshinsuke@yahoo.co.jp>
+Build-Depends: debhelper (>= 7)
+Standards-Version: 3.8.4
+Homepage: http://www11.atwiki.jp/s-irie/pages/13.html
+
+Package: menu-tree-el
+Architecture: all
+Depends: ${misc:Depends},
+	 emacs23 | emacs22-gtk | emacs22-nox | emacs-snapshot
+Description: Localize menu-bar items of GNU Emacs
+ Loading menu-tree.el replaces the texts of Emacs' menu-bar items
+ with the various languages' translations. By default, Japanese
+ translation data are applied.
