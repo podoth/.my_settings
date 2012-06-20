@@ -16,7 +16,7 @@
 ;;; linum 行番号を表示する
 ;;;
 (require 'linum)
-(global-linum-mode)
+(global-linum-mode t)
 
 ;;;
 ;;; highlight
@@ -90,7 +90,7 @@
 ;;;
 (add-hook 'c-mode-common-hook
 	  '(lambda()
-	     (hs-minor-mode 1))) 
+	     (hs-minor-mode 1)))
 ; コメントは、隠さず表示する。
 (setq hs-hide-comments-when-hiding-all nil)
 
@@ -110,8 +110,10 @@
 (define-key global-map "\C-c\C-v" 'uncrustify-region)
 
 ;;;
-;;; flymake for C/C++
+;;; flymake
 ;;;
+
+;; for C/C++
 (require 'flymake)
 
 (defun flymake-cc-init ()
@@ -121,14 +123,10 @@
                        temp-file
                        (file-name-directory buffer-file-name))))
     (setenv "LANG" "CPP")
-    (list  "g++" (list "-Wall" "-Wextra" "-fsyntax-only" "-lpthread" "-I/application/gtest" "-I/application/gtest/include" local-file))))
+    (list  "g++" (list "-Wall" "-Wextra" "-fsyntax-only" "-lpthread" local-file))))
 (push '("\\.cpp$" flymake-cc-init) flymake-allowed-file-name-masks)
 (add-hook 'c-mode-hook '(lambda () (if (string-match "\\.cpp$" buffer-file-name)
                                (flymake-mode t))))
-;; (add-hook 'c++-mode-hook
-;;           '(lambda ()
-;;              (flymake-mode t)))
-
 
 (defun flymake-c-init ()
   (let* ((temp-file   (flymake-init-create-temp-buffer-copy
@@ -137,13 +135,62 @@
                        temp-file
                        (file-name-directory buffer-file-name))))
     (setenv "LANG" "C")
-    (list "gcc" (list "-Wall" "-Wextra" "-fsyntax-only" "-lpthread" "-I/application/gtest" "-I/application/gtest/include" local-file))))
+    (list "gcc" (list "-Wall" "-Wextra" "-fsyntax-only" "-lpthread" local-file))))
 (push '("\\.c$" flymake-c-init) flymake-allowed-file-name-masks)
 (add-hook 'c-mode-hook '(lambda () (if (string-match "\\.c$" buffer-file-name)
                                (flymake-mode t))))
-;; (add-hook 'c-mode-hook
-;;           '(lambda ()
-;;              (flymake-mode t)))
+(add-hook
+ 'c-mode-common-hook
+ '(lambda ()
+    (define-key c-mode-map "\C-cd" 'credmp/flymake-display-err-minibuf)))
+
+;; for latex
+(defun flymake-tex-init ()
+  (let* ((temp-file   (flymake-init-create-temp-buffer-copy
+                       'flymake-create-temp-inplace))
+         (local-dir   (file-name-directory buffer-file-name))
+         (local-file  (file-relative-name
+                       temp-file
+                       local-dir)))
+    (list "platex" (list "-file-line-error" "-interaction=nonstopmode" local-file))))
+(defun flymake-tex-cleanup-custom ()
+  (let* ((base-file-name (file-name-sans-extension (file-name-nondirectory flymake-temp-source-file-name)))
+          (regexp-base-file-name (concat "^" base-file-name "\\.")))
+    (mapcar '(lambda (filename)
+                      (when (string-match regexp-base-file-name filename)
+                         (flymake-safe-delete-file filename)))
+                (split-string (shell-command-to-string "ls"))))
+  (setq flymake-last-change-time nil))
+(push '("\\.tex$" flymake-tex-init flymake-tex-cleanup-custom) flymake-allowed-file-name-masks)
+(add-hook 'LaTeX-mode-hook 'flymake-mode)
+(add-hook
+ 'LaTeX-mode-hook
+ '(lambda ()
+    (define-key LaTeX-mode-map "\C-cd" 'credmp/flymake-display-err-minibuf)))
+
+;; エラーをミニバッファに表示
+(defun credmp/flymake-display-err-minibuf ()
+  "Displays the error/warning for the current line in the minibuffer"
+  (interactive)
+  (let* ((line-no             (flymake-current-line-no))
+         (line-err-info-list  (nth 0 (flymake-find-err-info flymake-err-info line-no)))
+         (count               (length line-err-info-list))
+         )
+    (while (> count 0)
+      (when line-err-info-list
+        (let* ((file       (flymake-ler-file (nth (1- count) line-err-info-list)))
+               (full-file  (flymake-ler-full-file (nth (1- count) line-err-info-list)))
+               (text (flymake-ler-text (nth (1- count) line-err-info-list)))
+               (line       (flymake-ler-line (nth (1- count) line-err-info-list))))
+          (message "[%s %s]" line text)
+          )
+        )
+      (setq count (1- count)))))
+
+;; M-p/M-n で警告/エラー行の移動
+(global-set-key "\M-p" 'flymake-goto-prev-error)
+(global-set-key "\M-n" 'flymake-goto-next-error)
+
 
 ;;;
 ;;; linux カーネル編集モード

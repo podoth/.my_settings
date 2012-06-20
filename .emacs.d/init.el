@@ -28,7 +28,9 @@
 ;;;
 ;;; 一時ファイルのディレクトリ
 ;;;
-(setq user-emacs-directory "~/.emacs.d/var/") 
+(setq user-emacs-directory "~/.emacs.d/var/")
+
+(setq auto-save-list-file-prefix "~/.emacs.d/var/")
 
 ;;;
 ;;; Language
@@ -42,7 +44,7 @@
 ;;;
 ;;; Key customize
 ;;;
-(global-set-key [(control h)]	'delete-backward-char) 
+(global-set-key [(control h)]	'delete-backward-char)
 ;(global-set-key [(meta g)]	'goto-line)
 (define-key global-map "\C-\\" nil)
 
@@ -69,6 +71,7 @@
 ;;;
 (setq undo-limit 600000)
 (setq undo-strong-limit 900000)
+(setq undo-outer-limit 600000)
 
 ;;;
 ;;; 文字の大きさを変更　＋で大きく、ーで小さくする
@@ -103,7 +106,7 @@
 ;;;
 (cond (window-system
 (setq x-select-enable-clipboard t)
-)) 
+))
 
 ;;;
 ;;; C-kで行を連結したときにインデントを減らす
@@ -138,26 +141,84 @@
 ;;;
 ;;; ウインドウのサイズ変更を手軽に
 ;;;
-(global-set-key [(meta L)]	'enlarge-window-horizontally) 
-(global-set-key [(meta H)]	'shrink-window-horizontally) 
-(global-set-key [(meta J)]	'enlarge-window) 
-(global-set-key [(meta K)]	'shrink-window) 
+(global-set-key [(meta L)]	'enlarge-window-horizontally)
+(global-set-key [(meta H)]	'shrink-window-horizontally)
+(global-set-key [(meta J)]	'enlarge-window)
+(global-set-key [(meta K)]	'shrink-window)
 
 ;;;
 ;;; C-zで休止状態に入ると厄介なので阻止
-;;; サイズ変更(xmonadでmod-右クリック)すると休止状態から戻るので不要になった
+;;; サイズ変更(xmonadでmod-右クリック)すると休止状態から戻るので不要になった。けどやっぱうざいのでいれとく
 ;;;
-;(global-set-key [(control z)]	'nil) 
- 	
+(global-set-key [(control z)]	'nil)
+
 
 ;;;
 ;;; _を単語の定義に含める（単語単位の移動などに効く）
 ;;;
 (modify-syntax-entry ?_ "w")
 
+;;;
+;;; 指定行にジャンプ
+;;;
+(global-set-key [(control x)(:)] 'goto-line)
 
 
-(setq auto-load-list-prefix "~/.emacs.d/var")
+;;;
+;;; forward-wardで空白ではなく単語の銭湯に飛ぶ
+;;;
+(defun forward-word+1 ()
+  "forward-word で単語の先頭へ移動する"
+  (interactive)
+  (forward-word)
+  (forward-char))
+
+(global-set-key (kbd "M-f") 'forward-word+1)
+(global-set-key (kbd "C-M-f") 'forward-word+1)
+
+;;;
+;;; 末尾の半角スペースとタブを表示(プログラミング系モードのみ)
+;;;
+(defface my-face-u-1 '((t (:foreground "SteelBlue" :underline t))) nil)
+(defvar my-face-u-1 'my-face-u-1)
+(defadvice font-lock-mode (before my-font-lock-mode ())
+(font-lock-add-keywords major-mode '(("[ \t]+$" 0 my-face-u-1 append))))
+(ad-enable-advice 'font-lock-mode 'before 'my-font-lock-mode)
+(ad-activate 'font-lock-mode)
+(add-hook 'find-file-hooks '(lambda ()
+ (if font-lock-mode nil (font-lock-mode t))
+) t)
+
+;;;
+;;; 保存時に行末の(タブ・半角スペース)を削除(プログラミング系モードのみ)
+;;;
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+
+;;;
+;;; リージョンの行数と文字数をモードラインに表示
+;;;
+(line-number-mode t)
+(column-number-mode t)
+; 選択範囲の情報表示
+(defun count-lines-and-chars ()
+  (if mark-active
+      (format "[%3d:%4d]"
+              (count-lines (region-beginning) (region-end))
+              (- (region-end) (region-beginning)))
+    ""))
+(add-to-list 'default-mode-line-format
+             '(:eval (count-lines-and-chars)))
+
+;;;
+;;; 現在のバッファをkillして、さらにwindowを閉じる
+;;;
+(global-set-key (kbd "C-x K") 'kill-buffer-and-window)
+
+;;;
+;;; ファイルの最後にnewline
+;;;
+(setq require-final-newline t)
 
 ; 標準Elispの設定
 (load "config/builtins")

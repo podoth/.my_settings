@@ -1,0 +1,55 @@
+!左Altをmod3に
+!clear mod3
+!add mod3 = Caps_Lock
+
+!無変換をMod3に
+!clear mod3
+!add mod3 = Muhenkan
+
+!無変換をAltに
+!keycode 102=Meta_L
+!keycode 102=Muhenkan
+
+!変換をAltに
+!keycode 129=Meta_L
+!keycode 129=Henkan
+
+!全角半角をAltに
+!keycode 49=Meta_L
+!keycode 49=Zenkaku_Hankaku
+
+!右Controlをmod3に
+!remove Control = Control_R
+!add mod3 = Control_R
+
+!左Controlをmod3に
+!remove Control = Control_L
+!add mod3 = Control_L
+
+!
+! Change Caps_Lock to Ctrl
+!
+!remove Lock = Caps_Lock
+!remove Control = Control_L
+!keysym Control_L = Caps_Lock
+!keysym Caps_Lock = Control_L
+!add Lock = Caps_Lock
+!add Control = Control_L
+!keycode 66 = Control_L
+!keycode 37 = Caps_Lock
+
+!remove Lock = Caps_Lock
+!add mod3 = Caps_Lock
+
+!remove Lock = Caps_Lock
+!add mod3 = Caps_Lock
+
+! by yasui
+remove mod4 = Super_L
+remove control = Control_L
+keycode 37 = Super_L
+add mod3 = Super_L
+
+remove lock = Caps_Lock
+add control = Caps_Lock
+keycode 66 = Control_L

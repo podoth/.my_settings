@@ -1,2 +1,4 @@
 *~
 .emacs.d/var/*
+.xmonad/*
+!.xmonad/xmonad.hs

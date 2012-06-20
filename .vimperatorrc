@@ -1,0 +1,111 @@
+"2.3.1 (created: 2010/04/07 18:56:53)
+
+set runtimepath=$HOME/.vimperator
+source! $HOME/.vimperatorrc.local
+
+" vim: set ft=vimperator:
+
+"---
+
+" -*- coding:utf-8; comment-start: "\""; -*-
+
+"------------------------------------
+
+"coloring(~/.vimperator/colors/*.vimp)
+
+"colorscheme simple
+"colorscheme evening
+"colorscheme sweets
+"colorscheme sweets_snaka
+
+"colorscheme flee
+
+"------------------------------------
+
+" <plugin>
+" imekeys.js
+" _libly.js
+" forcefocuscontent.js
+" hints-ext.js
+" treestyletab.js
+" migemo-find.js
+
+"------------------------------------
+
+" <addon>
+" MyBookmarks
+
+"------------------------------------
+
+" <mapping>
+map j 10<C-e>
+map k 10<C-y>
+map <C-m> <CR>
+map <C-h> <BS>
+map <C-g> <ESC>
+
+imap <C-m> <CR>
+imap <C-h> <BS>
+imap <C-f> <RIGHT>
+imap <C-b> <LEFT>
+imap <C-p> <UP>
+imap <C-n> <DOWN>
+imap <C-g> <ESC>
+
+cmap <C-m> <CR>
+cmap <C-h> <BS>
+cmap <C-f> <RIGHT>
+cmap <C-b> <LEFT>
+cmap <C-p> <UP>
+cmap <C-n> <DOWN>
+cmap <C-g> <ESC>
+
+" source
+map ,s :so .vimperatorrc<CR>
+map ,l :loadplugins<CR>
+
+" messages
+map ,m :messages<CR>
+map ,c :messclear<CR>
+
+" buffering
+map ,b :buffer!
+
+" bookmark using MyBookmarks
+map b :tab open about:mybookmarks <CR>
+map B :open about:mybookmarks <CR>
+
+"-------------------------------------
+
+" <option>
+
+" beep,bell
+set visualbell
+hi Bell display: none;
+
+" focus
+set focuscontent
+
+" editor is emacs
+set editor='/usr/bin/emacs'
+
+" char-hints
+set hintchars=jklasdfghuiwerncv
+
+"-------------------------------------
+
+" <plugin option>
+
+" imekeys
+let g:ime_activate_xkey='\[Control]\[Shift]$'
+let g:ime_deactivate_xkey='\[Control]\[Shift] '
+let g:ime_activate_wkey='^{F11}'
+let g:ime_deactivate_wkey='^+{F11}'
+let g:imeoff='cmd'
+
+" hints-ext
+let use_hintchars_ex=2
+let use_hints_ext_caret="C"
+let use_hints_ext_visual="V"
+
+"-----------------------------------------

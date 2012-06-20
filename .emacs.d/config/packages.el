@@ -19,12 +19,13 @@
       LaTeX-figure-label		"fig:"
       LaTeX-table-label			"tab:"
       LaTeX-section-label		"sec:")
-(when (not (shell-command "which pxdvi"))
-  (setq TeX-output-view-style '(("^dvi$" "." "pxdvi %d"))))
+;; (when (not (shell-command "which pxdvi"))
+;;   (setq TeX-output-view-style '(("^dvi$" "." "pxdvi %d"))))
 
 (eval-after-load "auctex"
   '(when window-system
      (require 'font-latex)))
+
 ;;; bibtex
 (setq bib-bibtex-env-variable		"TEXMFHOME")
 (autoload 'turn-on-bib-cite "bib-cite")
@@ -45,13 +46,18 @@
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
 ;;; プレビュー
 (load "preview-latex.el" nil t t)
+;;; outline-minor-mode
+(add-hook 'LaTeX-mode-hook '(lambda () (outline-minor-mode t)
+			      (local-set-key [(meta n)] 'outline-next-visible-heading)
+			      (local-set-key [(meta p)] 'outline-previous-visible-heading)))
+
 ;;; xdviの設定
-(setq TeX-output-view-style '(("^dvi$" "." "pxdvi %d")))
-(eval-after-load "tex" '(progn
-  (setq TeX-view-program-list
-        (list (assoc "xdvi" TeX-view-program-list-builtin)))
-  (setcar (cadr (assoc "xdvi"  TeX-view-program-list))
-          "%(o?)pxdvi")))
+;; (setq TeX-output-view-style '(("^dvi$" "." "pxdvi %d")))
+;; (eval-after-load "tex" '(progn
+;;   (setq TeX-view-program-list
+;;         (list (assoc "xdvi" TeX-view-program-list-builtin)))
+;;   (setcar (cadr (assoc "xdvi"  TeX-view-program-list))
+;;           "%(o?)pxdvi")))
 ;;;分割コンパイル可能に
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
@@ -134,16 +140,6 @@
          (local-set-key "\M-s" 'gtags-find-symbol)
          (local-set-key "\C-t" 'gtags-pop-stack)
          ))
-;; (add-hook
-;;  'c-mode-common-hook
-;;  '(lambda()
-;;     (gtags-mode 1)
-;; ))
-;; (add-hook
-;;  'c++-mode-common-hook
-;;  '(lambda()
-;;     (gtags-mode 1)
-;; ))
 (add-hook 'c-mode-common-hook 'gtags-mode)
 (add-hook 'asm-mode-hook 'gtags-mode)
 
@@ -197,11 +193,67 @@
 (load "~/.emacs.d/packages/haskellmode-emacs/haskell-site-file.el")
 
 ;;;
+;;; open-junk-file。ごみファイルを~/.junkに生成する
+;;;
+(require 'open-junk-file)
+(setq open-junk-file-format "~/.junk/%Y/%m/%d/%H-%M.")
+(global-set-key "\C-c\C-j" 'open-junk-file)
+
+;;;
+;;; *Completions*バッファを自動で消す
+;;;
+(require 'lcomp)
+(lcomp-install)
+
+;;;
+;;; いきなりM-yでkill-ringをプレビュー表示
+;;;
+(require 'browse-kill-ring)
+(browse-kill-ring-default-keybindings)
+
+;;;
+;;; undo-tree
+;;;
+(require 'undo-tree)
+(global-undo-tree-mode)
+
+
+;;;
+;;; quickrun emacs上でプログラムのテスト実行
+;;;
+(require 'quickrun)
+(global-set-key (kbd "<f5>") 'quickrun)
+
+
+;;;
+;;; migemo-isearch
+;;;
+(setq migemo-command "cmigemo")
+(setq migemo-options '("-q" "--emacs"))
+(setq migemo-dictionary "/usr/local/share/migemo/utf-8/migemo-dict")
+(setq migemo-user-dictionary nil)
+(setq migemo-regex-dictionary nil)
+(setq migemo-coding-system 'utf-8-unix)
+(load-library "migemo")
+(migemo-init)
+
+;;;
 ;;; session。ミニバッファの入力履歴を終了後も記憶
 ;;;
-(require 'session)
-(add-hook 'after-init-hook 'session-initialize)
-(setq session-undo-check -1)
+; kill-ringやミニバッファで過去に開いたファイルなどの履歴を保存する
+(when (require 'session nil t)
+  (add-hook 'after-init-hook 'session-initialize)
+  (setq session-initialize '(de-saveplace session keys menus places)
+        session-globals-include '((kill-ring 50); kill-ring
+                                  (session-file-alist 500 t); ファイル内でのカーソル位置
+                                  (file-name-history 10000))); 開いたファイル
+  ;;これがないと file-name-history に500個保存する前に max-string に達する
+  (setq session-globals-max-string 100000000)
+  ;; ミニバッファ履歴リストの長さ制限をなくす
+  (setq history-length t)
+  ;;ファイルを開いたとき、前とじた時の位置にカーソルを復帰
+  (setq session-undo-check -1))
+
 
 ;;;
 ;;; minibuf-iserach。ミニバッファをインクリメンタル検索できるように
@@ -209,8 +261,11 @@
 (require 'minibuf-isearch)
 
 ;;;
-;;; open-junk-file。ごみファイルを~/.junkに生成する
+;;; アウトラインをまとめたものを表示
 ;;;
-(require 'open-junk-file)
-(setq open-junk-file-format "~/.junk/%Y/%m/%d/%H-%M.")
-(global-set-key "\C-c\C-j" 'open-junk-file)
+(setq load-path (cons "~/.emacs.d/package/ee-0.1.0" load-path))
+(require 'ee-autoloads)
+;; C-c o で起動。
+(global-set-key "\C-co" 'ee-outline)
+
+

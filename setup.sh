@@ -5,9 +5,12 @@ then
     mkdir .emacs.d/var
 fi
 
-for item in .bashrc .emacs .emacs.d
+for item in .bashrc .emacs .emacs.d .Xmodmap .gitconfig .gnomerc .vimperator .vimperatorrc .xinitrc .xmonad .zshrc
 do
-    rm -r ${HOME}/$item
+    if [ ! -L ${HOME}/${item} ]
+    then
+	mv ${HOME}/$item ${HOME}/${item}.mybak
+    fi
     ln -s ${PWD}/$item ${HOME}/$item
 done
 
