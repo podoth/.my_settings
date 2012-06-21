@@ -164,3 +164,6 @@ alias filesumcurrent='du -sk * | sort -nr | head -n 10'
 
 # zsh版 sshopt -s dotglob
 setopt dotglob
+
+#scim+GTKには必要
+export GTK_IM_MODULE=scim-bridge

@@ -1,4 +1,9 @@
 *~
+
 .emacs.d/var/*
+
+.vimperator/info/*
+
 .xmonad/*
 !.xmonad/xmonad.hs
+

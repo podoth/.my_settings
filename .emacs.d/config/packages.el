@@ -268,4 +268,16 @@
 ;; C-c o で起動。
 (global-set-key "\C-co" 'ee-outline)
 
-
+;;;
+;;; scim-bridge
+;;;
+(require 'scim-bridge-ja)
+(add-hook 'after-init-hook 'scim-mode-on)
+; C-SPC は Set Mark に使う
+(scim-define-common-key ?\C-\s nil)
+; C-/ は Undo に使う
+(scim-define-common-key ?\C-/ nil)
+; 日本語入力中は赤いカーソル
+(setq scim-cursor-color '("red"))
+; インクリメンタル中はカーソルを塗りつぶさないものにする
+(setq scim-isearch-cursor-type 'hollow)
