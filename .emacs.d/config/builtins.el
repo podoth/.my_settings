@@ -168,6 +168,80 @@
  '(lambda ()
     (define-key LaTeX-mode-map "\C-cd" 'credmp/flymake-display-err-minibuf)))
 
+;; for perl
+;; http://unknownplace.org/memo/2007/12/21#e001
+(require 'set-perl5lib)
+
+(defvar flymake-perl-err-line-patterns
+  '(("\\(.*\\) at \\([^ \n]+\\) line \\([0-9]+\\)[,.\n]" 2 3 nil 1)))
+
+(defconst flymake-allowed-perl-file-name-masks
+  '(("\\.pl$" flymake-perl-init)
+    ("\\.pm$" flymake-perl-init)
+    ("\\.t$" flymake-perl-init)))
+
+(defun flymake-perl-init ()
+  (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                     'flymake-create-temp-inplace))
+         (local-file (file-relative-name
+                      temp-file
+                      (file-name-directory buffer-file-name))))
+    (list "perl" (list "-wc" local-file))))
+
+(defun flymake-perl-load ()
+  (interactive)
+  (defadvice flymake-post-syntax-check (before flymake-force-check-was-interrupted)
+    (setq flymake-check-was-interrupted t))
+  (ad-activate 'flymake-post-syntax-check)
+  (setq flymake-allowed-file-name-masks (append flymake-allowed-file-name-masks flymake-allowed-perl-file-name-masks))
+  (setq flymake-err-line-patterns flymake-perl-err-line-patterns)
+  (set-perl5lib)
+  (flymake-mode t))
+
+(add-hook 'cperl-mode-hook 'flymake-perl-load)
+
+(add-hook
+ 'cperl-mode-hook
+ '(lambda ()
+    (define-key cperl-mode-map "\C-cd" 'credmp/flymake-display-err-minibuf)))
+
+
+;;;
+;;; for bash
+;;; コマンドの有無等は調べてくれない（構文エラーしか見ない）
+;;;
+(defcustom flymake-shell-of-choice
+      "/bin/sh"
+      "Path of shell.")
+; /bin/bashじゃなくて/bin/shじゃないと上手くいかない。-nオプションの関係？
+
+(defcustom flymake-shell-arguments
+  (list "-n")
+  "Shell arguments to invoke syntax checking.")
+
+(defconst flymake-allowed-shell-file-name-masks
+  '(("\\.sh$" flymake-shell-init))
+  "Filename extensions that switch on flymake-shell mode syntax checks.")
+
+(defcustom flymake-shell-err-line-pattern-re
+  '(("^\\(.+\\): line \\([0-9]+\\): \\(.+\\)$" 1 2 nil 3))
+  "Regexp matching JavaScript error messages.")
+
+(defun flymake-shell-init ()
+  (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                     'flymake-create-temp-inplace))
+         (local-file (file-relative-name
+                      temp-file
+                      (file-name-directory buffer-file-name))))
+    (list flymake-shell-of-choice (append flymake-shell-arguments (list local-file)))))
+
+(defun flymake-shell-load ()
+  (setq flymake-allowed-file-name-masks (append flymake-allowed-file-name-masks flymake-allowed-shell-file-name-masks))
+  (setq flymake-err-line-patterns (append flymake-err-line-patterns flymake-shell-err-line-pattern-re))
+  (flymake-mode t)
+  (local-set-key (kbd "C-c d") 'credmp/flymake-display-err-minibuf))
+(add-hook 'sh-mode-hook 'flymake-shell-load)
+
 ;; エラーをミニバッファに表示
 (defun credmp/flymake-display-err-minibuf ()
   "Displays the error/warning for the current line in the minibuffer"
@@ -262,3 +336,8 @@
                  (auto-fill-mode 1)
                  (if (eq window-system 'x)
                      (font-lock-mode 1))))
+
+;;;
+;;; perlの編集にはcperl-modeを使う
+;;;
+(defalias 'perl-mode 'cperl-mode)

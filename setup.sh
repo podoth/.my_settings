@@ -11,6 +11,7 @@ do
     then
 	mv ${HOME}/$item ${HOME}/${item}.mybak
     fi
+    rm ${HOME}/$item
     ln -s ${PWD}/$item ${HOME}/$item
 done
 

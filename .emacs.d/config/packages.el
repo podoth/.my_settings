@@ -215,7 +215,7 @@
 ;;; undo-tree
 ;;;
 (require 'undo-tree)
-(global-undo-tree-mode)
+(global-undo-tree-mode t)
 
 
 ;;;
@@ -235,6 +235,7 @@
 (setq migemo-regex-dictionary nil)
 (setq migemo-coding-system 'utf-8-unix)
 (load-library "migemo")
+(define-key isearch-mode-map (kbd "RET") 'migemo-toggle-isearch-enable)
 (migemo-init)
 
 ;;;
@@ -269,15 +270,16 @@
 (global-set-key "\C-co" 'ee-outline)
 
 ;;;
-;;; scim-bridge
+;;; mozc
 ;;;
-(require 'scim-bridge-ja)
-(add-hook 'after-init-hook 'scim-mode-on)
-; C-SPC は Set Mark に使う
-(scim-define-common-key ?\C-\s nil)
-; C-/ は Undo に使う
-(scim-define-common-key ?\C-/ nil)
-; 日本語入力中は赤いカーソル
-(setq scim-cursor-color '("red"))
-; インクリメンタル中はカーソルを塗りつぶさないものにする
-(setq scim-isearch-cursor-type 'hollow)
+(when (require 'mozc nil t)
+  (setq default-input-method "japanese-mozc")
+  (setq mozc-candidate-style 'overlay)
+  (global-set-key (kbd "S-SPC") 'toggle-input-method)
+  ;; faces
+  ;; (set-face-attribute 'mozc-cand-overlay-even-face 'nil
+  ;;                     :background "white" :foreground "black")
+  ;; (set-face-attribute 'mozc-cand-overlay-odd-face 'nil
+  ;;                     :background "white" :foreground "black"))
+  )
+  (define-key isearch-mode-map (kbd "S-SPC") 'isearch-edit-string)
