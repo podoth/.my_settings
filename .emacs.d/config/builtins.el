@@ -63,6 +63,24 @@
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
  )
+; *を入力されない限り*系のバッファを隠す
+(add-to-list 'iswitchb-buffer-ignore "\\`\\*")
+(setq iswitchb-buffer-ignore-asterisk-orig nil)
+(defadvice iswitchb-exhibit (before iswitchb-exhibit-asterisk activate)
+  "*が入力されている時は*で始まるものだけを出す"
+  (if (equal (char-after (minibuffer-prompt-end)) ?*)
+      (when (not iswitchb-buffer-ignore-asterisk-orig)
+        (setq iswitchb-buffer-ignore-asterisk-orig iswitchb-buffer-ignore)
+        (setq iswitchb-buffer-ignore '("^ "))
+        (iswitchb-make-buflist iswitchb-default)
+        (setq iswitchb-rescan t))
+    (when iswitchb-buffer-ignore-asterisk-orig
+      (setq iswitchb-buffer-ignore iswitchb-buffer-ignore-asterisk-orig)
+      (setq iswitchb-buffer-ignore-asterisk-orig nil)
+      (iswitchb-make-buflist iswitchb-default)
+      (setq iswitchb-rescan t))))
+; 別のフレームでバッファを開いている時でも選択フレームで開く
+(setq iswitchb-default-method 'samewindow)
 
 ;;;
 ;;; ファイル名が重複していたらプロンプトにディレクトリ名を追加する。
@@ -206,10 +224,9 @@
     (define-key cperl-mode-map "\C-cd" 'credmp/flymake-display-err-minibuf)))
 
 
-;;;
-;;; for bash
-;;; コマンドの有無等は調べてくれない（構文エラーしか見ない）
-;;;
+;; for bash
+;; コマンドの有無等は調べてくれない（構文エラーしか見ない）
+
 (defcustom flymake-shell-of-choice
       "/bin/sh"
       "Path of shell.")
@@ -264,7 +281,6 @@
 ;; M-p/M-n で警告/エラー行の移動
 (global-set-key "\M-p" 'flymake-goto-prev-error)
 (global-set-key "\M-n" 'flymake-goto-next-error)
-
 
 ;;;
 ;;; linux カーネル編集モード
@@ -341,3 +357,9 @@
 ;;; perlの編集にはcperl-modeを使う
 ;;;
 (defalias 'perl-mode 'cperl-mode)
+
+;;;
+;;; woman : emacs内のman
+;;;
+;; 初回起動が遅いのでキャッシュを作成(更新は C-u を付けて woman を呼ぶ)
+(setq woman-cache-filename (expand-file-name "~/.emacs.d/var/woman_cache.el"))

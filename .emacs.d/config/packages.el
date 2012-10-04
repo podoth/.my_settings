@@ -142,6 +142,8 @@
          ))
 (add-hook 'c-mode-common-hook 'gtags-mode)
 (add-hook 'asm-mode-hook 'gtags-mode)
+(setq gtags-auto-update t)
+(setq gtags-ignore-case t)
 
 ;;;
 ;;; isearch中にCtrl-lで単語に色をつけたままにする
@@ -253,7 +255,20 @@
   ;; ミニバッファ履歴リストの長さ制限をなくす
   (setq history-length t)
   ;;ファイルを開いたとき、前とじた時の位置にカーソルを復帰
-  (setq session-undo-check -1))
+  (setq session-undo-check -1)
+
+  ;; sessionはファイルを開いた履歴を保存するためだけに使っている
+  ;; 自分はマルチプロセスで使いたいので、このままだと上手く使えない
+  ;; なので、以下の設定で擬似的にプロセス間で同期を行なう
+  (run-with-idle-timer 10 t 'session-save-session) ; マルチプロセスで使うための設定:定期的に保存
+  (defadvice find-file (around save-history activate compile) ; マルチプロセスで使うための設定:ファイルを開くたびにロードして保存
+    ""
+    (progn
+      (load-file "~/.emacs.d/var/.session")
+      ad-do-it
+      (session-save-session)))
+  )
+
 
 
 ;;;
@@ -271,15 +286,76 @@
 
 ;;;
 ;;; mozc
+;;; モードラインが表示されないときは、uim-elをアンインストールすること
 ;;;
 (when (require 'mozc nil t)
   (setq default-input-method "japanese-mozc")
   (setq mozc-candidate-style 'overlay)
-  (global-set-key (kbd "S-SPC") 'toggle-input-method)
+  (global-set-key (kbd "S-SPC") 'toggle-input-method) 
   ;; faces
   ;; (set-face-attribute 'mozc-cand-overlay-even-face 'nil
   ;;                     :background "white" :foreground "black")
   ;; (set-face-attribute 'mozc-cand-overlay-odd-face 'nil
   ;;                     :background "white" :foreground "black"))
   )
-  (define-key isearch-mode-map (kbd "S-SPC") 'isearch-edit-string)
+(define-key isearch-mode-map (kbd "S-SPC") 'isearch-edit-string)
+
+;;;
+;;; point-undo.el
+;;; カーソル移動についてのundo
+;;;
+(require 'point-undo)
+(define-key global-map [f7] 'point-undo)
+(define-key global-map [S-f7] 'point-redo)
+
+
+;;;
+;;; rst.el
+;;; ReST編集の決定版
+;;;
+(require 'rst)
+(setq auto-mode-alist
+      (append '(("\\.rst$" . rst-mode)
+		("\\.rest$" . rst-mode)) auto-mode-alist))
+;; 全部スペースでインデントしましょう
+(add-hook 'rst-mode-hook '(lambda() (setq indent-tabs-mode nil)))
+
+;;;
+;;; jaunte.el 
+;;; hit-a-hint
+;;;
+;; (require 'jaunte)
+;; (global-set-key (kbd "C-c C-f") 'jaunte)
+
+;;;
+;;; ace-jump-mode
+;;; 最初の一文字だけ手動入力するhit-a-hint
+;;;
+(require 'ace-jump-mode)
+(global-set-key (kbd "C-c C-f") 'ace-jump-mode)
+
+;;;
+;;; sequential-command
+;;; 連続したコマンドに意味を持たせるフレームワーク
+;;;
+(require 'sequential-command)
+
+;;;
+;;; expand-region
+;;; 微妙なさじかげんでリージョンを拡大していく
+;;;
+(setq load-path (cons "~/.emacs.d/packages/expand-region.el" load-path))
+(require 'expand-region)
+;; C-SPC連続実行で発動。
+;; 何回やればいいのか分からないので、とりあえず並べまくる
+(define-sequential-command seq-SPC
+  cua-set-mark er/expand-region er/expand-region er/expand-region er/expand-region er/expand-region er/expand-region)
+(global-set-key (kbd "C-SPC") 'seq-SPC)
+
+;;;
+;;; key-combo
+;;; '=' => ' = 'にしたり、',' => ', 'にしたり色々。
+;;;
+(setq load-path (cons "~/.emacs.d/packages/key-combo" load-path))
+(require 'key-combo)
+(key-combo-load-default)

@@ -1,3 +1,8 @@
+# interactiveなとき以外(scp等)は何もしない
+if [ -z "$PS1" ]; then
+    return
+fi
+
 export SHELL=/bin/zsh
 
 autoload -U compinit
@@ -120,6 +125,7 @@ alias du='du -hk'
 #alias rdesktopfull='rdesktop onion -g 1280x1024'
 alias rdesktoponion='rdesktop onion -K -g 1900x1100+0-0'
 alias rdesktoppersil='rdesktop persil -K -g 1900x1100'
+alias rdesktopbasilic='rdesktop basilic -K -g 1900x1100+0-0'
 alias less='less -M'
 
 xset -b
@@ -167,3 +173,10 @@ setopt dotglob
 
 #scim+GTKには必要
 export GTK_IM_MODULE=scim-bridge
+
+#emacsclientを使用。serverの立ち上げはgnomeの設定で
+# alias emacs="${HOME}/.emacs.d/emacsclient.sh"
+# alias emacs='emacsclient -c'
+alias e='emacsclient --alternate-editor="" -c'
+
+alias ack='ack-grep'

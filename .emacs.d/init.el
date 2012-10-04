@@ -1,12 +1,4 @@
 ;;;
-;;; MATSUO & TSUMURA lab.
-;;;   ~/.emacs template
-;;;  feel free to edit this file at your own risk
-;;;
-;;; Last Modified: 2010/04/26
-;;; Created:       2007/04/03
-
-;;;
 ;;; C-c 文字は通常割り当てられていない。行儀の悪いelispが使わない限りは
 ;;; Meta-大文字は通常割り当てられていない。割り当てられていない場合は、自動でMeta-小文字に変換して処理する
 ;;;　f5~f9は自由に割り当てられる
@@ -57,8 +49,14 @@
 ;;;
 ;;; emacsclient
 ;;;
-(require 'server)
-(unless (server-running-p) (server-start))
+;; (require 'server)
+;; (unless (server-running-p) (server-start))
+
+;;;
+;;; clip_boardをXと共有
+;;; daemonだと手動で評価しないと効かない？
+;;;
+(setq x-select-enable-clipboard t)
 
 ;;;
 ;;; スクリプト保存時実行権限付与
@@ -100,13 +98,6 @@
 ;;; デフォルトでは10MBなので25MBに拡張する
 ;;;
 (setq lage-file-warning-threshold (* 25 1024 1024))
-
-;;;
-;;; clip_boardをXと共有
-;;;
-(cond (window-system
-(setq x-select-enable-clipboard t)
-))
 
 ;;;
 ;;; C-kで行を連結したときにインデントを減らす
@@ -174,7 +165,7 @@
   (forward-char))
 
 (global-set-key (kbd "M-f") 'forward-word+1)
-(global-set-key (kbd "C-M-f") 'forward-word+1)
+;; (global-set-key (kbd "C-M-f") 'forward-word+1)
 
 ;;;
 ;;; 末尾の半角スペースとタブを表示(プログラミング系モードのみ)
@@ -192,7 +183,7 @@
 ;;;
 ;;; 保存時に行末の(タブ・半角スペース)を削除(プログラミング系モードのみ)
 ;;;
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
+;; (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 
 ;;;
@@ -220,9 +211,15 @@
 ;;;
 (setq require-final-newline t)
 
+;;;
+;;; 毎日0時に、一時バッファや三日間見ていないバッファをkillする
+;;;
+(require 'midnight)
+
 ; 標準Elispの設定
 (load "config/builtins")
 ; 非標準Elispの設定
 (load "config/packages")
 ; 自作コマンドの設定
 (load "config/functions")
+
