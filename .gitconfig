@@ -5,3 +5,5 @@
 	diff = auto
 	status = auto
 	branch = auto
+[gui]
+	recentrepo = /nfs/repo/orthros

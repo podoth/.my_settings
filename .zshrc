@@ -117,10 +117,11 @@ esac
 alias la='ls -A'
 alias ll='ls -laBh'
 alias du='du -hk'
+alias less='less -M'
 #alias rdesktopfull='rdesktop onion -g 1280x1024'
 alias rdesktoponion='rdesktop onion -K -g 1900x1100+0-0'
+alias rdesktoponionslow='rdesktop onion -K -g 800x600+0-0 -x modem -z'
 alias rdesktoppersil='rdesktop persil -K -g 1900x1100'
-alias less='less -M'
 
 xset -b
 
