@@ -1,3 +1,7 @@
+# interactiveなとき以外(scp等)は何もしない
+if [ -z "$PS1" ]; then
+    return
+fi
 # zshが存在するときだけzsh
 if [ -e /bin/zsh ]; then
     exec zsh
@@ -72,4 +76,4 @@ xset -b
 #export PATH=/bin:/usr/bin:/usr/X11R6/bin:/usr/local/bin:/home/uchida/tmp
 #export PATH=/bin:/usr/bin:/usr/X11R6/bin:/usr/local/bin:/home/uchida/tmp
 
-export PATH=/bin:/usr/bin:/usr/X11R6/bin:/usr/local/bin:/home/uchida/tmp
+# export PATH=/bin:/usr/bin:/usr/X11R6/bin:/usr/local/bin:/home/uchida/tmp

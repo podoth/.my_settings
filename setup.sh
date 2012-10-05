@@ -1,5 +1,8 @@
 #!/bin/bash -x
 
+# require
+# ruby,migemo,c/migemo,ruby-gnome2,uncrusitfy,git,xmonad,zsh
+
 if [ ! -d .emacs.d/var ]
 then
     mkdir .emacs.d/var
@@ -15,3 +18,5 @@ do
     ln -s ${PWD}/$item ${HOME}/$item
 done
 
+sudo ln -s ${PWD}/emacs-mark.rb /usr/bin/emacs-mark.rb
+sudo ln -s ${PWD}/emacs-mark.server /usr/lib/bonobo/servers/emacs-mark.server

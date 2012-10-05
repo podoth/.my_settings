@@ -141,3 +141,30 @@
     ad-do-it))
 ;; minibuffer用
 (define-key minibuffer-local-completion-map "\C-w" 'backward-kill-word)
+
+
+
+(setq auto-clear-buffer-name (list "*Messages*" "*Completions*"))
+(defun clear-temp-buffers()
+  "登録された一時バッファを削除"
+  (interactive)
+  (let ((fn))
+    (dolist (bf (buffer-list))
+      (setq fn (buffer-name bf))
+      (when (member fn auto-clear-buffer-name)
+	(progn	  (kill-buffer fn)
+		  (print fn)))
+      )
+    )
+  )
+
+;;;
+;;; 句読点を論文スタイルに変換
+;;;
+(defun replace-kutoten ()
+  (interactive)
+  (save-excursion
+    (beginning-of-buffer)
+    (replace-string "、" "，" )
+    (replace-string "。" "．" ))
+)
