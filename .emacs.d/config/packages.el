@@ -230,6 +230,8 @@
 ;;;
 ;;; migemo-isearch
 ;;;
+(when (and (executable-find "cmigemo")
+ (require 'migemo nil t))
 (setq migemo-command "cmigemo")
 (setq migemo-options '("-q" "--emacs"))
 (setq migemo-dictionary "/usr/local/share/migemo/utf-8/migemo-dict")
@@ -239,6 +241,7 @@
 (load-library "migemo")
 (define-key isearch-mode-map (kbd "RET") 'migemo-toggle-isearch-enable)
 (migemo-init)
+)
 
 ;;;
 ;;; session。ミニバッファの入力履歴を終了後も記憶
