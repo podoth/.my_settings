@@ -20,10 +20,12 @@
 
 ;;;
 ;;; .emacsを読み直す
+;;; switch系のもののために二回読む
 ;;;
 (defun reload-emacs-settings ()
   "Reload ~/.emacs"
   (interactive)
+  (load-file "~/.emacs")
   (load-file "~/.emacs"))
 (global-set-key [(control c)(control e)]	'reload-emacs-settings)
 
