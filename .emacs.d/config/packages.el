@@ -275,6 +275,7 @@
 ;;;
 ;;; マルチプロセスでsave-hist保存時に一番新しいsave-histを保存するようにしたsave-hist?
 ;;;
+(setq savehist-file "~/.emacs.d/var/history")
 (require 'savehist)
 (savehist-mode 1)
 (custom-set-variables
@@ -284,7 +285,7 @@
 '(history-length t)
 '(history-delete-duplicates t)
 )
-(setq savehist-file "~/.emacs.d/var/history")
+
 
 ;;;
 ;;; minibuf-iserach。ミニバッファをインクリメンタル検索できるように

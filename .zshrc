@@ -181,3 +181,4 @@ export GTK_IM_MODULE=scim-bridge
 alias e='emacsclient --alternate-editor="" -c'
 
 alias ack='ack-grep'
+alias lv='lv -c'
