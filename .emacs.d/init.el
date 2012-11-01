@@ -125,9 +125,9 @@
 ;;;
 ;;; recentf。開いたファイルの履歴
 ;;;
-(recentf-mode 1)
-(setq recentf-max-menu-items 20)
-(setq recentf-max-saved-items 1000)
+;; (recentf-mode 1)
+;; (setq recentf-max-menu-items 20)
+;; (setq recentf-max-saved-items 1000)
 
 ;;;
 ;;; ウインドウのサイズ変更を手軽に
@@ -215,6 +215,18 @@
 ;;; 毎日0時に、一時バッファや三日間見ていないバッファをkillする
 ;;;
 (require 'midnight)
+
+;;;
+;;; C-x kは現在のバッファをKill
+;;; どうせ現在のバッファしかしないし、iswitchb-exhibitを使っていると有効
+;;;
+(global-set-key (kbd "C-x k") 'kill-this-buffer)
+
+;;;
+;;; C-n以上、C-v以下の上下移動手段が欲しい
+;;;
+(global-set-key (kbd "C-S-n") '(lambda () (interactive) (next-line 3)))
+(global-set-key (kbd "C-S-p") '(lambda () (interactive) (previous-line 3)))
 
 ; 標準Elispの設定
 (load "config/builtins")

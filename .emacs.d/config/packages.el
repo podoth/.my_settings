@@ -247,31 +247,44 @@
 ;;; session。ミニバッファの入力履歴を終了後も記憶
 ;;;
 ; kill-ringやミニバッファで過去に開いたファイルなどの履歴を保存する
-(when (require 'session nil t)
-  (add-hook 'after-init-hook 'session-initialize)
-  (setq session-initialize '(de-saveplace session keys menus places)
-        session-globals-include '((kill-ring 50); kill-ring
-                                  (session-file-alist 500 t); ファイル内でのカーソル位置
-                                  (file-name-history 10000))); 開いたファイル
-  ;;これがないと file-name-history に500個保存する前に max-string に達する
-  (setq session-globals-max-string 100000000)
-  ;; ミニバッファ履歴リストの長さ制限をなくす
-  (setq history-length t)
-  ;;ファイルを開いたとき、前とじた時の位置にカーソルを復帰
-  (setq session-undo-check -1)
+;; (when (require 'session nil t)
+;;   (add-hook 'after-init-hook 'session-initialize)
+;;   (setq session-initialize '(de-saveplace session keys menus places)
+;;         session-globals-include '((kill-ring 50); kill-ring
+;;                                   (session-file-alist 500 t); ファイル内でのカーソル位置
+;;                                   (file-name-history 10000))); 開いたファイル
+;;   ;;これがないと file-name-history に500個保存する前に max-string に達する
+;;   (setq session-globals-max-string 100000000)
+;;   ;; ミニバッファ履歴リストの長さ制限をなくす
+;;   (setq history-length t)
+;;   ;;ファイルを開いたとき、前とじた時の位置にカーソルを復帰
+;;   (setq session-undo-check -1)
 
-  ;; sessionはファイルを開いた履歴を保存するためだけに使っている
-  ;; 自分はマルチプロセスで使いたいので、このままだと上手く使えない
-  ;; なので、以下の設定で擬似的にプロセス間で同期を行なう
-  (run-with-idle-timer 10 t 'session-save-session) ; マルチプロセスで使うための設定:定期的に保存
-  (defadvice find-file (around save-history activate compile) ; マルチプロセスで使うための設定:ファイルを開くたびにロードして保存
-    ""
-    (progn
-      (load-file "~/.emacs.d/var/.session")
-      ad-do-it
-      (session-save-session)))
-  )
+;;   ;; sessionはファイルを開いた履歴を保存するためだけに使っている
+;;   ;; 自分はマルチプロセスで使いたいので、このままだと上手く使えない
+;;   ;; なので、以下の設定で擬似的にプロセス間で同期を行なう
+;;   (run-with-idle-timer 10 t '(session-save-session)) ; マルチプロセスで使うための設定:定期的に保存
+;;   (defadvice find-file (around save-history activate compile) ; マルチプロセスで使うための設定:ファイルを開くたびにロードして保存
+;;     ""
+;;     (progn
+;;       (load-file "~/.emacs.d/var/.session")
+;;       ad-do-it
+;;       (session-save-session)))
+;;   )
 
+;;;
+;;; マルチプロセスでsave-hist保存時に一番新しいsave-histを保存するようにしたsave-hist?
+;;;
+(setq savehist-file "~/.emacs.d/var/history")
+(require 'savehist)
+(savehist-mode 1)
+(custom-set-variables
+'(savehist-length nil))
+ 
+(custom-set-variables
+'(history-length t)
+'(history-delete-duplicates t)
+)
 
 
 ;;;
@@ -362,3 +375,38 @@
 (setq load-path (cons "~/.emacs.d/packages/key-combo" load-path))
 (require 'key-combo)
 (key-combo-load-default)
+
+
+;;;
+;;; auto-install
+;;;
+(require 'auto-install)
+(setq auto-install-directory "~/.emacs.d/packages/auto-install/")
+(auto-install-update-emacswiki-package-name t)
+(auto-install-compatibility-setup)             ; 互換性確保
+(setq load-path (cons "~/.emacs.d/packages/auto-install" load-path))
+
+;;;
+;;; eldoc
+;;;
+(require 'eldoc)
+(require 'eldoc-extension)
+(setq eldoc-idle-delay 0.20)
+(setq eldoc-echo-area-use-multiline-p t)
+(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+(add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
+(add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
+
+;;;
+;;; c-eldoc
+;;; 関数呼び出しを書くときに仮引数をミニバッファに表示したり
+;;;
+(setq c-eldoc-includes "`pkg-config gtk+-2.0 --cflags` -I./ -I../ ")
+(load "c-eldoc")
+(add-hook 'c-mode-hook
+          (lambda ()
+            (set (make-local-variable 'eldoc-idle-delay) 0.20)
+            (c-turn-on-eldoc-mode)
+            ))
+;; (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
+

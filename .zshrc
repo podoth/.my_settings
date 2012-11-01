@@ -182,3 +182,4 @@ alias e='emacsclient --alternate-editor="" -c'
 
 alias ack='ack-grep'
 alias gitwebtmp='git instaweb --httpd=webrick'
+alias lv='lv -c'
