@@ -410,3 +410,8 @@
             ))
 ;; (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
 
+;;;
+;;; ack
+;;;
+(load "ack")
+(setq ack-command "ack-grep --nocolor --nogroup ")

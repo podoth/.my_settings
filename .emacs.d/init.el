@@ -228,6 +228,11 @@
 (global-set-key (kbd "C-S-n") '(lambda () (interactive) (next-line 3)))
 (global-set-key (kbd "C-S-p") '(lambda () (interactive) (previous-line 3)))
 
+;;;
+;;; Evalで補完が効くように
+;;;
+(define-key read-expression-map (kbd "TAB") 'lisp-complete-symbol)
+
 ; 標準Elispの設定
 (load "config/builtins")
 ; 非標準Elispの設定
