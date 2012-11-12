@@ -117,6 +117,11 @@
     backup-directory-alist))
 
 ;;;
+;;; auto-saveは使わない
+;;;
+(setq auto-save-default nil)
+
+;;;
 ;;; i-search中にC-hでBackspace
 ;;;
 (define-key isearch-mode-map "\C-h" 'isearch-delete-char)
