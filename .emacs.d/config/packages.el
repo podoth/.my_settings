@@ -415,3 +415,11 @@
 ;;;
 (load "ack")
 (setq ack-command "ack-grep --nocolor --nogroup ")
+
+;;;
+;;; goto-chg
+;;; 変更箇所にジャンプ
+;;;
+(require 'goto-chg)
+(global-set-key (kbd "M-.") 'goto-last-change)
+(global-set-key (kbd "M-,")'goto-last-change-reverse)
