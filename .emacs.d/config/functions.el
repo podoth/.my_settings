@@ -1,6 +1,10 @@
 ;;;
+;;; 一個のファイルにするには小さすぎるlisp達
+;;; コピペと自作が混在
+;;;
+
+;;;
 ;;; 開いているファイルをリネーム
-;;; C-c C-r
 ;;;
 (defun rename-file-and-buffer (new-name)
   "Renames both current buffer and file it's visiting to NEW-NAME."
@@ -16,7 +20,7 @@
       (rename-buffer new-name)
       (set-visited-file-name new-name)
       (set-buffer-modified-p nil))))))
-(global-set-key [(control c)(control r)]	'rename-file-and-buffer)
+(global-set-key [(control c)(control q)]	'rename-file-and-buffer)
 
 ;;;
 ;;; .emacsを読み直す
@@ -170,3 +174,117 @@
     (replace-string "、" "，" )
     (replace-string "。" "．" ))
 )
+
+;;;
+;;; yank時にIndentもする
+;;;
+;; (defun yank-and-indent ()
+;;   "Yank and then indent the newly formed region according to mode."
+;;   (interactive)
+;;   (yank)
+;;   (call-interactively 'indent-region))
+;; (global-set-key [(control Y)]	'yank-and-indent)
+
+
+;;;
+;;; region内の検索と関数内の検索
+;;; http://www.jaist.ac.jp/~n-yoshi/tips/elisp_tips.html#cskip
+;;;
+(defun my-search-region (point str flag)
+  (and (integerp point)
+       (not (string= str ""))
+       (if (and (<= my-region-beginning point)
+		(<= point my-region-end))
+	   flag (not flag))))
+
+(defun my-search-defun (point str flag)
+  (and (integerp point)
+       (not (string= str ""))
+       (if (and (<= my-defun-beginning point)
+		(<= point my-defun-end))
+	   flag (not flag))))
+
+
+;; リージョン内以外を無視する (re-)search-forward(-regexp)
+(defadvice search-forward (around my-region-only disable)
+  (while (my-search-region ad-do-it (ad-get-arg 0) nil)))
+(defadvice search-forward-regexp (around my-region-only disable)
+  (while (my-search-region ad-do-it (ad-get-arg 0) nil)))
+(defadvice re-search-forward (around my-region-only disable)
+  (while (my-search-region ad-do-it (ad-get-arg 0) nil)))
+;; 関数内以外を無視する (re-)search-forward(-regexp)
+(defadvice search-forward (around my-defun-only disable)
+  (while (my-search-defun ad-do-it (ad-get-arg 0) nil)))
+(defadvice search-forward-regexp (around my-defun-only disable)
+  (while (my-search-defun ad-do-it (ad-get-arg 0) nil)))
+(defadvice re-search-forward (around my-defun-only disable)
+  (while (my-search-defun ad-do-it (ad-get-arg 0) nil)))
+(defadvice search-backward (around my-defun-only disable)
+  (while (my-search-defun ad-do-it (ad-get-arg 0) nil)))
+(defadvice search-backward-regexp (around my-defun-only disable)
+  (while (my-search-defun ad-do-it (ad-get-arg 0) nil)))
+(defadvice re-search-backward (around my-defun-only disable)
+  (while (my-search-defun ad-do-it (ad-get-arg 0) nil)))
+
+
+(fset 'isearch-forward-region 'isearch-forward)
+(fset 'isearch-forward-defun 'isearch-forward)
+(fset 'isearch-backward-defun 'isearch-backward)
+
+;; isearch-forward (migemo-forward) が内部で使っている search-forward
+;; (search-forward-regexp, re-search-forward) を変更
+(defadvice isearch-forward-region (before my-ad-activate activate)
+  (defvar my-region-beginning (region-beginning))
+  (defvar my-region-end (region-end))
+  (deactivate-mark)
+  (mapcar
+   (lambda (x) (ad-enable-advice x 'around 'my-region-only) (ad-activate x))
+   (list 'search-forward 'search-forward-regexp 're-search-forward)))
+
+(defadvice isearch-forward-defun (before my-ad-activate activate)
+  (save-excursion 
+    (c-beginning-of-defun)
+    (defvar my-defun-beginning (point))
+    (c-end-of-defun)
+    (defvar my-defun-end (point)))
+  (mapcar
+   (lambda (x) (ad-enable-advice x 'around 'my-defun-only) (ad-activate x))
+   (list 'search-forward 'search-forward-regexp 're-search-forward 'search-backward 'search-backward-regexp 're-search-backward)))
+
+(defadvice isearch-backward-defun (before my-ad-activate activate)
+  (save-excursion 
+    (c-beginning-of-defun)
+    (defvar my-defun-beginning (point))
+    (c-end-of-defun)
+    (defvar my-defun-end (point)))
+  (mapcar
+   (lambda (x) (ad-enable-advice x 'around 'my-defun-only) (ad-activate x))
+   (list 'search-forward 'search-forward-regexp 're-search-forward 'search-backward 'search-backward-regexp 're-search-backward)))
+
+
+(add-hook 'isearch-mode-end-hook
+          (lambda ()
+            (mapcar
+             (lambda (x)
+               (ad-deactivate x)
+               (ad-disable-advice x 'around 'my-region-only)
+               (ad-disable-advice x 'around 'my-defun-only)
+               (ad-activate x))
+             (list 'search-forward 'search-forward-regexp 're-search-forward))))
+(add-hook 'isearch-mode-end-hook
+          (lambda ()
+            (mapcar
+             (lambda (x)
+               (ad-deactivate x)
+               (ad-disable-advice x 'around 'my-defun-only)
+               (ad-activate x))
+             (list 'search-backward 'search-backward-regexp 're-search-backward))))
+
+;; region内検索は結局使ってない
+(add-hook
+ 'c-mode-common-hook
+ '(lambda ()
+    (define-key c-mode-map (kbd "C-c C-s") 'isearch-forward-defun)
+    (define-key c-mode-map (kbd "C-c C-r") 'isearch-backward-defun)))
+
+
