@@ -30,6 +30,7 @@
 (require 'paren)
 (show-paren-mode t)
 
+
 ;;;
 ;;; ナロウイングモードを有効化（Ctrl-x n nで選択リージョンのみを表示）
 ;;; Ctrl-x n w で元に戻す

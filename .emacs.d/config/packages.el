@@ -423,3 +423,12 @@
 (require 'goto-chg)
 (global-set-key (kbd "M-.") 'goto-last-change)
 (global-set-key (kbd "M-,")'goto-last-change-reverse)
+
+
+;;;
+;;; 括弧に色付けする
+;;;
+(require 'highlight-parentheses)
+(setq hl-paren-colors '("red" "blue" "yellow" "green" "magenta" "peru" "cyan"))
+(set-face-attribute 'hl-paren-face nil :weight 'bold)
+(add-hook 'emacs-lisp-mode-hook 'highlight-parentheses-mode)
