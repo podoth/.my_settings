@@ -126,6 +126,7 @@ alias less='less -M'
 #alias rdesktopfull='rdesktop onion -g 1280x1024'
 alias rdesktoponion='rdesktop onion -K -g 1900x1100+0-0'
 alias rdesktoponionslow='rdesktop onion -K -g 800x600+0-0 -x modem -z'
+alias rdesktoponionslowmid='rdesktop onion -K -g 1000x700+0-0 -x modem -z'
 alias rdesktoppersil='rdesktop persil -K -g 1900x1100'
 alias rdesktopbasilic='rdesktop basilic -K -g 1900x1100+0-0'
 
