@@ -63,10 +63,7 @@
 (setq TeX-parse-self t)
 (setq-default TeX-master nil)
 ;;; fly-spell
-(add-hook 'TeX-mode
-    '(lambda()
-       (flyspell-mode)
-       (local-set-key [(control .)] 'flyspell-auto-correct-word)))
+(add-hook 'LaTeX-mode-hook 'my-turn-on-flyspell)
 
 ;;;
 ;;; fold-dwim 3つ覚えるだけで隠したり伸ばしたりが伸縮自在に

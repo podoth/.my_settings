@@ -356,3 +356,23 @@
 ;;;
 ;; 初回起動が遅いのでキャッシュを作成(更新は C-u を付けて woman を呼ぶ)
 (setq woman-cache-filename (expand-file-name "~/.emacs.d/var/woman_cache.el"))
+
+;;;
+;;; flyspell
+;;;
+(setq ispell-program-name "aspell")
+(setq ispell-grep-command "grep")
+(setq flyspell-issue-welcome-flag nil)
+;; 日本語はスキップするようにする
+(eval-after-load "ispell"
+  '(add-to-list 'ispell-skip-region-alist '("[^\000-\377]")))
+(defun my-turn-on-flyspell ()
+  (flyspell-mode)
+  ;; 前後の日本語を巻き込んで強調しないようにする
+  ;; http://www.morishima.net/~naoto/fragments/archives/2005/12/20/flyspell/
+  (setq ispell-local-dictionary-alist
+	'((nil "[a-zA-Z]" "[^a-zA-Z]" "'" t ("-d" "en" "--encoding=utf-8") nil utf-8)))
+  ;; このキーバインドは使わない上に他のとかぶる
+  (define-key flyspell-mode-map [(control ?\,)] nil)
+  (define-key flyspell-mode-map [(control ?\.)] nil)
+)

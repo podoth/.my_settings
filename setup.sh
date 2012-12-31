@@ -8,7 +8,7 @@ then
     mkdir .emacs.d/var
 fi
 
-for item in .bashrc .emacs .emacs.d .Xmodmap .gitconfig .gnomerc .vimperator .vimperatorrc .xinitrc .xmonad .zshrc .uncrusitfy .Xresources
+for item in .bashrc .emacs .emacs.d .Xmodmap .gitconfig .gnomerc .vimperator .vimperatorrc .xinitrc .xmonad .zshrc .uncrusitfy .Xresources .aspell.conf .aspell.en.pws
 do
     if [ ! -L ${HOME}/${item} ]
     then
@@ -18,5 +18,5 @@ do
     ln -s ${PWD}/$item ${HOME}/$item
 done
 
-sudo ln -s ${PWD}/emacs-mark.rb /usr/bin/emacs-mark.rb
-sudo ln -s ${PWD}/emacs-mark.server /usr/lib/bonobo/servers/emacs-mark.server
+# sudo ln -s ${PWD}/emacs-mark.rb /usr/bin/emacs-mark.rb
+# sudo ln -s ${PWD}/emacs-mark.server /usr/lib/bonobo/servers/emacs-mark.server
