@@ -431,4 +431,10 @@
 (require 'highlight-parentheses)
 (setq hl-paren-colors '("red" "blue" "yellow" "green" "magenta" "peru" "cyan"))
 (set-face-attribute 'hl-paren-face nil :weight 'bold)
-(add-hook 'emacs-lisp-mode-hook 'highlight-parentheses-mode)
+;; (add-hook 'emacs-lisp-mode-hook 'highlight-parentheses-mode)
+;; (add-hook 'c-mode-hook 'highlight-parentheses-mode)
+(define-globalized-minor-mode global-highlight-parentheses-mode
+  highlight-parentheses-mode
+  (lambda ()
+    (highlight-parentheses-mode t)))
+(global-highlight-parentheses-mode t)

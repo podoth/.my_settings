@@ -74,8 +74,8 @@
 ;;;
 ;;; 文字の大きさを変更　＋で大きく、ーで小さくする
 ;;;
-(global-set-key "\C-c+" 'text-scale-increase)
-(global-set-key "\C-c-" 'text-scale-decrease)
+(global-set-key "\C-x+" 'text-scale-increase)
+(global-set-key "\C-x-" 'text-scale-decrease)
 
 ;;;
 ;;; lsなど実行時、色指定のエスケープシーケンスがバグらずちゃんと色がつくようにする

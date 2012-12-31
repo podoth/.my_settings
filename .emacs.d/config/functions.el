@@ -20,7 +20,7 @@
       (rename-buffer new-name)
       (set-visited-file-name new-name)
       (set-buffer-modified-p nil))))))
-(global-set-key [(control c)(control q)]	'rename-file-and-buffer)
+(global-set-key [(control c)(control t)]	'rename-file-and-buffer)
 
 ;;;
 ;;; .emacsを読み直す
