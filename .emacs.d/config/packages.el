@@ -2,7 +2,7 @@
 ;;; TeX関係
 ;;;
 
-;;; auctex
+;; auctex
 (if (locate-library "auctex")
     (load "auctex.el" nil t t))
 (setq TeX-japanese-process-input-coding-system  'japanese-iso-8bit
@@ -26,11 +26,11 @@
   '(when window-system
      (require 'font-latex)))
 
-;;; bibtex
+;; bibtex
 (setq bib-bibtex-env-variable		"TEXMFHOME")
 (autoload 'turn-on-bib-cite "bib-cite")
 (add-hook 'LaTeX-mode-hook 'turn-on-bib-cite)
-;;; reftex
+;; reftex
 (setq reftex-texpath-environment-variables	'("TEXMFHOME")
       reftex-bibpath-environment-variables	'("~/texmf//")
       reftex-plug-into-AUCTeX			t
@@ -44,9 +44,9 @@
 (autoload 'reftex-citation "reftex-cite" "Make citation" nil)
 (autoload 'reftex-index-phrase-mode "reftex-index" "Phrase mode" t)
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
-;;; プレビュー
+;; プレビュー
 (load "preview-latex.el" nil t t)
-;;; outline-minor-mode
+;; outline-minor-mode
 (add-hook 'LaTeX-mode-hook '(lambda () (outline-minor-mode t)
 			      (local-set-key [(meta n)] 'outline-next-visible-heading)
 			      (local-set-key [(meta p)] 'outline-previous-visible-heading)))
@@ -58,12 +58,14 @@
 ;;         (list (assoc "xdvi" TeX-view-program-list-builtin)))
 ;;   (setcar (cadr (assoc "xdvi"  TeX-view-program-list))
 ;;           "%(o?)pxdvi")))
-;;;分割コンパイル可能に
+;;分割コンパイル可能に
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
 (setq-default TeX-master nil)
-;;; fly-spell
+;; fly-spell
 (add-hook 'LaTeX-mode-hook 'my-turn-on-flyspell)
+;;使わないし邪魔なので削除
+(define-key TeX-mode-map "\C-c\C-w" 'nil)
 
 ;;;
 ;;; fold-dwim 3つ覚えるだけで隠したり伸ばしたりが伸縮自在に
