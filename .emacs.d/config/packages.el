@@ -435,3 +435,45 @@
   (lambda ()
     (highlight-parentheses-mode t)))
 (global-highlight-parentheses-mode t)
+
+
+;;;
+;;; sdic
+;;; 翻訳
+;;;
+(require 'sdic nil t)
+(global-set-key "\C-c\C-w" 'sdic-describe-word-at-point)
+;; minibufferに表示する
+(defun my-sdic-describe-word-with-popup (word &optional search-function)
+  "Display the meaning of word."
+  (interactive
+   (let ((f (if current-prefix-arg (sdic-select-search-function)))
+         (w (sdic-sea)))
+     (list w f)))
+  (let ((old-buf (current-buffer))
+        (dict-data))
+    (set-buffer (get-buffer-create sdic-buffer-name))
+    (or (string= mode-name sdic-mode-name) (sdic-mode))
+    (erase-buffer)
+    (let ((case-fold-search t)
+          (sdic-buffer-start-point (point-min)))
+      (if (prog1 (funcall (or search-function
+                              (if (string-match "\\cj" word)
+                                  'sdic-search-waei-dictionary
+                                'sdic-search-eiwa-dictionary))
+                          word)
+            (set-buffer-modified-p nil)
+            (setq dict-data (buffer-string))
+            (set-buffer old-buf))
+	  (message dict-data)
+        (message "Can't find word, \"%s\"." word)))
+    )
+  )
+
+
+(defadvice sdic-describe-word-at-point (around sdic-popup-advice activate)
+  (letf (((symbol-function 'sdic-describe-word) (symbol-function 'my-sdic-describe-word-with-popup)))
+    ad-do-it))
+
+
+

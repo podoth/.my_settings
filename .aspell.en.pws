@@ -2,10 +2,11 @@ personal_ws-1.1 en 0 utf-8
 shimos
 otherworld
 nfs
-Orthros
+orthros
 LPAR
 VM
 VMM
+Xen
 et
 KVM
 NIC
@@ -25,3 +26,11 @@ SIGWINCH
 MySQL
 InnoDB
 LaTeX
+failover
+udev
+struct
+pid
+namespace
+cpu
+os
+impl
