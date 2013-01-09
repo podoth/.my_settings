@@ -487,3 +487,16 @@
        (recenter 0))
      (defadvice sdic-backward-item (after sdic-backward-item-always-top activate)
        (recenter 0))))
+
+;;;
+;;; text-translator
+;;; webサービスを使ってリージョン翻訳
+;;;
+(require 'text-translator)
+;; 自動選択に使用する関数を設定
+(setq text-translator-auto-selection-func
+      'text-translator-translate-by-auto-selection-enja)
+;; グローバルキーを設定
+(global-set-key "\C-c\C-g" 'text-translator-translate-by-auto-selection)
+;; (global-set-key "\C-c\C-g" 'text-translator)
+(global-set-key "\C-cg" 'text-translator-translate-last-string)
