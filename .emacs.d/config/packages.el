@@ -445,37 +445,45 @@
 ;;;
 (require 'sdic nil t)
 (global-set-key "\C-c\C-w" 'sdic-describe-word-at-point)
-;; minibufferに表示する
-(defun my-sdic-describe-word-with-popup (word &optional search-function)
-  "Display the meaning of word."
-  (interactive
-   (let ((f (if current-prefix-arg (sdic-select-search-function)))
-         (w (sdic-sea)))
-     (list w f)))
-  (let ((old-buf (current-buffer))
-        (dict-data))
-    (set-buffer (get-buffer-create sdic-buffer-name))
-    (or (string= mode-name sdic-mode-name) (sdic-mode))
-    (erase-buffer)
-    (let ((case-fold-search t)
-          (sdic-buffer-start-point (point-min)))
-      (if (prog1 (funcall (or search-function
-                              (if (string-match "\\cj" word)
-                                  'sdic-search-waei-dictionary
-                                'sdic-search-eiwa-dictionary))
-                          word)
-            (set-buffer-modified-p nil)
-            (setq dict-data (buffer-string))
-            (set-buffer old-buf))
-	  (message dict-data)
-        (message "Can't find word, \"%s\"." word)))
-    )
-  )
-
-
-(defadvice sdic-describe-word-at-point (around sdic-popup-advice activate)
-  (letf (((symbol-function 'sdic-describe-word) (symbol-function 'my-sdic-describe-word-with-popup)))
-    ad-do-it))
-
-
-
+(global-set-key "\C-cw" 'sdic-describe-word)
+;; 英辞郎.saryのための設定
+;; http://d.hatena.ne.jp/syohex/20110116/1295158441
+(setq sdic-default-coding-system 'utf-8)
+(autoload 'sdic-describe-word "sdic" "search word" t nil)
+(eval-after-load "sdic"
+  '(progn
+     (setq sdicf-array-command "/usr/bin/sary") ;; sary command path
+     (setq sdic-eiwa-dictionary-list
+           '((sdicf-client "/usr/share/dict/eijiro126.sdic"
+                           (strategy array))))
+     (setq sdic-waei-dictionary-list
+           '((sdicf-client "/usr/share/dict/waeijiro126.sdic"
+             (strategy array))))
+     ;; saryを直接使用できるように sdicf.el 内に定義されている
+     ;; arrayコマンド用関数を強制的に置換
+     (fset 'sdicf-array-init 'sdicf-common-init)
+     (fset 'sdicf-array-quit 'sdicf-common-quit)
+     (fset 'sdicf-array-search
+           (lambda (sdic pattern &optional case regexp)
+             (sdicf-array-init sdic)
+             (if regexp
+                 (signal 'sdicf-invalid-method '(regexp))
+               (save-excursion
+                 (set-buffer (sdicf-get-buffer sdic))
+                 (delete-region (point-min) (point-max))
+                 (apply 'sdicf-call-process
+                        sdicf-array-command
+                        (sdicf-get-coding-system sdic)
+                        nil t nil
+                        (if case
+                            (list "-i" pattern (sdicf-get-filename sdic))
+                          (list pattern (sdicf-get-filename sdic))))
+                 (goto-char (point-min))
+                 (let (entries)
+                   (while (not (eobp)) (sdicf-search-internal))
+                   (nreverse entries))))))
+     ;; omake
+     (defadvice sdic-forward-item (after sdic-forward-item-always-top activate)
+       (recenter 0))
+     (defadvice sdic-backward-item (after sdic-backward-item-always-top activate)
+       (recenter 0))))
