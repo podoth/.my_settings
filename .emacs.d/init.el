@@ -238,6 +238,12 @@
 ;;;
 (define-key read-expression-map (kbd "TAB") 'lisp-complete-symbol)
 
+;;;
+;;; エラー対処。以下のエラーが出るため、原因は分からないが定義
+;;; Symbol's value as variable is void: warning-suppress-types
+;;;
+(setq warning-suppress-types nil)
+
 ; 標準Elispの設定
 (load "config/builtins")
 ; 非標準Elispの設定

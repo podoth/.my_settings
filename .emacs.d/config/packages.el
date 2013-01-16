@@ -132,17 +132,34 @@
 ;;; gtags
 ;;;
 (autoload 'gtags-mode "gtags" "" t)
+(add-hook 'c-mode-common-hook 'gtags-mode)
+(add-hook 'asm-mode-hook 'gtags-mode)
+(setq gtags-auto-update t)
+(setq gtags-ignore-case t)
+(defun gtags-parse-current-file ()
+  (interactive)
+  (if (gtags-get-rootpath)
+      (let*
+          ((root (gtags-get-rootpath))
+           (path (buffer-file-name))
+           (gtags-path-style 'root)
+           (gtags-rootdir root))
+        (if (string-match (regexp-quote root) path)
+            (gtags-goto-tag
+             (replace-match "" t nil path)
+             "f" nil)
+          ;; delegate to gtags-parse-file
+          (gtags-parse-file)))
+    ;; delegate to gtags-parse-file
+    (gtags-parse-file)))
 (setq gtags-mode-hook
       '(lambda ()
          (local-set-key "\M-t" 'gtags-find-tag)
          (local-set-key "\M-r" 'gtags-find-rtag)
          (local-set-key "\M-s" 'gtags-find-symbol)
          (local-set-key "\C-t" 'gtags-pop-stack)
+         (local-set-key "\C-co" 'gtags-parse-current-file)
          ))
-(add-hook 'c-mode-common-hook 'gtags-mode)
-(add-hook 'asm-mode-hook 'gtags-mode)
-(setq gtags-auto-update t)
-(setq gtags-ignore-case t)
 
 ;;;
 ;;; isearch中にCtrl-lで単語に色をつけたままにする
@@ -487,6 +504,24 @@
        (recenter 0))
      (defadvice sdic-backward-item (after sdic-backward-item-always-top activate)
        (recenter 0))))
+;; 検索結果表示ウインドウの高さ
+(setq sdic-window-height 10)
+;; 検索結果表示ウインドウにカーソルを移動しないようにする
+(setq sdic-disable-select-window t)
+;; sdicバッファのundo量が大きくなりすぎるのを防ぐ
+;; いい方法が思いつかないので、実行されるたびに無効化するようにする。
+;; 一回目は失敗するけど、対象になるのは長時間バッファが存在する時だけだからおｋ
+(defadvice sdic-describe-word-at-point (after sdic-disable-undo activate)
+  (save-current-buffer
+    (set-buffer (get-buffer sdic-buffer-name))
+    (buffer-disable-undo)
+    (undo-tree-mode -1)))
+(defadvice sdic-describe-word (after sdic-disable-undo activate)
+  (save-current-buffer
+    (set-buffer (get-buffer sdic-buffer-name))
+    (buffer-disable-undo)
+    (undo-tree-mode -1)))
+
 
 ;;;
 ;;; text-translator
@@ -497,6 +532,6 @@
 (setq text-translator-auto-selection-func
       'text-translator-translate-by-auto-selection-enja)
 ;; グローバルキーを設定
-(global-set-key "\C-c\C-g" 'text-translator-translate-by-auto-selection)
+(global-set-key "\C-c\C-a" 'text-translator-translate-by-auto-selection)
 ;; (global-set-key "\C-c\C-g" 'text-translator)
-(global-set-key "\C-cg" 'text-translator-translate-last-string)
+(global-set-key "\C-ca" 'text-translator-translate-last-string)

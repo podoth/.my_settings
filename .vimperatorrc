@@ -87,8 +87,8 @@ hi Bell display: none;
 set focuscontent
 
 " editor is emacs
-" set editor='/usr/bin/emacs'
- set editor='/usr/bin/emacsclient --alternate-editor="" -c'
+ set editor='/usr/bin/emacs'
+" set editor='/usr/bin/emacsclient --alternate-editor="" -c'
 
 " char-hints
 set hintchars=jklasdfghuiwerncv
