@@ -535,3 +535,14 @@
 (global-set-key "\C-c\C-a" 'text-translator-translate-by-auto-selection)
 ;; (global-set-key "\C-c\C-g" 'text-translator)
 (global-set-key "\C-ca" 'text-translator-translate-last-string)
+
+;;;
+;;; lookup
+;;; 辞書検索
+;;;
+(setq lookup-enable-splash nil)
+(autoload 'lookup "lookup" nil t)
+(autoload 'lookup-region "lookup" nil t)
+(autoload 'lookup-pattern "lookup" nil t)
+(global-set-key "\C-c\C-y" 'lookup-pattern)
+(setq lookup-search-agents '((ndeb "/usr/share/epwing/GENIUS")))
