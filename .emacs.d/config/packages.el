@@ -387,10 +387,11 @@
 ;;;
 ;;; key-combo
 ;;; '=' => ' = 'にしたり、',' => ', 'にしたり色々。
+;;; 不具合が多いので使用中止
 ;;;
-(setq load-path (cons "~/.emacs.d/packages/key-combo" load-path))
-(require 'key-combo)
-(key-combo-load-default)
+;; (setq load-path (cons "~/.emacs.d/packages/key-combo" load-path))
+;; (require 'key-combo)
+;; (key-combo-load-default)
 
 
 ;;;
@@ -540,9 +541,12 @@
 ;;; lookup
 ;;; 辞書検索
 ;;;
-(setq lookup-enable-splash nil)
 (autoload 'lookup "lookup" nil t)
 (autoload 'lookup-region "lookup" nil t)
 (autoload 'lookup-pattern "lookup" nil t)
+(setq lookup-enable-splash nil)
+(setq lookup-window-height 3)
 (global-set-key "\C-c\C-y" 'lookup-pattern)
 (setq lookup-search-agents '((ndeb "/usr/share/epwing/GENIUS")))
+(setq lookup-default-dictionary-options '((:stemmer .  stem-english)))
+

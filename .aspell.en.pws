@@ -47,3 +47,4 @@ al
 ARP
 maskable
 timestamp
+icmp
