@@ -607,15 +607,28 @@ key.setCaretKey('p', function (ev, arg) {
 }, 'Open yanked address or google it', true);
 
 key.setGlobalKey(['C-['], function (ev, arg) {
+    key.generateKey(ev.originalTarget, KeyEvent.DOM_VK_ESCAPE, true);
+
     let elem = document.commandDispatcher.focusedElement;
     if (elem) elem.blur();
 
+    command.closeFindBar();
+    if (!document.getElementById("keysnail-prompt").hidden) {
+        prompt.finish(true);
+    }
     gBrowser.focus();
     _content.focus();
-
-    // ブラウザ画面なら ESC キーイベントも投げておく
-    if (KeySnail.windowType === "navigator:browser" && !marked)
-    {
-	key.generateKey(aEvent.originalTarget, KeyEvent.DOM_VK_ESCAPE, true);
-    }
 }, 'コンテンツにフォーカス', true);
+
+
+key.setViewKey(['g', 'o'], function (ev, arg) {
+    ext.exec("quickmark-open-page", arg, ev);
+}, 'Open Page (QuickMark)', true);
+
+key.setViewKey(['g', 'j'], function (ev, arg) {
+    ext.exec("quickmark-jump-page", arg, ev);
+}, 'Jump Page (QuickMark)', true);
+
+key.setViewKey('M', function (ev, arg) {
+    ext.exec("quickmark-mark-page", arg, ev);
+}, 'Mark Page (QuickMark)', true);
