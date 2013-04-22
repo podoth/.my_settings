@@ -550,3 +550,48 @@
 (setq lookup-search-agents '((ndeb "/usr/share/epwing/GENIUS")))
 (setq lookup-default-dictionary-options '((:stemmer .  stem-english)))
 
+;;;
+;;; git-gutter.el
+;;; gitのdiffを使って更新点を強調表示
+;;;
+(require 'git-gutter-fringe)
+(global-git-gutter-mode t)
+;;更新頻度を下げる
+(setq git-gutter:update-hooks '(find-file-hook after-save-hook after-revert-hook))
+
+;;;
+;;; helm
+;;;
+(add-to-list 'load-path "~/.emacs.d/packages/helm")
+(require 'helm-config)
+(global-set-key (kbd "C-c h") 'helm-mini)
+;; (helm-mode t)
+(global-set-key (kbd "M-y") 'helm-show-kill-ring)
+(global-set-key (kbd "M-x") 'helm-M-x)
+(eval-after-load 'helm
+  '(progn
+     (define-key helm-map (kbd "C-w") 'backward-kill-word)
+     (define-key helm-map (kbd "TAB") 'helm-execute-persistent-action)
+     ))
+;; 自動補完を無効
+(custom-set-variables '(helm-ff-auto-update-initial-value nil))
+
+
+;;;
+;;; helm-gtags
+;;;
+(add-to-list 'load-path "~/.emacs.d/packages/emacs-helm-gtags")
+(require 'helm-gtags)
+(add-hook 'c-mode-hook 'helm-gtags-mode)
+(add-hook 'c++-mode-hook 'helm-gtags-mode)
+(add-hook 'asm-mode-hook 'helm-gtags-mode)
+(setq helm-gtags-path-style 'relative)
+(setq helm-gtags-ignore-case t)
+(setq helm-gtags-read-only t)
+(add-hook 'helm-gtags-mode-hook
+          '(lambda ()
+              (local-set-key (kbd "M-t") 'helm-gtags-find-tag)
+              (local-set-key (kbd "M-r") 'helm-gtags-find-rtag)
+              (local-set-key (kbd "M-s") 'helm-gtags-find-symbol)
+              (local-set-key (kbd "C-t") 'helm-gtags-pop-stack)))
+

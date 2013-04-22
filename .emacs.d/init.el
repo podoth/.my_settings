@@ -244,6 +244,13 @@
 ;;;
 (setq warning-suppress-types nil)
 
+;;;
+;;; ミニバッファで C-h でヘルプでないようにする
+;;;
+(load "term/bobcat")
+(when (fboundp 'terminal-init-bobcat)
+  (terminal-init-bobcat))
+
 ; 標準Elispの設定
 (load "config/builtins")
 ; 非標準Elispの設定

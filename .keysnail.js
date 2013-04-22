@@ -4,9 +4,27 @@
 // 特殊キー, キーバインド定義, フック, ブラックリスト以外のコードは, この中に書くようにして下さい
 // ========================================================================= //
 //{{%PRESERVE%
-key.setEditKey(["C-i"], function (ev, arg) {
-    ext.exec("edit_text", arg);
-}, "外部エディタで編集", true);
+plugins.options["K2Emacs.editor"] = "/usr/bin/emacs";
+plugins.options["tanything_opt.keymap"] = {
+    "C-z"   : "prompt-toggle-edit-mode",
+    "SPC"   : "prompt-next-page",
+    "b"     : "prompt-previous-page",
+    "j"     : "prompt-next-completion",
+    "k"     : "prompt-previous-completion",
+    "g"     : "prompt-beginning-of-candidates",
+    "G"     : "prompt-end-of-candidates",
+    "D"     : "prompt-cancel",
+    // Tanything specific actions
+    "O"     : "localOpen",
+    "q"     : "localClose",
+    "p"     : "localLeftclose",
+    "n"     : "localRightclose",
+    "a"     : "localAllclose",
+    "d"     : "localDomainclose",
+    "c"     : "localClipUT",
+    "C"     : "localClipU",
+    "e"     : "localMovetoend"
+};
 //}}%PRESERVE%
 // ========================================================================= //
 
@@ -18,9 +36,9 @@ key.escapeKey            = "C-q";
 key.macroStartKey        = "<f3>";
 key.macroEndKey          = "<f4>";
 key.universalArgumentKey = "C-u";
-key.negativeArgument1Key = "C--";
-key.negativeArgument2Key = "C-M--";
-key.negativeArgument3Key = "M--";
+key.negativeArgument1Key = "Not defined";
+key.negativeArgument2Key = "Not defined";
+key.negativeArgument3Key = "Not defined";
 key.suspendKey           = "<f2>";
 
 // ================================= Hooks ================================= //
@@ -157,17 +175,31 @@ key.setGlobalKey('C-M-h', function (ev) {
     getBrowser().mTabContainer.advanceSelectedTab(-1, true);
 }, 'ひとつ左のタブへ');
 
+key.setGlobalKey('C-[', function (ev, arg) {
+    key.generateKey(ev.originalTarget, KeyEvent.DOM_VK_ESCAPE, true);
+    var elem = document.commandDispatcher.focusedElement;
+    if (elem) {
+        elem.blur();
+    }
+    command.closeFindBar();
+    if (!document.getElementById("keysnail-prompt").hidden) {
+        prompt.finish(true);
+    }
+    gBrowser.focus();
+    _content.focus();
+}, 'エスケープ', true);
+
 key.setViewKey('j', function (ev) {
-    for (var i = 0; i < 7; i++) {
+    for (var i = 0; i < 5; i++) {
         key.generateKey(ev.originalTarget, KeyEvent.DOM_VK_DOWN, true);
     }
-}, '7行スクロールダウン');
+}, '5行スクロールダウン');
 
 key.setViewKey('k', function (ev) {
-    for (var i = 0; i < 7; i++) {
+    for (var i = 0; i < 5; i++) {
         key.generateKey(ev.originalTarget, KeyEvent.DOM_VK_UP, true);
     }
-}, '7行スクロールアップ');
+}, '5行スクロールアップ');
 
 key.setViewKey('h', function (ev) {
     key.generateKey(ev.originalTarget, KeyEvent.DOM_VK_LEFT, true);
@@ -224,6 +256,14 @@ key.setViewKey(['g', 'i'], function (ev) {
     command.focusElement(command.elementsRetrieverTextarea, 0);
 }, '最初のインプットエリアへフォーカス', true);
 
+key.setViewKey(['g', 'o'], function (ev, arg) {
+    ext.exec("quickmark-open-page", arg, ev);
+}, 'Open Page (QuickMark)', true);
+
+key.setViewKey(['g', 'j'], function (ev, arg) {
+    ext.exec("quickmark-jump-page", arg, ev);
+}, 'Jump Page (QuickMark)', true);
+
 key.setViewKey('G', function (ev) {
     goDoCommand("cmd_scrollBottom");
 }, 'ページ末尾へ移動', true);
@@ -269,20 +309,20 @@ key.setViewKey('i', function (ev, arg) {
 }, 'Toggle caret mode', true);
 
 key.setViewKey('t', function (ev, arg) {
-    shell.input("tabopen ");
-}, 'Tab open', true);
+    shell.input("tabopen google ");
+}, 'Tab open google', true);
 
 key.setViewKey('T', function (ev, arg) {
-    shell.input("tabopen! ");
-}, 'Tab open', true);
+    shell.input("tabopen! google ");
+}, 'Tab open google', true);
 
 key.setViewKey('o', function (ev, arg) {
-    shell.input("open ");
-}, 'Open', true);
+    shell.input("open google ");
+}, 'Open google', true);
 
 key.setViewKey('O', function (ev, arg) {
-    shell.input("open! ");
-}, 'Open', true);
+    shell.input("open! google ");
+}, 'Open google', true);
 
 key.setViewKey('y', function (ev, arg) {
     command.setClipboardText(content.document.location.href);
@@ -297,9 +337,9 @@ key.setViewKey('p', function (ev, arg) {
     gBrowser.loadOneTab(url, null, null, null, false);
 }, 'Open yanked address or google it', true);
 
-key.setEditKey([['C-i'], ['C-c', 'e']], function (ev, arg) {
-    ext.exec("edit_text", arg);
-}, '外部エディタで編集', true);
+key.setViewKey('M', function (ev, arg) {
+    ext.exec("quickmark-mark-page", arg, ev);
+}, 'Mark Page (QuickMark)', true);
 
 key.setEditKey(['C-x', 'h'], function (ev) {
     command.selectAll(ev);
@@ -578,20 +618,20 @@ key.setCaretKey('i', function (ev, arg) {
 }, 'Toggle caret mode', true);
 
 key.setCaretKey('t', function (ev, arg) {
-    shell.input("tabopen ");
-}, 'Tab open', true);
+    shell.input("tabopen google ");
+}, 'Tab open google', true);
 
 key.setCaretKey('T', function (ev, arg) {
-    shell.input("tabopen! ");
-}, 'Tab open', true);
+    shell.input("tabopen! google ");
+}, 'Tab open google', true);
 
 key.setCaretKey('o', function (ev, arg) {
-    shell.input("open ");
-}, 'Open', true);
+    shell.input("open google ");
+}, 'Open Google', true);
 
 key.setCaretKey('O', function (ev, arg) {
-    shell.input("open! ");
-}, 'Open', true);
+    shell.input("open! google ");
+}, 'Open Google', true);
 
 key.setCaretKey('y', function (ev, arg) {
     command.setClipboardText(content.document.location.href);
@@ -605,30 +645,9 @@ key.setCaretKey('p', function (ev, arg) {
     }
     gBrowser.loadOneTab(url, null, null, null, false);
 }, 'Open yanked address or google it', true);
-
-key.setGlobalKey(['C-['], function (ev, arg) {
-    key.generateKey(ev.originalTarget, KeyEvent.DOM_VK_ESCAPE, true);
-
-    let elem = document.commandDispatcher.focusedElement;
-    if (elem) elem.blur();
-
-    command.closeFindBar();
-    if (!document.getElementById("keysnail-prompt").hidden) {
-        prompt.finish(true);
-    }
-    gBrowser.focus();
-    _content.focus();
-}, 'コンテンツにフォーカス', true);
-
-
-key.setViewKey(['g', 'o'], function (ev, arg) {
-    ext.exec("quickmark-open-page", arg, ev);
-}, 'Open Page (QuickMark)', true);
-
-key.setViewKey(['g', 'j'], function (ev, arg) {
-    ext.exec("quickmark-jump-page", arg, ev);
-}, 'Jump Page (QuickMark)', true);
-
-key.setViewKey('M', function (ev, arg) {
-    ext.exec("quickmark-mark-page", arg, ev);
-}, 'Mark Page (QuickMark)', true);
+key.setEditKey(['C-i'], function (ev, arg) {
+    ext.exec("edit_text", arg, ev);
+}, "外部エディタで編集", true);
+key.setViewKey("a", function (ev, arg) {
+                   ext.exec("tanything", arg);
+               }, "view all tabs", true);
