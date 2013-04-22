@@ -12,6 +12,8 @@ colors
 zstyle ':completion:*' list-colors 'di=34' 'ln=35' 'so=32' 'ex=31' 'bd=46;34' 'cd=43;34'
 zstyle ':zle:*' word-chars " -~()/:@+|"
 zstyle ':zle:*' word-style unspecified
+zstyle ':completion:*:cd:*' ignore-parents parent pwd
+zstyle ':completion:*:descriptions' format '%BCompleting%b %U%d%u'
 
 autoload -Uz select-word-style
 select-word-style bash
@@ -184,3 +186,40 @@ alias e='emacsclient --alternate-editor="" -c'
 alias ack='ack-grep'
 alias gitwebtmp='git instaweb --httpd=webrick'
 alias lv='lv -c'
+
+#anythingみたいなの。C-x;で起動
+source ${HOME}/.zsh.plugin/zaw/zaw.zsh
+#C-sでhistory一覧
+bindkey '^t' zaw-history
+
+# cdr補完に履歴使用
+typeset -ga chpwd_functions
+
+if is-at-least 4.3.11; then
+  autoload -U chpwd_recent_dirs cdr
+  chpwd_functions+=chpwd_recent_dirs
+  zstyle ":chpwd:*" recent-dirs-max 500
+  zstyle ":chpwd:*" recent-dirs-default true
+  zstyle ":completion:*" recent-dirs-insert always
+fi
+
+#履歴ジャンプ
+_Z_CMD=j
+source ~/.zsh.plugin/z/z.sh
+precmd() {
+  _z --add "$(pwd -P)"
+}
+
+#コマンドラインスタックを可視化。C-qでスタック
+show_buffer_stack() {
+  POSTDISPLAY="
+stack: $LBUFFER"
+  zle push-line-or-edit
+}
+zle -N show_buffer_stack
+setopt noflowcontrol
+bindkey '^Q' show_buffer_stack
+
+# ubuntu11.10でemacs24を走らせるとエラーがでるので
+export UBUNTU_MENUPROXY=
+export GTK_MODULES=

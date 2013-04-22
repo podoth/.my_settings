@@ -1,6 +1,7 @@
 *~
 
 .emacs.d/var/*
+*.elc
 
 .vimperator/info/*
 

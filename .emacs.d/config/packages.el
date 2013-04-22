@@ -1,4 +1,11 @@
 ;;;
+;;; auto-async-byte-compile
+;;;
+(require 'auto-async-byte-compile)
+(setq auto-async-byte-compile-exclude-files-regexp "/junk/")
+(add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
+
+;;;
 ;;; TeX関係
 ;;;
 
@@ -376,23 +383,13 @@
 ;;; expand-region
 ;;; 微妙なさじかげんでリージョンを拡大していく
 ;;;
-(setq load-path (cons "~/.emacs.d/packages/expand-region.el" load-path))
+(setq load-path (cons "~/.emacs.d/packages/expand-region" load-path))
 (require 'expand-region)
 ;; C-SPC連続実行で発動。
 ;; 何回やればいいのか分からないので、とりあえず並べまくる
 (define-sequential-command seq-SPC
   cua-set-mark er/expand-region er/expand-region er/expand-region er/expand-region er/expand-region er/expand-region)
 (global-set-key (kbd "C-SPC") 'seq-SPC)
-
-;;;
-;;; key-combo
-;;; '=' => ' = 'にしたり、',' => ', 'にしたり色々。
-;;; 不具合が多いので使用中止
-;;;
-;; (setq load-path (cons "~/.emacs.d/packages/key-combo" load-path))
-;; (require 'key-combo)
-;; (key-combo-load-default)
-
 
 ;;;
 ;;; auto-install
@@ -549,4 +546,49 @@
 (global-set-key "\C-c\C-y" 'lookup-pattern)
 (setq lookup-search-agents '((ndeb "/usr/share/epwing/GENIUS")))
 (setq lookup-default-dictionary-options '((:stemmer .  stem-english)))
+
+;;;
+;;; git-gutter.el
+;;; gitのdiffを使って更新点を強調表示
+;;;
+(require 'git-gutter-fringe)
+(global-git-gutter-mode t)
+;;更新頻度を下げる
+(setq git-gutter:update-hooks '(find-file-hook after-save-hook after-revert-hook))
+
+;;;
+;;; helm
+;;;
+(add-to-list 'load-path "~/.emacs.d/packages/helm")
+(require 'helm-config)
+(global-set-key (kbd "C-c h") 'helm-mini)
+;; (helm-mode t)
+(global-set-key (kbd "M-y") 'helm-show-kill-ring)
+(global-set-key (kbd "M-x") 'helm-M-x)
+(eval-after-load 'helm
+  '(progn
+     (define-key helm-map (kbd "C-w") 'backward-kill-word)
+     (define-key helm-map (kbd "TAB") 'helm-execute-persistent-action)
+     ))
+;; 自動補完を無効
+(custom-set-variables '(helm-ff-auto-update-initial-value nil))
+
+
+;;;
+;;; helm-gtags
+;;;
+(add-to-list 'load-path "~/.emacs.d/packages/emacs-helm-gtags")
+(require 'helm-gtags)
+(add-hook 'c-mode-hook 'helm-gtags-mode)
+(add-hook 'c++-mode-hook 'helm-gtags-mode)
+(add-hook 'asm-mode-hook 'helm-gtags-mode)
+(setq helm-gtags-path-style 'relative)
+(setq helm-gtags-ignore-case t)
+(setq helm-gtags-read-only t)
+(add-hook 'helm-gtags-mode-hook
+          '(lambda ()
+              (local-set-key (kbd "M-t") 'helm-gtags-find-tag)
+              (local-set-key (kbd "M-r") 'helm-gtags-find-rtag)
+              (local-set-key (kbd "M-s") 'helm-gtags-find-symbol)
+              (local-set-key (kbd "C-t") 'helm-gtags-pop-stack)))
 
