@@ -266,12 +266,26 @@ var ucjs_ExternalEditor = {
     ostr.flush();
     ostr.close();
 
+   // var d1 = new Date().getTime(); 
+   // var d2 = new Date().getTime(); 
+   // while( d2 < d1+1000*5 ){
+   //     d2=new Date().getTime(); 
+   // } 
+
+
     // 外部エディタをランチ
     if(this.editfile(file.path, target) == false) return;
     var html = getBrowser().contentDocument.getElementsByTagName("html")[0];
     try{
       html.setAttribute("__ucjs_editor_",true);
     }catch(e){return;}
+
+    // 修正：外部エディタにフォーカスが移るより前にaddEventListenerしてしまうと、編集前に実行されてしまうっぽい
+   var d1 = new Date().getTime(); 
+   var d2 = new Date().getTime(); 
+   while( d2 < d1+1000*5 ){
+       d2=new Date().getTime(); 
+   } 
     document.addEventListener("focus", ucjs_ExternalEditor.checkfocus_window, true);
   },
 

@@ -143,8 +143,6 @@
                        (file-name-directory buffer-file-name))))
     (list  "g++" (list "-Wall" "-Wextra" "-fsyntax-only" "-lpthread" local-file))))
 (push '("\\.cpp$" flymake-cc-init) flymake-allowed-file-name-masks)
-(add-hook 'c-mode-hook '(lambda () (if (string-match "\\.cpp$" buffer-file-name)
-                               (flymake-mode t))))
 
 (defun flymake-c-init ()
   (let* ((temp-file   (flymake-init-create-temp-buffer-copy
@@ -154,12 +152,13 @@
                        (file-name-directory buffer-file-name))))
     (list "gcc" (list "-Wall" "-Wextra" "-fsyntax-only" "-lpthread" local-file))))
 (push '("\\.c$" flymake-c-init) flymake-allowed-file-name-masks)
-(add-hook 'c-mode-hook '(lambda () (if (string-match "\\.c$" buffer-file-name)
-                               (flymake-mode t))))
+
 (add-hook
  'c-mode-common-hook
  '(lambda ()
-    (define-key c-mode-map "\C-cd" 'credmp/flymake-display-err-minibuf)))
+    (flymake-mode t)
+    (define-key c-mode-map "\C-cd" 'credmp/flymake-display-err-minibuf)
+    (define-key c++-mode-map "\C-cd" 'credmp/flymake-display-err-minibuf)))
 
 ;; for latex
 (defun flymake-tex-init ()
@@ -179,10 +178,10 @@
                 (split-string (shell-command-to-string "ls"))))
   (setq flymake-last-change-time nil))
 (push '("\\.tex$" flymake-tex-init flymake-tex-cleanup-custom) flymake-allowed-file-name-masks)
-(add-hook 'LaTeX-mode-hook 'flymake-mode)
 (add-hook
  'LaTeX-mode-hook
  '(lambda ()
+    (flymake-mode t)
     (define-key LaTeX-mode-map "\C-cd" 'credmp/flymake-display-err-minibuf)))
 
 ;; for perl

@@ -1,0 +1,7 @@
+#name : class ... { ... }
+# --
+class ${1:IDENTIFIER} {
+public:
+${1:$(yas/substr text "[^: ]*")}(${2:void});$0
+~${1:$(yas/substr text "[^: ]*")}(void);
+};

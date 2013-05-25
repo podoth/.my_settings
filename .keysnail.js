@@ -4,7 +4,14 @@
 // 特殊キー, キーバインド定義, フック, ブラックリスト以外のコードは, この中に書くようにして下さい
 // ========================================================================= //
 //{{%PRESERVE%
-plugins.options["K2Emacs.editor"] = "/usr/bin/emacs";
+key.setEditKey(['C-i'], function (ev, arg) {
+    ext.exec("edit_text",  arg,ev);
+}, "外部エディタで編集", true);
+plugins.options["K2Emacs.editor"] = "/usr/bin/emacs-snapshot-gtk";
+// plugins.options["K2Emacs.editor"] = "/usr/bin/emacsclient -c -a \"\"";
+plugins.options["K2Emacs.ext"]  = "txt";
+plugins.options["K2Emacs.encode"] = "UTF-8";
+plugins.options["K2Emacs.sep"] = "/";
 plugins.options["tanything_opt.keymap"] = {
     "C-z"   : "prompt-toggle-edit-mode",
     "SPC"   : "prompt-next-page",
@@ -43,7 +50,6 @@ key.suspendKey           = "<f2>";
 
 // ================================= Hooks ================================= //
 
-
 hook.setHook('KeyBoardQuit', function (aEvent) {
     if (key.currentKeySequence.length) {
         return;
@@ -68,11 +74,11 @@ hook.setHook('KeyBoardQuit', function (aEvent) {
     }
 });
 
-
 // ============================= Key bindings ============================== //
 
 key.setGlobalKey('C-M-r', function (ev) {
     userscript.reload();
+    userscript.loadPlugins();
 }, '設定ファイルを再読み込み', true);
 
 key.setGlobalKey('M-x', function (aEvent, aArg) {
@@ -188,6 +194,11 @@ key.setGlobalKey('C-[', function (ev, arg) {
     gBrowser.focus();
     _content.focus();
 }, 'エスケープ', true);
+
+key.setGlobalKey('C-t', function (ev) {
+    BrowserOpenTab();
+    _content.focus();
+}, 'タブを開く');
 
 key.setViewKey('j', function (ev) {
     for (var i = 0; i < 5; i++) {
@@ -340,6 +351,14 @@ key.setViewKey('p', function (ev, arg) {
 key.setViewKey('M', function (ev, arg) {
     ext.exec("quickmark-mark-page", arg, ev);
 }, 'Mark Page (QuickMark)', true);
+
+key.setViewKey('a', function (ev, arg) {
+    ext.exec("tanything", arg);
+}, 'view all tabs', true);
+
+key.setEditKey('C-i', function (ev, arg) {
+    ext.exec("edit_text", arg, ev);
+}, '外部エディタで編集', true);
 
 key.setEditKey(['C-x', 'h'], function (ev) {
     command.selectAll(ev);
@@ -645,9 +664,3 @@ key.setCaretKey('p', function (ev, arg) {
     }
     gBrowser.loadOneTab(url, null, null, null, false);
 }, 'Open yanked address or google it', true);
-key.setEditKey(['C-i'], function (ev, arg) {
-    ext.exec("edit_text", arg, ev);
-}, "外部エディタで編集", true);
-key.setViewKey("a", function (ev, arg) {
-                   ext.exec("tanything", arg);
-               }, "view all tabs", true);

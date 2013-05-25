@@ -110,8 +110,8 @@
 (global-set-key "\M-\\" 'ac-start)
 (setq ac-comphist-file "~/.emacs.d/var/ac-comphist.dat")
 ;;; C-n/C-p で候補を選択
-(define-key ac-complete-mode-map "\C-n" 'ac-next)
-(define-key ac-complete-mode-map "\C-p" 'ac-previous)
+;; (define-key ac-complete-mode-map "\C-n" 'ac-next)
+;; (define-key ac-complete-mode-map "\C-p" 'ac-previous)
 ;;; auto-completeにclangを使う
 (require 'auto-complete-clang)
 (setq clang-completion-suppress-error 't)
@@ -344,9 +344,23 @@
 ;;; カーソル移動についてのundo
 ;;;
 (require 'point-undo)
+;; 上下左右の単純移動はカウントしないようにする
+(defun point-undo-pre-command-hook ()
+  "Save positions before command."
+  (unless (or (eq this-command 'point-undo)
+              (eq this-command 'point-redo)
+	      (eq this-command 'next-line)
+	      (eq this-command 'previous-line)
+	      (eq this-command 'forward-char)
+	      (eq this-command 'backward-char))
+    
+    (let ((cell (cons (point) (window-start))))
+      (unless (equal cell (car point-undo-list))
+       (setq point-undo-list (cons cell point-undo-list))))
+    (setq point-redo-list nil)))
+
 (define-key global-map [f7] 'point-undo)
 (define-key global-map [S-f7] 'point-redo)
-
 
 ;;;
 ;;; rst.el
@@ -561,18 +575,18 @@
 ;;;
 (add-to-list 'load-path "~/.emacs.d/packages/helm")
 (require 'helm-config)
-(global-set-key (kbd "C-c h") 'helm-mini)
+(global-set-key (kbd "C-c b") 'helm-mini)
 ;; (helm-mode t)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 (global-set-key (kbd "M-x") 'helm-M-x)
 (eval-after-load 'helm
   '(progn
      (define-key helm-map (kbd "C-w") 'backward-kill-word)
-     (define-key helm-map (kbd "TAB") 'helm-execute-persistent-action)
+     (define-key helm-map (kbd "TAB") 'helm-next-line)
      ))
 ;; 自動補完を無効
 (custom-set-variables '(helm-ff-auto-update-initial-value nil))
-
+(setq helm-input-idle-delay 0.001) 
 
 ;;;
 ;;; helm-gtags
@@ -582,13 +596,42 @@
 (add-hook 'c-mode-hook 'helm-gtags-mode)
 (add-hook 'c++-mode-hook 'helm-gtags-mode)
 (add-hook 'asm-mode-hook 'helm-gtags-mode)
-(setq helm-gtags-path-style 'relative)
+;; (setq helm-gtags-path-style 'relative)
 (setq helm-gtags-ignore-case t)
-(setq helm-gtags-read-only t)
+;; (setq helm-gtags-read-only t)
 (add-hook 'helm-gtags-mode-hook
           '(lambda ()
-              (local-set-key (kbd "M-t") 'helm-gtags-find-tag)
-              (local-set-key (kbd "M-r") 'helm-gtags-find-rtag)
-              (local-set-key (kbd "M-s") 'helm-gtags-find-symbol)
-              (local-set-key (kbd "C-t") 'helm-gtags-pop-stack)))
+              (local-set-key (kbd "M-T") 'helm-gtags-find-tag)
+              (local-set-key (kbd "M-R") 'helm-gtags-find-rtag)
+              (local-set-key (kbd "M-S") 'helm-gtags-find-symbol)
+	      (local-set-key (kbd "C-T") 'helm-gtags-pop-stack)
+              ;; (local-set-key (kbd "C-t") '(lambda ()
+	      ;; 				    (interactive)
+	      ;; 				     (helm-gtags-pop-stack)
+	      ;; 				     (helm-resume 1))
+	      ;; 		     )
+	      ))
+
+;;;
+;;; auto-highlight-symbol
+;;;
+(setq load-path (cons "~/.emacs.d/packages/auto-highlight-symbol" load-path))
+(require 'auto-highlight-symbol)
+(global-auto-highlight-symbol-mode t)
+
+;;;
+;;; highlight-symbol
+;;;
+(require 'highlight-symbol)
+(global-set-key (kbd "C-c h") 'highlight-symbol-at-point)
+(global-set-key (kbd "C-c n") 'highlight-symbol-next)
+(global-set-key (kbd "C-c p") 'highlight-symbol-prev)
+
+;;;
+;;; yasnippet
+;;;
+(setq load-path (cons "~/.emacs.d/packages/yasnippet-0.6.1c" load-path))
+(require 'yasnippet)
+(yas/initialize)
+(yas/load-directory "~/.emacs.d/etc/snippets")
 

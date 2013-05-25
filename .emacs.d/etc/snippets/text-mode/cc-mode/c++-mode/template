@@ -1,0 +1,4 @@
+#name : template <class ...>
+# --
+template <class ${1:T}>
+$0

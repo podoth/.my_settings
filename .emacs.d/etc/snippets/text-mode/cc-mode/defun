@@ -1,0 +1,6 @@
+#name: T funcname(...) { ... }
+# --
+${1:int} ${2:IDENTIFIER}(${3:void})
+{
+$0
+}

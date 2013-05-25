@@ -1,0 +1,4 @@
+#name : (defun ... (...) ...)
+# --
+(defun ${1:IDENT} (${2:ARGS})
+$0)

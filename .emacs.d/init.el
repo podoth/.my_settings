@@ -49,8 +49,8 @@
 ;;;
 ;;; emacsclient
 ;;;
-;; (require 'server)
-;; (unless (server-running-p) (server-start))
+(require 'server)
+(unless (server-running-p) (server-start))
 
 ;;;
 ;;; clip_boardをXと共有
@@ -157,7 +157,7 @@
 ;;;
 ;;; 指定行にジャンプ
 ;;;
-(global-set-key [(control x)(:)] 'goto-line)
+;; (global-set-key [(control x)(:)] 'goto-line)
 
 
 ;;;
@@ -232,6 +232,8 @@
 ;;;
 (global-set-key (kbd "C-S-n") '(lambda () (interactive) (next-line 3)))
 (global-set-key (kbd "C-S-p") '(lambda () (interactive) (previous-line 3)))
+(global-set-key (kbd "C-S-f") '(lambda () (interactive) (forward-char 3)))
+(global-set-key (kbd "C-S-b") '(lambda () (interactive) (backward-char 3)))
 
 ;;;
 ;;; Evalで補完が効くように
@@ -250,6 +252,23 @@
 (load "term/bobcat")
 (when (fboundp 'terminal-init-bobcat)
   (terminal-init-bobcat))
+
+;;;
+;;; (yes/no) を (y/n)に
+;;;
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;;;
+;;; M-xなどで実行したときにキーバインドを通知する？
+;;;
+(setq suggest-key-bindings t)
+
+;;;
+;;; find-alternate-fileをrevert-bufferで置き換える。ついでに確認しないようにする。
+;;; 色々リセットされなくなるが、diredモードとか利用してると不都合かもしれない
+;;;
+(global-set-key (kbd "C-x C-v") '(lambda () (interactive) (revert-buffer t t nil)))
+
 
 ; 標準Elispの設定
 (load "config/builtins")

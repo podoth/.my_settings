@@ -1,0 +1,4 @@
+#name : (lambda (...) ...)
+# --
+(lambda (${1:ARGS})
+$0)

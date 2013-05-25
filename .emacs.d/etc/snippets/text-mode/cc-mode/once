@@ -1,0 +1,8 @@
+#name : #ifndef XXX; #define XXX; #endif
+# --
+#ifndef ${1:_`(upcase (replace-regexp-in-string "\\\\." "_" (file-name-nondirectory (buffer-file-name))))`_}
+#define $1
+
+$0
+
+#endif /* $1 */
