@@ -4,12 +4,6 @@
 ;;;　f5~f9は自由に割り当てられる
 
 ;;;
-;;; ???
-;;;
-;; (defvar matlab:current-system
-;;   (nth 2 (split-string system-configuration "-")))
-
-;;;
 ;;; ロードパスの追加
 ;;;
 (setq load-path (append
@@ -18,10 +12,20 @@
                  load-path))
 
 ;;;
+;;; idle-require 遅延起動
+;;; これは非標準なので注意
+;;;
+(require 'idle-require)
+(custom-set-variables
+ '(idle-require-idle-delay 10))
+(idle-require-mode 1)
+(custom-set-variables
+ '(idle-require-symbols nil))
+
+;;;
 ;;; 一時ファイルのディレクトリ
 ;;;
 (setq user-emacs-directory "~/.emacs.d/var/")
-
 (setq auto-save-list-file-prefix "~/.emacs.d/var/")
 
 ;;;
@@ -125,7 +129,6 @@
 ;;; i-search中にC-hでBackspace
 ;;;
 (define-key isearch-mode-map "\C-h" 'isearch-delete-char)
-
 
 ;;;
 ;;; recentf。開いたファイルの履歴
@@ -270,10 +273,37 @@
 (global-set-key (kbd "C-x C-v") '(lambda () (interactive) (revert-buffer t t nil)))
 
 
+;;;
+;;; 起動時間を計測
+;;;
+(add-hook 'after-init-hook
+  (lambda ()
+    (message "init time: %.3f sec"
+             (float-time (time-subtract after-init-time before-init-time)))))
+
+;;;
+;;; 時間がかかるrequireを表示
+;;;
+(defadvice require (around require-benchmark activate)
+  (let* ((before (current-time))
+	 (result ad-do-it)
+	 (after (current-time))
+	 (time (float-time (time-subtract after before))))
+    (when (> time 0.05)
+      (message "%s: %.3f sec" (ad-get-arg 0) time))))
+
+(defadvice load (around load-benchmark activate)
+  (let* ((before (current-time))
+	 (result ad-do-it)
+	 (after (current-time))
+	 (time (float-time (time-subtract after before))))
+    (when (> time 0.05)
+      (message "%s: %.3f sec" (ad-get-arg 0) time))))
+
 ; 標準Elispの設定
 (load "config/builtins")
 ; 非標準Elispの設定
 (load "config/packages")
-; 自作コマンドの設定
+;; ; その他コマンドの設定
 (load "config/functions")
 

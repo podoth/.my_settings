@@ -28,7 +28,7 @@
 (eval-when-compile
   (require 'cl))
 
-(require 'tramp)
+;; (require 'tramp)
 
 (defgroup git-gutter nil
   "Port GitGutter"

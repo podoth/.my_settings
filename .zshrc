@@ -223,3 +223,6 @@ bindkey '^Q' show_buffer_stack
 # ubuntu11.10でemacs24を走らせるとエラーがでるので
 export UBUNTU_MENUPROXY=
 export GTK_MODULES=
+
+# 独自ビルドを使う＆＆ubuntuの設定ファイルを読み込まない
+alias emacs='emacs-snapshot -no-site-file'

@@ -41,8 +41,8 @@
 ;;;
 ;;; tramp
 ;;;
-(if (locate-library "tramp")
-    (require 'tramp))
+;; (if (locate-library "tramp")
+;;     (require 'tramp))
 
 ;;;
 ;;; iswitchb-mode
@@ -178,6 +178,7 @@
                 (split-string (shell-command-to-string "ls"))))
   (setq flymake-last-change-time nil))
 (push '("\\.tex$" flymake-tex-init flymake-tex-cleanup-custom) flymake-allowed-file-name-masks)
+
 (add-hook
  'LaTeX-mode-hook
  '(lambda ()
@@ -186,7 +187,7 @@
 
 ;; for perl
 ;; http://unknownplace.org/memo/2007/12/21#e001
-(require 'set-perl5lib)
+(autoload 'set-perl5lib "set-perl5lib")
 
 (defvar flymake-perl-err-line-patterns
   '(("\\(.*\\) at \\([^ \n]+\\) line \\([0-9]+\\)[,.\n]" 2 3 nil 1)))

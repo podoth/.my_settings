@@ -7,7 +7,7 @@
 key.setEditKey(['C-i'], function (ev, arg) {
     ext.exec("edit_text",  arg,ev);
 }, "外部エディタで編集", true);
-plugins.options["K2Emacs.editor"] = "/usr/bin/emacs-snapshot-gtk";
+plugins.options["K2Emacs.editor"] = "/usr/bin/emacs-snapshot -no-site-file";
 // plugins.options["K2Emacs.editor"] = "/usr/bin/emacsclient -c -a \"\"";
 plugins.options["K2Emacs.ext"]  = "txt";
 plugins.options["K2Emacs.encode"] = "UTF-8";
