@@ -636,3 +636,10 @@
     '(progn
        (yas/initialize)
        (yas/load-directory "~/.emacs.d/etc/snippets")))
+
+;;;
+;;; magit
+;;;
+(autoload 'magit-status "magit")
+(global-set-key (kbd "C-c g") 'magit-status)
+
