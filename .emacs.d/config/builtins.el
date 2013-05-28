@@ -181,7 +181,7 @@
 (push '("\\.tex$" flymake-tex-init flymake-tex-cleanup-custom) flymake-allowed-file-name-masks)
 
 (add-hook
- 'LaTeX-mode-hook
+ 'TeX-mode-hook
  '(lambda ()
     (flymake-mode t)
     (define-key LaTeX-mode-map "\C-cd" 'credmp/flymake-display-err-minibuf)))
