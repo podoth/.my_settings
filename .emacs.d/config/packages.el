@@ -137,29 +137,29 @@
 (add-hook 'asm-mode-hook 'gtags-mode)
 (setq gtags-auto-update t)
 (setq gtags-ignore-case t)
-(defun gtags-parse-current-file ()
-  (interactive)
-  (if (gtags-get-rootpath)
-      (let*
-          ((root (gtags-get-rootpath))
-           (path (buffer-file-name))
-           (gtags-path-style 'root)
-           (gtags-rootdir root))
-        (if (string-match (regexp-quote root) path)
-            (gtags-goto-tag
-             (replace-match "" t nil path)
-             "f" nil)
-          ;; delegate to gtags-parse-file
-          (gtags-parse-file)))
-    ;; delegate to gtags-parse-file
-    (gtags-parse-file)))
+;; (defun gtags-parse-current-file ()
+;;   (interactive)
+;;   (if (gtags-get-rootpath)
+;;       (let*
+;;           ((root (gtags-get-rootpath))
+;;            (path (buffer-file-name))
+;;            (gtags-path-style 'root)
+;;            (gtags-rootdir root))
+;;         (if (string-match (regexp-quote root) path)
+;;             (gtags-goto-tag
+;;              (replace-match "" t nil path)
+;;              "f" nil)
+;;           ;; delegate to gtags-parse-file
+;;           (gtags-parse-file)))
+;;     ;; delegate to gtags-parse-file
+;;     (gtags-parse-file)))
 (setq gtags-mode-hook
       '(lambda ()
          (local-set-key "\M-t" 'gtags-find-tag)
          (local-set-key "\M-r" 'gtags-find-rtag)
          (local-set-key "\M-s" 'gtags-find-symbol)
          (local-set-key "\C-t" 'gtags-pop-stack)
-         (local-set-key "\C-co" 'gtags-parse-current-file)
+         ;; (local-set-key "\C-co" 'gtags-parse-current-file)
          ))
 
 ;;;
@@ -311,10 +311,10 @@
 ;;;
 ;;; アウトラインをまとめたものを表示
 ;;;
-(setq load-path (cons "~/.emacs.d/packages/ee-0.1.0" load-path))
-(require 'ee-autoloads)
-;; C-c o で起動。
-(global-set-key "\C-co" 'ee-outline)
+;; (setq load-path (cons "~/.emacs.d/packages/ee-0.1.0" load-path))
+;; (require 'ee-autoloads)
+;; ;; C-c o で起動。
+;; (global-set-key "\C-co" 'ee-outline)
 
 ;;;
 ;;; mozc
@@ -579,10 +579,12 @@
 (global-set-key (kbd "C-c b") 'helm-mini)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 (global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-c o") 'helm-imenu)
 (eval-after-load 'helm
   '(progn
      (define-key helm-map (kbd "C-w") 'backward-kill-word)
      (define-key helm-map (kbd "TAB") 'helm-next-line)
+     (define-key helm-map (kbd "C-l") 'helm-recenter-top-bottom-other-window)
      ))
 ;; 自動補完を無効
 (custom-set-variables '(helm-ff-auto-update-initial-value nil))
