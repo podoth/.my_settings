@@ -2,6 +2,7 @@
 
 .emacs.d/var/*
 *.elc
+*.pyc
 
 .vimperator/info/*
 
