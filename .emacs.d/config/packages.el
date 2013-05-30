@@ -750,3 +750,13 @@ PREFIX が t の場合 (前置引数がある場合) は、これまでの選択
 (global-set-key (kbd "C-c i") 'my-magit-insert-selected-files)
 
 
+;;;
+;;; python-mode:非標準（少し古いけど機能充実）mode
+;;; 普通に解凍後にディレクトリごと置いて、load-path通してやればOK
+;;;
+(setq load-path (cons "~/.emacs.d/packages/python-mode.el-6.1.1" load-path))
+(autoload 'python-mode "python-mode" "Major mode for editing Python programs" t)
+(autoload 'py-shell "python-mode" "Python shell" t)
+(setq auto-mode-alist
+      (cons (cons "\\.py$" 'python-mode) auto-mode-alist))
+
