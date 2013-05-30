@@ -787,3 +787,20 @@ PREFIX が t の場合 (前置引数がある場合) は、これまでの選択
 	     (setq ropemacs-confirm-saving 'nil)
              ))
 
+;;;
+;;; jedi:pythonの補完
+;;; これが一番速くて賢いらしい
+;;; "easy_install jedi" "easy_install epc"
+;;; deferred.el,concurrent.el,ctable.el,epc.el,jedi.elをload-pathの通った場所におく
+;;; jediepcserver.pyをjedi.elと同じ場所に置く
+;;; http://www.sakito.com/2012/11/emacs-python-jedi.html
+;;;
+(setq load-path (cons "~/.emacs.d/packages/jedi" load-path))
+(require 'jedi)
+(add-hook 'python-mode-hook
+          '(lambda ()
+             (jedi:ac-setup)
+             (define-key python-mode-map (kbd "M-\\") 'jedi:complete)
+             ))
+
+
