@@ -648,6 +648,9 @@
 (autoload 'magit-status "magit")
 (global-set-key (kbd "C-c g") 'magit-status)
 
+;; rebase-mode
+(require' rebase-mode)
+
 ;; 複数動作可能にするための設定
 ;; http://d.hatena.ne.jp/ken_m/20111225/1324833439
 (defvar my-magit-selected-files ()
