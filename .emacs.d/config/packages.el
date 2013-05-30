@@ -99,35 +99,29 @@
 (add-to-list 'load-path ac-dir)
 (require 'auto-complete-config)
 (ac-config-default)
-
 (add-to-list 'ac-dictionary-directories (concat ac-dir "ac-dict/"))
 (global-set-key "\M-\\" 'ac-start)
 (setq ac-comphist-file "~/.emacs.d/var/ac-comphist.dat")
-;;; C-n/C-p で候補を選択
-;; (define-key ac-complete-mode-map "\C-n" 'ac-next)
-;; (define-key ac-complete-mode-map "\C-p" 'ac-previous)
-;;; auto-completeにclangを使う
+;; C-n/C-p で候補を選択
+(define-key ac-complete-mode-map "\M-n" 'ac-next)
+(define-key ac-complete-mode-map "\M-p" 'ac-previous)
+
+
+;;;
+;;; auto-complete-clang
+;;; 文脈を考慮したC/C++用の補完
+;;;
+;; 上手くいかないときは、yasnippetとの競合か、clang/clang++がうまく動いていないことを疑う。
+;; 参考：http://d.hatena.ne.jp/illness0721/20110820/1313851919
 (require 'auto-complete-clang)
 (setq clang-completion-suppress-error 't)
-
-(defun my-c-mode-common-hook()
-  (setq ac-auto-start nil)
-  (setq completion-mode t)
-  (setq ac-expand-on-auto-complete nil)
-  (setq ac-quick-help-delay 0.3)
-  (c-set-offset 'innamespace 0)
-  (c-set-offset 'arglist-close 0)
-
-  ;; compliation
-  (setq compile-command "make -k -j2")
-  (setq compilation-read-command nil)  ;; do not ask for make's option.
-  (setq compilation-ask-about-save nil)  ;; auto-saving when you make
-  (define-key c-mode-base-map "\C-cx" 'next-error)
-  (define-key c-mode-base-map "\C-cc" 'compile)
-  (define-key c-mode-base-map (kbd "M-\\") 'ac-complete-clang)
-)
-
-(add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
+(add-hook 'c-mode-common-hook 
+	  '(lambda ()
+	     (setq ac-auto-start nil)
+	     (setq completion-mode t)
+	     (setq ac-expand-on-auto-complete nil)
+	     (setq ac-quick-help-delay 0.3)
+	     (define-key c-mode-base-map (kbd "M-\\") 'ac-complete-clang)))
 
 ;;;
 ;;; gtags
