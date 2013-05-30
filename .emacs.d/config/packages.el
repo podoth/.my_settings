@@ -760,3 +760,30 @@ PREFIX が t の場合 (前置引数がある場合) は、これまでの選択
 (setq auto-mode-alist
       (cons (cons "\\.py$" 'python-mode) auto-mode-alist))
 
+;;;
+;;; Pymacs:pythonとemacsをつなぐフレームワーク？
+;;; pythonの方は"make"&&"python setup.py install"して、
+;;; emacsの方はpymacs.elだけ置いてやればOK。
+;;; pymacs用のpythonファイルは、etc/pymacsに置くことにする。
+;;;
+(autoload 'pymacs-apply "pymacs")
+(autoload 'pymacs-call "pymacs")
+(autoload 'pymacs-eval "pymacs" nil t)
+(autoload 'pymacs-exec "pymacs" nil t)
+(autoload 'pymacs-load "pymacs" nil t)
+(eval-after-load "pymacs"
+  '(add-to-list 'pymacs-load-path "~/.emacs.d/etc/pymacs"))
+
+;;;
+;;; ropemacs:pythonのリファクタリングを行なうツール。
+;;; "easy_install rope"と"easy_install ropemacs"でインストールした。
+;;; インストールした後、ropeとropemacsをインストール先からpymacsのパスの通った場所へ移してやった。
+;;;
+(add-hook 'python-mode-hook
+          '(lambda ()
+	     (require 'pymacs)
+	     (pymacs-load "ropemacs" "rope-")
+	     ;; Automatically save project python buffers before refactorings
+	     (setq ropemacs-confirm-saving 'nil)
+             ))
+
