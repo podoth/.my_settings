@@ -187,6 +187,8 @@
 (add-hook 'find-file-hooks '(lambda ()
  (if font-lock-mode nil (font-lock-mode t))
 ) t)
+(when (boundp 'show-trailing-whitespace)
+  (setq-default show-trailing-whitespace t))
 
 ;;;
 ;;; 保存時に行末の(タブ・半角スペース)を削除(プログラミング系モードのみ)
