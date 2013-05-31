@@ -651,7 +651,20 @@
 ;; rebase-mode
 (require' rebase-mode)
 
-;; 複数動作可能にするための設定
+;; 別windowで開く
+(eval-after-load 'magit
+  '(progn
+     (define-key magit-mode-map (kbd "RET") '(lambda () (interactive) (magit-visit-file-item t)))
+     ))
+
+;; diffの色付け
+(eval-after-load 'magit
+  '(progn
+     (set-face-foreground 'magit-diff-add "blue")
+     (set-face-foreground 'magit-diff-del "red")
+     (set-face-foreground 'magit-diff-file-header "#4040ff")))
+
+;; 複数選択可能にするための設定
 ;; http://d.hatena.ne.jp/ken_m/20111225/1324833439
 (defvar my-magit-selected-files ()
   "選択されているファイルの名前のリスト。")
