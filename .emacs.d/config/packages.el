@@ -105,7 +105,10 @@
 ;; C-n/C-p で候補を選択
 (define-key ac-complete-mode-map "\M-n" 'ac-next)
 (define-key ac-complete-mode-map "\M-p" 'ac-previous)
-
+;; 大文字・小文字を区別しない
+(setq ac-ignore-case t)
+;; 補完対象に大文字が含まれる場合のみ区別する
+(setq ac-ignore-case 'smart)
 
 ;;;
 ;;; auto-complete-clang
