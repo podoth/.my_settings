@@ -405,7 +405,11 @@ Return its components if so, nil otherwise."
 ;;; perlの編集にはcperl-modeを使う
 ;;;
 (defalias 'perl-mode 'cperl-mode)
-
+(add-hook 'cperl-mode-hook
+    '(lambda()
+        (setq indent-tabs-mode nil)
+        (setq cperl-indent-parens-as-block t)
+        (setq cperl-close-paren-offset -2)))
 ;;;
 ;;; woman : emacs内のman
 ;;;
