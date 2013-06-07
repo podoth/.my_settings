@@ -113,15 +113,69 @@
 ;;;
 ;; 上手くいかないときは、yasnippetとの競合か、clang/clang++がうまく動いていないことを疑う。
 ;; 参考：http://d.hatena.ne.jp/illness0721/20110820/1313851919
-(require 'auto-complete-clang)
-(setq clang-completion-suppress-error 't)
-(add-hook 'c-mode-common-hook 
-	  '(lambda ()
+;; 大抵、clangの最新版をソースからビルドして入れれば直る
+;; (require 'auto-complete-clang)
+;; (setq clang-completion-suppress-error 't)
+;; (add-hook 'c-mode-common-hook
+;; 	  '(lambda ()
+;; 	     ;; (setq ac-auto-start nil)
+;; 	     ;; (setq completion-mode t)
+;; 	     ;; (setq ac-expand-on-auto-complete nil)
+
+;; 	     (setq ac-quick-help-delay 0.1)
+
+;; 	     (setq ac-sources (append '(ac-source-clang
+;; 	     				ac-source-gtags)
+;; 	     			      ac-sources))
+
+;; 	     ; clangのバグ修正のためにインクルードパスを指定
+;; 	     (setq ac-clang-flags
+;; 	     	   (mapcar (lambda (item) (concat "-I" item))
+;; 	     		   '("/usr/include/c++/4.5"
+;; 	     		     "/usr/include/c++/4.5/i486-linux-gnu"
+;; 	     		     "/usr/include/c++/4.5/i686-linux-gnu"
+;; 	     		     "/usr/lib/i386-linux-gnu/gcc/i686-linux-gnu/4.5/include"
+;; 	     		     "/usr/local/include"
+;; 	     		     "/usr/include")))
+;; 	     (define-key c-mode-base-map (kbd "M-\\") 'ac-complete-clang)))
+
+;;;
+;;; auto-complete-clang-async
+;;; 文脈を考慮したC/C++用の補完。少し速いらしい
+;;;
+(add-hook 'c-mode-common-hook
+ 	  '(lambda ()
+	     (require 'auto-complete-clang-async)
+
+	     ;; (setq ac-auto-start nil)
+	     ;; (setq complejjjtion-mode t)
+	     ;; (setq ac-expand-on-auto-complete nil)
+
+	     ; ac-auto-startに数値を入れるのは何故か効かない
 	     (setq ac-auto-start nil)
-	     (setq completion-mode t)
-	     (setq ac-expand-on-auto-complete nil)
-	     (setq ac-quick-help-delay 0.3)
-	     (define-key c-mode-base-map (kbd "M-\\") 'ac-complete-clang)))
+	     ;; (setq ac-clang-async-do-autocompletion-automatically t)
+
+	     (setq ac-clang-complete-executable "~/.emacs.d/etc/clang-complete")
+
+	     (setq ac-quick-help-delay 0.1)
+
+	     ; ac-source-gtagsを入れると重くなる
+	     (setq ac-sources (append '(ac-source-clang-async)
+	     			      ac-sources))
+
+	     (ac-clang-launch-completion-process)
+
+	     ;; clangのインクルードパスベタがきの仕様により、C++の方はインクルードパスを指定してやらないといけない
+	     (setq ac-clang-cflags
+		   (mapcar (lambda (item) (concat "-I" item))
+			   (list "/usr/include/c++/4.5"
+				 "/usr/include/c++/4.5/i486-linux-gnu"
+				 "/usr/include/c++/4.5/i686-linux-gnu"
+				 "/usr/lib/i386-linux-gnu/gcc/i686-linux-gnu/4.5/include"
+				 "/usr/local/include"
+				 "/usr/include")))
+	     (ac-clang-update-cmdlineargs)
+	     ))
 
 ;;;
 ;;; gtags
