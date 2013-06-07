@@ -191,10 +191,21 @@
   (setq-default show-trailing-whitespace t))
 
 ;;;
-;;; 保存時に行末の(タブ・半角スペース)を削除(プログラミング系モードのみ)
+;;; 保存時に行末の(タブ・半角スペース)を削除(プログラミング系モードかつgitレポジトリでない場合のみ)
 ;;;
-;; (add-hook 'before-save-hook 'delete-trailing-whitespace)
-
+(defun is-project-git-repository ()
+  (and
+   ; gitリポジトリ内
+   (let ((error-message (shell-command-to-string "git rev-parse")))
+     (string= error-message ""))
+   ; git管理されているファイル
+   (let ((result (shell-command-to-string (concat "git ls-files " (file-truename (buffer-file-name))))))
+    (message result)
+    (not (string= result "")))))
+(add-hook 'before-save-hook
+	  '(lambda () (when (not (is-project-git-repository))
+			(delete-trailing-whitespace)))
+)
 
 ;;;
 ;;; リージョンの行数と文字数をモードラインに表示
