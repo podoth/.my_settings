@@ -613,6 +613,22 @@
 (global-git-gutter-mode t)
 ;;更新頻度を下げる
 (setq git-gutter:update-hooks '(find-file-hook after-save-hook after-revert-hook))
+;; M-P/M-N で警告/エラー行の移動
+(global-set-key "\M-N" 'git-gutter:next-hunk)
+(global-set-key "\M-P" 'git-gutter:previous-hunk)
+
+;;;
+;;; rfringe
+;;; 色々使えるらしいが、とりあえずflymakeでのエラー行表示
+;;;
+(require 'rfringe)
+(require 'fringe-helper)
+(fringe-helper-define 'rfringe-thin-dash '(top repeat)
+  ".XX...XX."
+  "..XX.XX.."
+  "...XXX..."
+  "..XX.XX.."
+  ".XX...XX.")
 
 ;;;
 ;;; helm

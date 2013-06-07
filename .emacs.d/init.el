@@ -4,6 +4,11 @@
 ;;;　f5~f9は自由に割り当てられる
 
 ;;;
+;;; デバッグ
+;;;
+(setq debug-on-error t)
+
+;;;
 ;;; ロードパスの追加
 ;;;
 (setq load-path (append
@@ -319,4 +324,3 @@
 (load "config/packages")
 ;; ; その他コマンドの設定
 (load "config/functions")
-

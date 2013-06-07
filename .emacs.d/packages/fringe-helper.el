@@ -86,6 +86,32 @@
 
 (eval-when-compile (require 'cl))
 
+(eval-when-compile
+(defun fringe-helper-convert (&rest strings)
+  "Convert STRINGS into a vector usable for `define-fringe-bitmap'.
+Each string in STRINGS represents a line of the fringe bitmap.
+Periods (.) are background-colored pixel; Xs are foreground-colored.  The
+fringe bitmap always is aligned to the right.  If the fringe has half
+width, only the left 4 pixels of an 8 pixel bitmap will be shown.
+
+For example, the following code defines a diagonal line.
+
+\(fringe-helper-convert
+  \"XX......\"
+  \"..XX....\"
+  \"....XX..\"
+  \"......XX\"\)"
+  (unless (cdr strings)
+    ;; only one string, probably with newlines
+    (setq strings (split-string (car strings) "\n")))
+  (apply 'vector
+         (mapcar (lambda (str)
+                   (let ((num 0))
+                     (dolist (c (string-to-list str))
+                       (setq num (+ (* num 2) (if (eq c ?.) 0 1))))
+                     num))
+                 strings)))
+)
 (defun fringe-helper-convert (&rest strings)
   "Convert STRINGS into a vector usable for `define-fringe-bitmap'.
 Each string in STRINGS represents a line of the fringe bitmap.
@@ -237,7 +263,6 @@ SIDE should be either 'left-fringe or 'right-fringe and defaults to the former."
     (setq pattern (cdar pattern))
     (or (car (memq (car pattern) fringe-bitmaps))
         (define-fringe-bitmap (car pattern) (cdr pattern) nil nil alignment))))
-
 
 (defconst fringe-lib-exclamation-mark
   `((5 fringe-lib-exclamation-mark-5 .
