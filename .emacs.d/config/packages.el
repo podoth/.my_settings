@@ -698,12 +698,6 @@
 ;; rebase-mode
 (require' rebase-mode)
 
-;; 別windowで開く
-(eval-after-load 'magit
-  '(progn
-     (define-key magit-mode-map (kbd "RET") '(lambda () (interactive) (magit-visit-file-item t)))
-     ))
-
 ;; diffの色付け
 (eval-after-load 'magit
   '(progn
