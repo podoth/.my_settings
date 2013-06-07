@@ -188,30 +188,22 @@
 (add-hook 'asm-mode-hook 'gtags-mode)
 (setq gtags-auto-update t)
 (setq gtags-ignore-case t)
-;; (defun gtags-parse-current-file ()
-;;   (interactive)
-;;   (if (gtags-get-rootpath)
-;;       (let*
-;;           ((root (gtags-get-rootpath))
-;;            (path (buffer-file-name))
-;;            (gtags-path-style 'root)
-;;            (gtags-rootdir root))
-;;         (if (string-match (regexp-quote root) path)
-;;             (gtags-goto-tag
-;;              (replace-match "" t nil path)
-;;              "f" nil)
-;;           ;; delegate to gtags-parse-file
-;;           (gtags-parse-file)))
-;;     ;; delegate to gtags-parse-file
-;;     (gtags-parse-file)))
 (setq gtags-mode-hook
       '(lambda ()
          (local-set-key "\M-t" 'gtags-find-tag)
          (local-set-key "\M-r" 'gtags-find-rtag)
          (local-set-key "\M-s" 'gtags-find-symbol)
          (local-set-key "\C-t" 'gtags-pop-stack)
-         ;; (local-set-key "\C-co" 'gtags-parse-current-file)
          ))
+; auto-updateを非同期にする（これで合っているかは分からない）
+(defun gtags-auto-update-async ()
+    (if (and gtags-mode gtags-auto-update buffer-file-name)
+        (progn
+          (gtags-push-tramp-environment)
+	  (start-process "gtags" "*gtags*" gtags-global-command "-u" (concat "--single-update=" (gtags-buffer-file-name)))
+          (gtags-pop-tramp-environment))))
+(defadvice gtags-auto-update (around make-async activate)
+  (gtags-auto-update-async))
 
 ;;;
 ;;; isearch中にCtrl-lで単語に色をつけたままにする
