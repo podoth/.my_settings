@@ -136,23 +136,43 @@
 ;; for C/C++
 (require 'flymake)
 
-(defun flymake-cc-init ()
-  (let* ((temp-file   (flymake-init-create-temp-buffer-copy
-                       'flymake-create-temp-inplace))
-         (local-file  (file-relative-name
-                       temp-file
-                       (file-name-directory buffer-file-name))))
-    (list  "g++" (list "-Wall" "-Wextra" "-fsyntax-only" "-lpthread" local-file))))
-(push '("\\.cpp$" flymake-cc-init) flymake-allowed-file-name-masks)
+(defun flymake-simple-generic-init (cmd &optional opts)
+  (let* ((temp-file  (flymake-init-create-temp-buffer-copy
+                      'flymake-create-temp-inplace))
+         (local-file (file-relative-name
+                      temp-file
+                      (file-name-directory buffer-file-name))))
+    (list cmd (append opts (list local-file)))))
+
+; Makefileがあればそれを使い、無くてもデフォのルールでチェック
+
+(defun does-makefile-check-syntax-exist (filepath)
+  (save-window-excursion
+    (let* ((bufname (generate-new-buffer "*Makefile-check-check-syntax*"))
+	   (result (progn (switch-to-buffer bufname)
+			  (insert-file-contents filepath)
+			  (search-forward "check-syntax" nil t))))
+      (erase-buffer)
+      (kill-buffer bufname)
+      result)
+    ))
+
+(defun flymake-simple-make-or-generic-init (cmd &optional opts)
+  (if (and (file-exists-p "Makefile")
+	   (does-makefile-check-syntax-exist "./Makefile"))
+      (flymake-simple-make-init)
+    (flymake-simple-generic-init cmd opts)))
 
 (defun flymake-c-init ()
-  (let* ((temp-file   (flymake-init-create-temp-buffer-copy
-                       'flymake-create-temp-inplace))
-         (local-file  (file-relative-name
-                       temp-file
-                       (file-name-directory buffer-file-name))))
-    (list "gcc" (list "-Wall" "-Wextra" "-fsyntax-only" "-lpthread" local-file))))
-(push '("\\.c$" flymake-c-init) flymake-allowed-file-name-masks)
+  (flymake-simple-make-or-generic-init
+   "gcc" (list "-Wall" "-Wextra" "-Wshadow" "-fsyntax-only" "-lpthread")))
+
+(defun flymake-cc-init ()
+  (flymake-simple-make-or-generic-init
+   "g++" (list "-Wall" "-Wextra" "-Wshadow" "-fsyntax-only" "-lpthread")))
+
+(push '("\\.[cC]$" flymake-c-init) flymake-allowed-file-name-masks)
+(push '("\\.\\(cc\\|cpp\\|CC\\|CPP\\)$" flymake-cc-init) flymake-allowed-file-name-masks)
 
 (add-hook
  'c-mode-common-hook
@@ -275,6 +295,7 @@
 (global-set-key "\M-n" 'flymake-goto-next-error)
 
 ;; 警告を青色にする（flymakeのVersion 0.3の正規表現を修正）
+;; さらに、noteをエラーにしないようにする
 (defun flymake-parse-line (line)
   "Parse LINE to see if it is an error or warning.
 Return its components if so, nil otherwise."
@@ -297,6 +318,9 @@ Return its components if so, nil otherwise."
 	  (or err-text (setq err-text "<no error text>"))
 	  (if (and err-text (string-match "[wW]arning\\|警告" err-text))
 	      (setq err-type "w")
+	    )
+	  (if (and err-text (string-match "[nN]ote" err-text))
+	      (setq err-type "i")
 	    )
 	  (flymake-log 3 "parse line: file-idx=%s line-idx=%s file=%s line=%s text=%s" file-idx line-idx
 		       raw-file-name line-no err-text)
