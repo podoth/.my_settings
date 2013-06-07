@@ -1,0 +1,6 @@
+#name : ifdefn (...) { ... }
+# --
+#ifdef ${1:cond}
+#else
+    $0
+#endif

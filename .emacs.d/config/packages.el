@@ -636,11 +636,9 @@
 ;;; yasnippet
 ;;;
 (setq load-path (cons "~/.emacs.d/packages/yasnippet-0.6.1c" load-path))
-(idle-require 'yasnippet)
-(eval-after-load "yasnippet"
-    '(progn
-       (yas/initialize)
-       (yas/load-directory "~/.emacs.d/etc/snippets")))
+(require 'yasnippet)
+(yas/initialize)
+(yas/load-directory "~/.emacs.d/etc/snippets")
 
 ;;;
 ;;; magit

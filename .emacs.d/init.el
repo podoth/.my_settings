@@ -15,12 +15,12 @@
 ;;; idle-require 遅延起動
 ;;; これは非標準なので注意
 ;;;
-(require 'idle-require)
-(custom-set-variables
- '(idle-require-idle-delay 10))
-(idle-require-mode 1)
-(custom-set-variables
- '(idle-require-symbols nil))
+;; (require 'idle-require)
+;; (custom-set-variables
+;;  '(idle-require-idle-delay 10))
+;; (idle-require-mode 1)
+;; (custom-set-variables
+;;  '(idle-require-symbols nil))
 
 ;;;
 ;;; 一時ファイルのディレクトリ
