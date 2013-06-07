@@ -435,3 +435,9 @@ Return its components if so, nil otherwise."
   (define-key flyspell-mode-map [(control ?\,)] nil)
   (define-key flyspell-mode-map [(control ?\.)] nil)
 )
+
+;;;
+;;; dabbrev
+;;;
+; 大文字小文字変換をしない
+(setq dabbrev-case-replace nil)
