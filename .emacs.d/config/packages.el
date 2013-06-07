@@ -675,6 +675,12 @@
      ))
 
 ;;;
+;;; helm-flymake
+;;;
+(autoload 'helm-flymake "helm-flymake")
+(global-set-key (kbd "C-c e") 'helm-flymake)
+
+;;;
 ;;; helm-ag
 ;;;
 (autoload 'helm-ag "helm-ag")
