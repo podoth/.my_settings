@@ -52,7 +52,7 @@
 (autoload 'reftex-index-phrase-mode "reftex-index" "Phrase mode" t)
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
 ;; プレビュー
-(load "preview-latex.el" nil t t)
+(require 'preview-latex)
 ;; outline-minor-mode
 (add-hook 'LaTeX-mode-hook '(lambda () (outline-minor-mode t)
 			      (local-set-key [(meta n)] 'outline-next-visible-heading)
@@ -234,7 +234,7 @@
 ;;;
 ;;; 全角文字と空白文字の間に自動でスペースを開けるコマンド
 ;;;
-(load "text-adjust")
+(require 'text-adjust)
 
 ;;;
 ;;; evernote-mode
@@ -252,7 +252,8 @@
 ;;;
 ;;; haskell-mode
 ;;;
-(load "~/.emacs.d/packages/haskellmode-emacs/haskell-site-file.el")
+(setq load-path (cons "~/.emacs.d/packages/haskellmode-emacs" load-path))
+(require 'haskell-mode)
 
 ;;;
 ;;; open-junk-file。ごみファイルを~/.junkに生成する

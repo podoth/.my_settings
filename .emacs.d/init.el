@@ -322,5 +322,5 @@
 (load "config/builtins")
 ; 非標準Elispの設定
 (load "config/packages")
-;; ; その他コマンドの設定
+; その他コマンドの設定
 (load "config/functions")
