@@ -324,3 +324,18 @@
 (load "config/packages")
 ; その他コマンドの設定
 (load "config/functions")
+
+; 粒度の荒い設定達
+(load "config/git-common")
+(load "config/english-common")
+
+; モード特有の設定達
+(load "config/c-mode")
+(load "config/linux-kernel-mode")
+(load "config/latex-mode")
+(load "config/python-mode")
+(load "config/perl-mode")
+(load "config/emacs-lisp-mode")
+(load "config/bash-mode")
+(load "config/octave-mode")
+(load "config/haskell-mode")
