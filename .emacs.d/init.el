@@ -347,6 +347,8 @@
 (load "config/functions")
 
 ; 粒度の荒い設定達
+(load "config/flymake-common")
+(load "config/helm-common")
 (load "config/git-common")
 (load "config/english-common")
 
