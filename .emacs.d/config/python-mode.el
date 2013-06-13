@@ -41,13 +41,12 @@
 ;;; "easy_install rope"と"easy_install ropemacs"でインストールした。
 ;;; インストールした後、ropeとropemacsをインストール先からpymacsのパスの通った場所へ移してやった。
 ;;;
-(add-hook 'python-mode-hook
-          '(lambda ()
-	     (require 'pymacs)
-	     (pymacs-load "ropemacs" "rope-")
-	     ;; Automatically save project python buffers before refactorings
-	     (setq ropemacs-confirm-saving 'nil)
-             ))
+; 重複せず、python-mode時にだけloadさせる方法が分からない
+; 独自キーバインドを使わない
+(setq ropemacs-enable-shortcuts nil)
+(pymacs-load "ropemacs" "rope-")
+;; Automatically save project python buffers before refactorings
+(setq ropemacs-confirm-saving 'nil)
 
 ;;;
 ;;; jedi:pythonの補完
@@ -58,13 +57,12 @@
 ;;; http://www.sakito.com/2012/11/emacs-python-jedi.html
 ;;;
 (setq load-path (cons "~/.emacs.d/packages/jedi" load-path))
-(require 'jedi)
+(autoload 'jedi:ac-setup "jedi")
 (add-hook 'python-mode-hook
           '(lambda ()
              (jedi:ac-setup)
              (define-key python-mode-map (kbd "M-\\") 'jedi:complete)
              ))
-
 
 ;;;
 ;;; python用flymake設定
