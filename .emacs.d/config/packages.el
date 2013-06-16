@@ -337,9 +337,15 @@
 ;;; yasnippet
 ;;;
 (setq load-path (cons "~/.emacs.d/packages/yasnippet-0.6.1c" load-path))
-(require 'yasnippet)
-(yas/initialize)
-(yas/load-directory "~/.emacs.d/etc/snippets")
-
+(require 'yasnippet-bundle)
+(yas/initialize-bundle)
+; snippetsディレクトリを更新したらこれを呼ぶ
+(defun my-compile-yasnippet-bundle ()
+  (interactive)
+  (yas/compile-bundle "~/.emacs.d/packages/yasnippet-0.6.1c/yasnippet.el"
+		      "~/.emacs.d/packages/yasnippet-0.6.1c/yasnippet-bundle.el"
+		      "~/.emacs.d/etc/snippets"
+		      ""
+		      "~/.emacs.d/packages/yasnippet-0.6.1c/dropdown-list.el"))
 
 

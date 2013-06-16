@@ -3,6 +3,7 @@
 .emacs.d/var/*
 *.elc
 *.pyc
+yasnippet-bundle.el
 
 .vimperator/info/*
 
