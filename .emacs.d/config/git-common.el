@@ -4,11 +4,25 @@
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;;
+;;; 使わない割に重いvcを無効化
+;;;
+(setq vc-handled-backends ())
+(remove-hook 'find-file-hook 'vc-find-file-hook)
+(remove-hook 'kill-buffer-hook 'vc-kill-buffer-hook)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; package
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;
+;;; modeline-git-branch
+;;; vcより軽く、モードラインにブランチ名を表示
+;;;
+(require 'modeline-git-branch)
+(modeline-git-branch-mode 1)
 
 ;;;
 ;;; git-gutter.el
