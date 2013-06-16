@@ -81,17 +81,11 @@
     (define-key c-mode-map "\C-cd" 'credmp/flymake-display-err-minibuf)
     (define-key c++-mode-map "\C-cd" 'credmp/flymake-display-err-minibuf)))
 
-
 ;;;
 ;;; c/c++でif 0, if 1の偽部分を灰色にする
 ;;;
-(add-hook
- 'c-mode-common-hook
- '(lambda()
-    (cpp-highlight-buffer t)
-))
-(setq cpp-known-face
-      '(background-color . "light gray"))
+(add-hook 'c-mode-common-hook '(lambda () (cpp-highlight-buffer t)))
+(setq cpp-known-face 'my-camouflaged-face)
 (setq cpp-unknown-face 'default)
 (setq cpp-face-type 'light)
 (setq cpp-known-writable 't)
@@ -99,18 +93,8 @@
 (setq cpp-edit-list ())
 (setq cpp-edit-list
       (append cpp-edit-list
-	      '( ("1" nil
-		  (progn
-		    (foreground-color . "gray")
-		    (background-color . "light gray")
-		    )
-		  both nil)
-		 ("0"
-		  (progn
-		    (foreground-color . "gray")
-		    (background-color . "light gray")
-		    )
-		  default both nil))))
+	      '( ("1" default my-camouflaged-face both nil)
+		 ("0" my-camouflaged-face default both nil))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

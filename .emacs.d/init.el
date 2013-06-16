@@ -290,28 +290,6 @@
 ;;;
 (global-set-key (kbd "C-x C-v") '(lambda () (interactive) (revert-buffer t t nil)))
 
-;;
-;; Color
-;;
-(set-foreground-color "#CCCCCC") ; 文字色
-(set-background-color "#333333") ; 背景色
-(set-cursor-color "#FF0000") ; カーソル色
-(set-face-background 'region "#999955") ; リージョン
-(set-face-foreground 'modeline "#CCCCCC") ; モードライン文字
-(set-face-background 'modeline "#333333") ; モードライン背景
-(set-face-foreground 'mode-line-inactive "#333333") ; モードライン文字(非アクティブ)
-(set-face-background 'mode-line-inactive "#CCCCCC") ; モードライン背景(非アクティブ)
-(set-face-foreground 'font-lock-comment-delimiter-face "#CCCC55") ; コメントデリミタ
-(set-face-foreground 'font-lock-comment-face "#CCCC55") ; コメント
-(set-face-foreground 'font-lock-string-face "#7FFF7F") ; 文字列
-(set-face-foreground 'font-lock-function-name-face "#BF7FFF") ; 関数名
-(set-face-foreground 'font-lock-keyword-face "#FF7F7F") ; キーワード
-(set-face-foreground 'font-lock-constant-face "#FFBF7F") ; 定数(this, selfなども)
-(set-face-foreground 'font-lock-variable-name-face "#7F7FFF") ; 変数
-(set-face-foreground 'font-lock-type-face "#FFFF7F") ; クラス
-;; (set-face-foreground 'fringe "#666666") ; fringe(折り返し記号などが出る部分)
-(set-face-background 'fringe "#282828") ; fringe
-
 ;;;
 ;;; 起動時間を計測
 ;;;
@@ -338,6 +316,9 @@
 	 (time (float-time (time-subtract after before))))
     (when (> time 0.05)
       (message "%s: %.3f sec" (ad-get-arg 0) time))))
+
+; 各設定の前提となる設定
+(load "config/display-common")
 
 ; 標準Elispの設定
 (load "config/builtins")

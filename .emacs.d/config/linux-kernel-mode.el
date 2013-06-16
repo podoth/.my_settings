@@ -23,24 +23,9 @@
 ;;;
 (setq cpp-edit-list
       (append cpp-edit-list
-	      '(("NOT_CFORK"
-		 (progn
-		   (foreground-color . "gray")
-		   (background-color . "light gray")
-		   )
-		 default both nil)
-		("NOT_ORTHROS_COPY"
-		 (progn
-		   (foreground-color . "gray")
-		   (background-color . "light gray")
-		   )
-		 default both nil)
-		("NOT_ORTHROS"
-		 (progn
-		   (foreground-color . "gray")
-		   (background-color . "light gray")
-		   )
-		 default both nil))))
+	      '(("NOT_CFORK" my-camouflaged-face default both nil)
+		("NOT_ORTHROS_COPY" my-camouflaged-face default both nil)
+		("NOT_ORTHROS" my-camouflaged-face default both nil))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -29,7 +29,7 @@
 ; 対となる括弧を目立たせる
 (require 'paren)
 (show-paren-mode t)
-(setq show-paren-style 'mixed)
+;; (setq show-paren-style 'mixed)
 
 
 ;;;
