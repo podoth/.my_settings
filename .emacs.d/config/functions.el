@@ -288,3 +288,14 @@
     (define-key c-mode-map (kbd "C-c C-r") 'isearch-backward-defun)))
 
 
+;;;
+;;; sudoで開き直す
+;;;
+(defun reopen-with-sudo ()
+  "Reopen current buffer-file with sudo using tramp."
+  (interactive)
+  (let ((file-name (buffer-file-name)))
+    (if file-name
+        (find-alternate-file (concat "/sudo::" file-name))
+      (error "Cannot get a file name"))))
+(global-set-key [(control c)(control s)]	'rename-file-and-buffer)
