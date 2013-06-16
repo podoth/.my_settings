@@ -93,3 +93,12 @@
 	  '(lambda ()
 	     (flymake-mode t)
 	     (define-key python-mode-map "\C-cd" 'credmp/flymake-display-err-minibuf)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; for require/autoload
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun python-mode-config () (python-mode))
+(provide 'python-mode-config)
