@@ -308,3 +308,41 @@
         (find-alternate-file (concat "/sudo::" file-name))
       (error "Cannot get a file name"))))
 (global-set-key [(control c)(control s)]	'rename-file-and-buffer)
+
+
+;;;
+;;; その場で色をポップアップ
+;;; http://d.hatena.ne.jp/tequilasunset/20110102/p1
+;;;
+(eval-when-compile
+  (require 'cl))
+(require 'popup)
+
+(defvar popup-color-string
+  (let ((x 9) (y 3))
+    (mapconcat 'identity
+	       (loop with str = (make-string x ?\ ) repeat y collect str)
+	       "\n"))
+  "*String displayed in tooltip.")
+
+(defun popup-color-at-point ()
+  "Popup color specified by word at point."
+  (interactive)
+  (let ((word (word-at-point))
+	(bg (plist-get (face-attr-construct 'popup-tip-face) :background)))
+    (when word
+      (unless (member (downcase word) (mapcar #'downcase (defined-colors)))
+	(setq word (concat "#" word)))
+      (set-face-background 'popup-tip-face word)
+      (message "%s: %s"
+	       (propertize "Popup color"
+			   'face `(:background ,word))
+	       (propertize (substring-no-properties word)
+			   'face `(:foreground ,word)))
+      (popup-tip popup-color-string)
+      (set-face-background 'popup-tip-face bg))))
+
+(global-set-key (kbd "C-c c") 'popup-color-at-point)
+
+
+
