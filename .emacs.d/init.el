@@ -43,6 +43,16 @@
 (prefer-coding-system 'utf-8)
 
 ;;;
+;;; ホームディレクトリで作業する
+;;;
+(cd "~")
+
+;;;
+;;; メモリ使用量を多くしてGC頻度を下げる
+;;;
+(setq gc-cons-threshold 5000000)
+
+;;;
 ;;; Key customize
 ;;;
 (global-set-key [(control h)]	'delete-backward-char)
