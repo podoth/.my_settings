@@ -82,7 +82,7 @@
 ;;; open-junk-file。ごみファイルを~/.junkに生成する
 ;;;
 (autoload 'open-junk-file "open-junk-file")
-(setq open-junk-file-format "~/.junk/%Y/%m/%d/%H-%M.")
+(setq open-junk-file-format "~/.junk/%Y-%m-%d/%H-%M.")
 (global-set-key "\C-c\C-j" 'open-junk-file)
 
 ;;;
