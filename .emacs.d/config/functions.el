@@ -136,7 +136,16 @@
          (t (forward-char) (backward-word) (kill-word 1)))))
 (global-set-key "\M-d" 'kill-word-at-point)
 
-
+;;;
+;;; yankの上書きする版
+;;;
+(defun yank-overwrite ()
+  (interactive)
+  (if mark-active
+      (delete-region (region-beginning) (region-end))
+    (delete-line))
+  (yank))
+(global-set-key [(control meta y)] 'yank-overwrite)
 
 ;;;
 ;;; 範囲指定していない時、C-wで前の単語を削除
