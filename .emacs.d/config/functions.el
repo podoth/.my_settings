@@ -346,3 +346,80 @@
 
 
 
+;;;
+;;; マイナーモードを折り畳む
+;;; http://d.hatena.ne.jp/tequilasunset/20100605/p1
+;;;
+(eval-when-compile
+  (require 'cl))
+
+(defvar hide-minor-modes-line nil
+  "実際に折り畳まれる部分。")
+
+(defun hide-minor-modes-set-line ()
+  "変数 `hide-minor-modes-line' を設定する。"
+  (unless (local-variable-p 'mode-line-modes)
+    (make-local-variable 'mode-line-modes))
+  (unless hide-minor-modes-line
+    (setq hide-minor-modes-line
+          (catch 'res
+            (dolist (elt (default-value 'mode-line-modes) 'none)
+              (when (and (consp elt)
+                         (equal (car elt) :propertize)
+                         (member '("" minor-mode-alist) (cdr elt)))
+                (throw 'res elt)))))))
+
+(defun* hide-minor-modes-toggle (&optional (arg 'toggle))
+  "モードライン上のマイナーモードの表示／非表示を切り替える。"
+  (interactive)
+  (hide-minor-modes-set-line)
+  (let* ((desc-fn (lambda () (interactive)
+                    (describe-function 'hide-minor-modes-toggle)))
+         (format `(:propertize
+                   ":"
+                   mouse-face
+                   mode-line-highlight
+                   local-map
+                   (keymap (mode-line keymap
+                                      (mouse-2 . ,desc-fn)
+                                      (down-mouse-1
+                                       . hide-minor-modes-toggle )))))
+	 (hide (cond
+		((< (prefix-numeric-value arg) 0) nil)
+		((equal arg 0) nil)
+		((equal arg 'toggle) (member hide-minor-modes-line mode-line-modes))
+		(t t)
+		)))
+    (cond
+     ((equal hide-minor-modes-line 'none)
+      ;; 折り畳める部分が存在しない
+      nil)
+     (hide
+      ;; 折り畳む
+      (setq mode-line-modes
+            (let ((lst (remove hide-minor-modes-line mode-line-modes)))
+              (if (member format lst) lst (cons format lst)))))
+     (t
+      ;; 伸長する
+      (setq mode-line-modes (cons format (default-value 'mode-line-modes))))))
+  (force-mode-line-update t))
+
+
+(defun hide-minor-modes-enable ()
+  (hide-minor-modes-toggle t))
+
+(defun hide-minor-modes-disable ()
+  (setq mode-line-modes (default-value 'mode-line-modes))
+  (force-mode-line-update t))
+
+(defvar hide-minor-modes-mode-keymap (make-keymap) "hide-minor-modes-mode keymap.")
+(define-minor-mode hide-minor-modes-mode
+  "hide minor-modes from mode-line"
+  :keymap hide-minor-modes-mode-keymap
+  (if hide-minor-modes-mode
+      (hide-minor-modes-enable)
+    (hide-minor-modes-disable)))
+(define-global-minor-mode global-hide-minor-modes-mode hide-minor-modes-mode hide-minor-modes-mode)
+
+(global-hide-minor-modes-mode t)
+(define-key hide-minor-modes-mode-keymap (kbd "C-c m") 'hide-minor-modes-toggle)
