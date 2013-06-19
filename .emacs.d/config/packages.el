@@ -349,3 +349,9 @@
 		      "~/.emacs.d/packages/yasnippet-0.6.1c/dropdown-list.el"))
 
 
+
+;;;
+;;; dabbrevの日本語対応
+;;;
+(load "dabbrev-ja")
+
