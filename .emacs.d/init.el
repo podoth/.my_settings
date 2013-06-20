@@ -301,6 +301,7 @@
 (load "config/functions")
 
 ; 粒度の荒い設定達
+(load "config/completion-common")
 (load "config/whitespace-common")
 (load "config/flymake-common")
 (load "config/helm-common")

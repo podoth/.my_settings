@@ -112,8 +112,3 @@
 ;; 初回起動が遅いのでキャッシュを作成(更新は C-u を付けて woman を呼ぶ)
 (setq woman-cache-filename (expand-file-name "~/.emacs.d/var/woman_cache.el"))
 
-;;;
-;;; dabbrev
-;;;
-; 大文字小文字変換をしない
-(setq dabbrev-case-replace nil)
