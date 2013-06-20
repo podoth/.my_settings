@@ -90,6 +90,11 @@
 (setq cpp-face-type 'light)
 (setq cpp-known-writable 't)
 (setq cpp-unknown-writable 't)
+; 保存するたびに更新する
+(add-hook 'before-save-hook '(lambda () (when (or (equal major-mode 'c-mode)
+                                                  (equal major-mode 'c++-mode))
+                                          (cpp-highlight-buffer t))))
+; キーワードの設定
 (setq cpp-edit-list ())
 (setq cpp-edit-list
       (append cpp-edit-list

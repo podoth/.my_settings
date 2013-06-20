@@ -14,7 +14,7 @@
 (defface my-camouflage-face `((t (:foreground ,my-foreground-color :background ,my-background-color))) nil)
 
 ; 目立たせたくないものに使う迷彩色
-(defvar my-foreground-camouflaged-color "#555555")
+(defvar my-foreground-camouflaged-color "#444444")
 (defface my-camouflaged-face `((t (:foreground ,my-foreground-camouflaged-color))) nil)
 
 ; プラスの効果
@@ -29,6 +29,15 @@
 ; regionはhighlightの中にあっても輝く
 (defvar my-background-region-color "#777777")
 (defvar my-background-highlight-color "#555555")
+
+
+(defvar my-background-warning-color "light blue")
+(defvar my-foreground-warning-color "black")
+(defface my-warning-face `((t (:foreground ,my-foreground-warning-color :background ,my-background-warning-color))) nil)
+
+(defvar my-background-error-color "light ping")
+(defvar my-foreground-error-color "black")
+(defface my-error-face `((t (:foreground ,my-foreground-error-color :background ,my-background-error-color))) nil)
 
 (set-foreground-color my-foreground-color) ; 文字色
 (set-background-color my-background-color) ; 背景色

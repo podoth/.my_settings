@@ -191,38 +191,6 @@
 ;; (global-set-key (kbd "C-M-f") 'forward-word+1)
 
 ;;;
-;;; 末尾の半角スペースとタブを表示(プログラミング系モードのみ)
-;;;
-(defface my-face-u-1 '((t (:foreground "SteelBlue" :underline t))) nil)
-(defvar my-face-u-1 'my-face-u-1)
-(defadvice font-lock-mode (before my-font-lock-mode ())
-(font-lock-add-keywords major-mode '(("[ \t]+$" 0 my-face-u-1 append))))
-(ad-enable-advice 'font-lock-mode 'before 'my-font-lock-mode)
-(ad-activate 'font-lock-mode)
-(add-hook 'find-file-hooks '(lambda ()
- (if font-lock-mode nil (font-lock-mode t))
-) t)
-(when (boundp 'show-trailing-whitespace)
-  (setq-default show-trailing-whitespace t))
-
-;;;
-;;; 保存時に行末の(タブ・半角スペース)を削除(プログラミング系モードかつgitレポジトリでない場合のみ)
-;;;
-(defun is-project-git-repository ()
-  (and
-   ; gitリポジトリ内
-   (let ((error-message (shell-command-to-string "git rev-parse")))
-     (string= error-message ""))
-   ; git管理されているファイル
-   (let ((result (shell-command-to-string (concat "git ls-files " (file-truename (buffer-file-name))))))
-    (message result)
-    (not (string= result "")))))
-(add-hook 'before-save-hook
-	  '(lambda () (when (not (is-project-git-repository))
-			(delete-trailing-whitespace)))
-)
-
-;;;
 ;;; リージョンの行数と文字数をモードラインに表示
 ;;;
 (line-number-mode t)
@@ -241,11 +209,6 @@
 ;;; 現在のバッファをkillして、さらにwindowを閉じる
 ;;;
 (global-set-key (kbd "C-x K") 'kill-buffer-and-window)
-
-;;;
-;;; ファイルの最後にnewline
-;;;
-(setq require-final-newline t)
 
 ;;;
 ;;; 毎日0時に、一時バッファや三日間見ていないバッファをkillする
@@ -338,6 +301,7 @@
 (load "config/functions")
 
 ; 粒度の荒い設定達
+(load "config/whitespace-common")
 (load "config/flymake-common")
 (load "config/helm-common")
 (load "config/git-common")

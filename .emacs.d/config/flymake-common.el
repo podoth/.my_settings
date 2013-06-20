@@ -10,10 +10,8 @@
 (require 'flymake)
 
 ;; 色設定
-(custom-set-faces
-  '(flymake-errline ((((class color)) (:foreground "black" :background "light pink"))))
-  '(flymake-warnline ((((class color)) (:foreground "black" :background "light blue")))))
-
+(copy-face  'my-error-face 'flymake-errline)
+(copy-face  'my-warning-face 'flymake-warnline)
 ;; エラーをミニバッファに表示
 (defun credmp/flymake-display-err-minibuf ()
   (interactive)
