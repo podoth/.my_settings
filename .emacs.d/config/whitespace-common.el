@@ -48,21 +48,18 @@
 (set-face-background 'whitespace-space my-background-color)
 (set-face-foreground 'whitespace-tab my-foreground-camouflaged-color)
 (set-face-background 'whitespace-tab my-background-color)
+
 ;;;
 ;;; 保存時に行末の(タブ・半角スペース)を削除(プログラミング系モードかつgitレポジトリでない場合のみ)
 ;;;
 (if (executable-find "git")
-(defun is-project-git-repository ()
-  (and
-                                        ; gitリポジトリ内
-   (let ((error-message (shell-command-to-string "git rev-parse")))
-     (string= error-message ""))
-                                        ; git管理されているファイル
-   (let ((result (shell-command-to-string (concat "git ls-files " (file-truename (buffer-file-name))))))
-     (message result)
-     (not (string= result "")))))
-(defun is-project-git-repository () nil)
-)
+    (defun is-project-git-repository ()
+      (and (let ((error-message (shell-command-to-string "git rev-parse"))); gitリポジトリ内
+             (string= error-message ""))
+           (let ((result (shell-command-to-string (concat "git ls-files " (file-truename (buffer-file-name)))))); git管理されているファイル
+             (message result)
+             (not (string= result "")))))
+  (defun is-project-git-repository () t))
 (add-hook 'before-save-hook
           '(lambda () (when (not (is-project-git-repository))
                         (delete-trailing-whitespace))))
