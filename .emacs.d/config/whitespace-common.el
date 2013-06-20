@@ -51,6 +51,7 @@
 ;;;
 ;;; 保存時に行末の(タブ・半角スペース)を削除(プログラミング系モードかつgitレポジトリでない場合のみ)
 ;;;
+(if (executable-find "git")
 (defun is-project-git-repository ()
   (and
                                         ; gitリポジトリ内
@@ -60,6 +61,8 @@
    (let ((result (shell-command-to-string (concat "git ls-files " (file-truename (buffer-file-name))))))
      (message result)
      (not (string= result "")))))
+(defun is-project-git-repository () nil)
+)
 (add-hook 'before-save-hook
           '(lambda () (when (not (is-project-git-repository))
                         (delete-trailing-whitespace))))

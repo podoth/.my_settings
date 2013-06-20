@@ -4,6 +4,34 @@
 ;;;　f5~f9は自由に割り当てられる
 
 ;;;
+;;; 環境別に設定を切り分けるための設定
+;;;
+(setq darwin-p  (eq system-type 'darwin)
+      ns-p      (eq window-system 'ns)
+      carbon-p  (eq window-system 'mac)
+      linux-p   (eq system-type 'gnu/linux)
+      colinux-p (when linux-p
+                  (let ((file "/proc/modules"))
+                    (and
+                     (file-readable-p file)
+                     (x->bool
+                      (with-temp-buffer
+                        (insert-file-contents file)
+                        (goto-char (point-min))
+                        (re-search-forward "^cofuse\.+" nil t))))))
+      cygwin-p  (eq system-type 'cygwin)
+      nt-p      (eq system-type 'windows-nt)
+      meadow-p  (featurep 'meadow)
+      windows-p (or cygwin-p nt-p meadow-p))
+
+;;;
+;;; windowsのためのパス設定
+;;;
+(when windows-p
+  (setq explicit-shell-file-name (executable-find "bash"))
+  (setq shell-file-name (executable-find "bash")))
+
+;;;
 ;;; デバッグ
 ;;;
 (setq debug-on-error t)
@@ -305,7 +333,8 @@
 (load "config/whitespace-common")
 (load "config/flymake-common")
 (load "config/helm-common")
-(load "config/git-common")
+(when (executable-find "git")
+  (load "config/git-common"))
 (load "config/english-common")
 
 ; モード特有の設定達

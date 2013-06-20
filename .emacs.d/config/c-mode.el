@@ -144,39 +144,40 @@
 ;;; auto-complete-clang-async
 ;;; 文脈を考慮したC/C++用の補完。少し速いらしい
 ;;;
-(add-hook 'c-mode-common-hook
- 	  '(lambda ()
-	     (require 'auto-complete-clang-async)
+(when (executable-find "clang")
+  (add-hook 'c-mode-common-hook
+            '(lambda ()
+               (require 'auto-complete-clang-async)
 
-	     ;; (setq ac-auto-start nil)
-	     ;; (setq complejjjtion-mode t)
-	     ;; (setq ac-expand-on-auto-complete nil)
+               ;; (setq ac-auto-start nil)
+               ;; (setq complejjjtion-mode t)
+               ;; (setq ac-expand-on-auto-complete nil)
 
-	     ; ac-auto-startに数値を入れるのは何故か効かない
-	     (setq ac-auto-start nil)
-	     ;; (setq ac-clang-async-do-autocompletion-automatically t)
+                                        ; ac-auto-startに数値を入れるのは何故か効かない
+               (setq ac-auto-start nil)
+               ;; (setq ac-clang-async-do-autocompletion-automatically t)
 
-	     (setq ac-clang-complete-executable "~/.emacs.d/etc/clang-complete")
+               (setq ac-clang-complete-executable "~/.emacs.d/etc/clang-complete")
 
-	     (setq ac-quick-help-delay 0.1)
+               (setq ac-quick-help-delay 0.1)
 
-	     ; ac-source-gtagsを入れると重くなる
-	     (setq ac-sources (append '(ac-source-clang-async)
-	     			      ac-sources))
+                                        ; ac-source-gtagsを入れると重くなる
+               (setq ac-sources (append '(ac-source-clang-async)
+                                        ac-sources))
 
-	     (ac-clang-launch-completion-process)
+               (ac-clang-launch-completion-process)
 
-	     ;; clangのインクルードパスベタがきの仕様により、C++の方はインクルードパスを指定してやらないといけない
-	     (setq ac-clang-cflags
-		   (mapcar (lambda (item) (concat "-I" item))
-			   (list "/usr/include/c++/4.5"
-				 "/usr/include/c++/4.5/i486-linux-gnu"
-				 "/usr/include/c++/4.5/i686-linux-gnu"
-				 "/usr/lib/i386-linux-gnu/gcc/i686-linux-gnu/4.5/include"
-				 "/usr/local/include"
-				 "/usr/include")))
-	     (ac-clang-update-cmdlineargs)
-	     ))
+               ;; clangのインクルードパスベタがきの仕様により、C++の方はインクルードパスを指定してやらないといけない
+               (setq ac-clang-cflags
+                     (mapcar (lambda (item) (concat "-I" item))
+                             (list "/usr/include/c++/4.5"
+                                   "/usr/include/c++/4.5/i486-linux-gnu"
+                                   "/usr/include/c++/4.5/i686-linux-gnu"
+                                   "/usr/lib/i386-linux-gnu/gcc/i686-linux-gnu/4.5/include"
+                                   "/usr/local/include"
+                                   "/usr/include")))
+               (ac-clang-update-cmdlineargs)
+               )))
 
 ;;;
 ;;; gtags
