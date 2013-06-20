@@ -39,6 +39,7 @@
 ;;;
 ;;; magit
 ;;;
+(setq load-path (cons "~/.emacs.d/packages/magit" load-path))
 (autoload 'magit-status "magit")
 (global-set-key (kbd "C-c g") 'magit-status)
 
