@@ -182,28 +182,29 @@
 ;;;
 ;;; gtags
 ;;;
-(autoload 'gtags-mode "gtags" "" t)
-(add-hook 'c-mode-common-hook 'gtags-mode)
-(add-hook 'asm-mode-hook 'gtags-mode)
-(setq gtags-auto-update t)
-(setq gtags-ignore-case t)
-(setq gtags-mode-hook
-      '(lambda ()
-         (local-set-key "\M-t" 'gtags-find-tag)
-         (local-set-key "\M-r" 'gtags-find-rtag)
-         (local-set-key "\M-s" 'gtags-find-symbol)
-         (local-set-key "\C-t" 'gtags-pop-stack)
-         ))
-; auto-updateを非同期にする（これで合っているかは分からない）
-(defun gtags-auto-update-async ()
+(when (executable-find "gtags")
+  (autoload 'gtags-mode "gtags" "" t)
+  (add-hook 'c-mode-common-hook 'gtags-mode)
+  (add-hook 'asm-mode-hook 'gtags-mode)
+  (setq gtags-auto-update t)
+  (setq gtags-ignore-case t)
+  (setq gtags-mode-hook
+        '(lambda ()
+           (local-set-key "\M-t" 'gtags-find-tag)
+           (local-set-key "\M-r" 'gtags-find-rtag)
+           (local-set-key "\M-s" 'gtags-find-symbol)
+           (local-set-key "\C-t" 'gtags-pop-stack)
+           ))
+  ; auto-updateを非同期にする（これで合っているかは分からない）
+  (defun gtags-auto-update-async ()
     (if (and gtags-mode gtags-auto-update buffer-file-name)
         (progn
           (gtags-push-tramp-environment)
-	  (start-process "gtags" "*gtags*" gtags-global-command "-u" (concat "--single-update=" (gtags-buffer-file-name)))
+          (start-process "gtags" "*gtags*" gtags-global-command "-u" (concat "--single-update=" (gtags-buffer-file-name)))
           (gtags-pop-tramp-environment))))
-(defadvice gtags-auto-update (around make-async activate)
-  (gtags-auto-update-async))
-
+  (defadvice gtags-auto-update (around make-async activate)
+    (gtags-auto-update-async))
+  )
 ;;;
 ;;; c-eldoc
 ;;; 関数呼び出しを書くときに仮引数をミニバッファに表示したり
@@ -219,23 +220,24 @@
 ;;;
 ;;; helm-gtags
 ;;;
-(add-to-list 'load-path "~/.emacs.d/packages/emacs-helm-gtags")
-(autoload 'helm-gtags-mode "helm-gtags")
-(add-hook 'c-mode-hook 'helm-gtags-mode)
-(add-hook 'c++-mode-hook 'helm-gtags-mode)
-(add-hook 'asm-mode-hook 'helm-gtags-mode)
-(eval-after-load "helm-gtags"
-  '(progn
-     (setq helm-gtags-ignore-case t)
-     (add-hook 'helm-gtags-mode-hook
-	       '(lambda ()
-		  (local-set-key (kbd "M-T") 'helm-gtags-find-tag)
-		  (local-set-key (kbd "M-R") 'helm-gtags-find-rtag)
-		  (local-set-key (kbd "M-S") 'helm-gtags-find-symbol)
-		  (local-set-key (kbd "C-T") 'helm-gtags-pop-stack)
-		  ))
-     ))
-
+(when (executable-find "gtags")
+  (add-to-list 'load-path "~/.emacs.d/packages/emacs-helm-gtags")
+  (autoload 'helm-gtags-mode "helm-gtags")
+  (add-hook 'c-mode-hook 'helm-gtags-mode)
+  (add-hook 'c++-mode-hook 'helm-gtags-mode)
+  (add-hook 'asm-mode-hook 'helm-gtags-mode)
+  (eval-after-load "helm-gtags"
+    '(progn
+       (setq helm-gtags-ignore-case t)
+       (add-hook 'helm-gtags-mode-hook
+                 '(lambda ()
+                    (local-set-key (kbd "M-T") 'helm-gtags-find-tag)
+                    (local-set-key (kbd "M-R") 'helm-gtags-find-rtag)
+                    (local-set-key (kbd "M-S") 'helm-gtags-find-symbol)
+                    (local-set-key (kbd "C-T") 'helm-gtags-pop-stack)
+                    ))
+       ))
+  )
 ;;;
 ;;; helm-flymake
 ;;;
