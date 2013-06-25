@@ -50,13 +50,6 @@
 
 (add-hook 'cperl-mode-hook 'flymake-perl-load)
 
-(add-hook
- 'cperl-mode-hook
- '(lambda ()
-    (define-key cperl-mode-map "\C-cd" 'credmp/flymake-display-err-minibuf)))
-
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; package

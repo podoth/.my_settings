@@ -22,15 +22,19 @@
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+
 ;;;
 ;;; auto-complete
 ;;;
-(setq ac-dir "~/.emacs.d/packages/auto-complete-1.3.1/")
-(add-to-list 'load-path ac-dir)
+;; (setq ac-dir "~/.emacs.d/packages/auto-complete-1.3.1/")
+(setq ac-dir "~/.emacs.d/packages/auto-complete/")
+(add-to-list 'load-path "~/.emacs.d/packages/auto-complete/")
 (require 'auto-complete-config)
 (ac-config-default)
 (add-to-list 'ac-dictionary-directories (concat ac-dir "ac-dict/"))
-(global-set-key "\M-\\" 'ac-start)
+;; (global-set-key "\M-\\" 'ac-start)
+;; (global-set-key "\M-\\" (lambda () (interactive)(ac-start :requires 0 :triggered nil)))
+(global-set-key "\M-\\" 'auto-complete)
 (setq ac-comphist-file "~/.emacs.d/var/ac-comphist.dat")
 ;; C-n/C-p で候補を選択
 (define-key ac-complete-mode-map "\M-n" 'ac-next)
@@ -39,6 +43,11 @@
 (setq ac-ignore-case t)
 ;; 補完対象に大文字が含まれる場合のみ区別する
 (setq ac-ignore-case 'smart)
+;; 制限数をつけてフリーズしないようにする
+(setq ac-candidate-limit 1000)
+;; gtagsをac-sourceに使わない（多すぎるので）
+(defun ac-cc-mode-setup ()
+  (setq ac-sources (append '(ac-source-yasnippet) ac-sources)))
 
 ;;;
 ;;; yasnippet
@@ -61,7 +70,9 @@
 		      "~/.emacs.d/packages/yasnippet-0.6.1c/yasnippet-bundle.el"
 		      "~/.emacs.d/etc/snippets"
 		      ""
-		      "~/.emacs.d/packages/yasnippet-0.6.1c/dropdown-list.el"))
+		      "~/.emacs.d/packages/yasnippet-0.6.1c/dropdown-list.el")
+  (byte-compile-file "~/.emacs.d/packages/yasnippet-0.6.1c/yasnippet-bundle.el")
+  (load "yasnippet-bundle"))
 
 ;;;
 ;;; dabbrevの日本語対応

@@ -74,12 +74,7 @@
 (push '("\\.[cC]$" flymake-c-init) flymake-allowed-file-name-masks)
 (push '("\\.\\(cc\\|cpp\\|CC\\|CPP\\)$" flymake-cc-init) flymake-allowed-file-name-masks)
 
-(add-hook
- 'c-mode-common-hook
- '(lambda ()
-    (flymake-mode t)
-    (define-key c-mode-map "\C-cd" 'credmp/flymake-display-err-minibuf)
-    (define-key c++-mode-map "\C-cd" 'credmp/flymake-display-err-minibuf)))
+(add-hook 'c-mode-common-hook 'flymake-mode)
 
 ;;;
 ;;; c/c++でif 0, if 1の偽部分を灰色にする
@@ -238,8 +233,3 @@
                     ))
        ))
   )
-;;;
-;;; helm-flymake
-;;;
-(autoload 'helm-flymake "helm-flymake")
-(global-set-key (kbd "C-c e") 'helm-flymake)

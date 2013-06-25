@@ -38,8 +38,8 @@
 (defun flymake-shell-load ()
   (setq flymake-allowed-file-name-masks (append flymake-allowed-file-name-masks flymake-allowed-shell-file-name-masks))
   (setq flymake-err-line-patterns (append flymake-err-line-patterns flymake-shell-err-line-pattern-re))
-  (flymake-mode t)
-  (local-set-key (kbd "C-c d") 'credmp/flymake-display-err-minibuf))
+  (flymake-mode t))
+
 (add-hook 'sh-mode-hook 'flymake-shell-load)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

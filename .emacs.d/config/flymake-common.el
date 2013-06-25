@@ -22,6 +22,7 @@
 		      (car (flymake-find-err-info flymake-err-info
 						  (flymake-current-line-no)))
 		      "\n")))
+(add-hook 'flymake-mode-hook (lambda () (local-set-key "\C-cd" 'credmp/flymake-display-err-minibuf)))
 
 ;; M-p/M-n で警告/エラー行の移動
 (global-set-key "\M-p" 'flymake-goto-prev-error)
@@ -69,3 +70,9 @@ Return its components if so, nil otherwise."
 ;;; package
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;
+;;; helm-flymake
+;;;
+(autoload 'helm-flymake "helm-flymake")
+(global-set-key (kbd "C-c e") 'helm-flymake)

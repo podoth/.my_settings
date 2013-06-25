@@ -322,14 +322,15 @@
 ; 粒度の荒い設定達
 (load "config/completion-common")
 (load "config/whitespace-common")
-(load "config/flymake-common")
 (load "config/helm-common")
+(load "config/flymake-common")
 (when (executable-find "git")
   (load "config/git-common"))
 (load "config/english-common")
 
 ; モード特有の設定達
 (load "config/c-mode")
+(load "config/java-mode")
 (load "config/linux-kernel-mode")
 (autoload 'LaTeX-mode-config "config/latex-mode-config" "" t)
 (add-to-list 'auto-mode-alist '("\\.tex\\'" . LaTeX-mode-config))

@@ -35,7 +35,7 @@
 (defvar my-foreground-warning-color "black")
 (defface my-warning-face `((t (:foreground ,my-foreground-warning-color :background ,my-background-warning-color))) nil)
 
-(defvar my-background-error-color "light ping")
+(defvar my-background-error-color "light pink")
 (defvar my-foreground-error-color "black")
 (defface my-error-face `((t (:foreground ,my-foreground-error-color :background ,my-background-error-color))) nil)
 
