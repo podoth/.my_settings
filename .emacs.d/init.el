@@ -25,7 +25,7 @@
 ;;;
 ;;; デバッグ
 ;;;
-(setq debug-on-error t)
+;; (setq debug-on-error t)
 
 ;;;
 ;;; ロードパスの追加
