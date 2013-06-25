@@ -7,3 +7,9 @@
 [submodule ".emacs.d/packages/helm"]
 	path = .emacs.d/packages/helm
 	url = https://github.com/emacs-helm/helm.git
+[submodule ".emacs.d/packages/popup-el"]
+	path = .emacs.d/packages/popup-el
+	url = https://github.com/auto-complete/popup-el.git
+[submodule ".emacs.d/packages/auto-complete"]
+	path = .emacs.d/packages/auto-complete
+	url = https://github.com/auto-complete/auto-complete.git

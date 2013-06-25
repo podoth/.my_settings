@@ -315,3 +315,8 @@
 (global-set-key (kbd "C-c n") 'highlight-symbol-next)
 (global-set-key (kbd "C-c p") 'highlight-symbol-prev)
 
+;;;
+;;; popup
+;;;
+(add-to-list 'load-path "~/.emacs.d/packages/popup-el/")
+(require 'popup)

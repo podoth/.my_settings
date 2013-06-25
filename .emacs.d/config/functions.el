@@ -320,8 +320,6 @@
 ;;;
 (eval-when-compile
   (require 'cl))
-(setq ac-dir "~/.emacs.d/packages/auto-complete-1.3.1/")
-(add-to-list 'load-path ac-dir)
 (require 'popup)
 
 (defvar popup-color-string
