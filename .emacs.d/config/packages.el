@@ -171,7 +171,8 @@
 ;;;
 (when (require 'mozc nil t)
   (setq default-input-method "japanese-mozc")
-  (setq mozc-candidate-style 'overlay)
+  ;; (setq mozc-candidate-style 'overlay)
+  (setq mozc-candidate-style 'echo-area)
   (global-set-key (kbd "S-SPC") 'toggle-input-method) 
   ;; faces
   ;; (set-face-attribute 'mozc-cand-overlay-even-face 'nil
