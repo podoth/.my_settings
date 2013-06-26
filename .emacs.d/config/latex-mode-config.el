@@ -7,53 +7,59 @@
 ;;;
 ;;; flymake
 ;;;
-(require 'flymake)
+(when (executable-find "platex")
+  (progn
+    (require 'flymake)
 
-;; for latex
-(defun flymake-tex-init ()
-  (let* ((temp-file   (flymake-init-create-temp-buffer-copy
-                       'flymake-create-temp-inplace))
-         (local-dir   (file-name-directory buffer-file-name))
-         (local-file  (file-relative-name
-                       temp-file
-                       local-dir)))
-    (list "platex" (list "-file-line-error" "-interaction=nonstopmode" local-file))))
-(defun flymake-tex-cleanup-custom ()
-  (let* ((base-file-name (file-name-sans-extension (file-name-nondirectory flymake-temp-source-file-name)))
-          (regexp-base-file-name (concat "^" base-file-name "\\.")))
-    (mapcar '(lambda (filename)
-                      (when (string-match regexp-base-file-name filename)
-                         (flymake-safe-delete-file filename)))
+    ;; for latex
+    (defun flymake-tex-init ()
+      (let* ((temp-file   (flymake-init-create-temp-buffer-copy
+                           'flymake-create-temp-inplace))
+             (local-dir   (file-name-directory buffer-file-name))
+             (local-file  (file-relative-name
+                           temp-file
+                           local-dir)))
+        (list "platex" (list "-file-line-error" "-interaction=nonstopmode" local-file))))
+    (defun flymake-tex-cleanup-custom ()
+      (let* ((base-file-name (file-name-sans-extension (file-name-nondirectory flymake-temp-source-file-name)))
+             (regexp-base-file-name (concat "^" base-file-name "\\.")))
+        (mapcar '(lambda (filename)
+                   (when (string-match regexp-base-file-name filename)
+                     (flymake-safe-delete-file filename)))
                 (split-string (shell-command-to-string "ls"))))
-  (setq flymake-last-change-time nil))
-(push '("\\.tex$" flymake-tex-init flymake-tex-cleanup-custom) flymake-allowed-file-name-masks)
+      (setq flymake-last-change-time nil))
+    (push '("\\.tex$" flymake-tex-init flymake-tex-cleanup-custom) flymake-allowed-file-name-masks)
 
-(add-hook
- 'TeX-mode-hook
- '(lambda ()
-    (flymake-mode t)
-    (define-key LaTeX-mode-map "\C-cd" 'credmp/flymake-display-err-minibuf)))
+    (add-hook
+     'TeX-mode-hook
+     '(lambda ()
+        (flymake-mode t)
+        (define-key LaTeX-mode-map "\C-cd" 'credmp/flymake-display-err-minibuf)))
+    ))
 
 ;;;
 ;;; flyspell
 ;;;
 (setq ispell-program-name "aspell")
-(setq ispell-grep-command "grep")
-(setq flyspell-issue-welcome-flag nil)
-;; 日本語はスキップするようにする
-(eval-after-load "ispell"
-  '(add-to-list 'ispell-skip-region-alist '("[^\000-\377]")))
-(defun my-turn-on-flyspell ()
-  (flyspell-mode)
-  ;; 前後の日本語を巻き込んで強調しないようにする
-  ;; http://www.morishima.net/~naoto/fragments/archives/2005/12/20/flyspell/
-  (setq ispell-local-dictionary-alist
-	'((nil "[a-zA-Z]" "[^a-zA-Z]" "'" t ("-d" "en" "--encoding=utf-8") nil utf-8)))
-  ;; このキーバインドは使わない上に他のとかぶる
-  (define-key flyspell-mode-map [(control ?\,)] nil)
-  (define-key flyspell-mode-map [(control ?\.)] nil)
-)
-(add-hook 'LaTeX-mode-hook 'my-turn-on-flyspell)
+(when (executable-find ispell-program-name)
+  (progn
+    (setq ispell-grep-command "grep")
+    (setq flyspell-issue-welcome-flag nil)
+    ;; 日本語はスキップするようにする
+    (eval-after-load "ispell"
+      '(add-to-list 'ispell-skip-region-alist '("[^\000-\377]")))
+    (defun my-turn-on-flyspell ()
+      (flyspell-mode)
+      ;; 前後の日本語を巻き込んで強調しないようにする
+      ;; http://www.morishima.net/~naoto/fragments/archives/2005/12/20/flyspell/
+      (setq ispell-local-dictionary-alist
+            '((nil "[a-zA-Z]" "[^a-zA-Z]" "'" t ("-d" "en" "--encoding=utf-8") nil utf-8)))
+      ;; このキーバインドは使わない上に他のとかぶる
+      (define-key flyspell-mode-map [(control ?\,)] nil)
+      (define-key flyspell-mode-map [(control ?\.)] nil))
+    (add-hook 'TeX-mode-hook 'my-turn-on-flyspell)
+    ))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; package
@@ -63,8 +69,10 @@
 ;;;
 ;;; auctex
 ;;;
-(if (locate-library "auctex")
-    (load "auctex.el" nil t t))
+(setq auc-directory "~/.emacs.d/packages/auctex")
+(setq load-path (cons auc-directory load-path))
+(load (concat (file-name-as-directory auc-directory) "auctex"))
+(load (concat (file-name-as-directory auc-directory) "tex-jp"))
 (setq TeX-japanese-process-input-coding-system  'japanese-iso-8bit
       TeX-japanese-process-output-coding-system 'iso-2022-jp
       LaTeX-version			"2e"
@@ -113,6 +121,7 @@
 ;;;
 ;;; プレビュー
 ;;;
+(setq load-path (cons "~/.emacs.d/packages/auctex/preview" load-path))
 (require 'preview-latex)
 
 
@@ -137,9 +146,6 @@
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
 (setq-default TeX-master nil)
-
-;; fly-spell
-(add-hook 'LaTeX-mode-hook 'my-turn-on-flyspell)
 
 ;;;
 ;;; 邪魔なキーバインドを排除
