@@ -45,6 +45,8 @@
 (setq ac-ignore-case 'smart)
 ;; 制限数をつけてフリーズしないようにする
 (setq ac-candidate-limit 1000)
+;; 遅延
+(setq ac-delay 0.2)
 ;; gtagsをac-sourceに使わない（多すぎるので）
 (defun ac-cc-mode-setup ()
   (setq ac-sources (append '(ac-source-yasnippet) ac-sources)))

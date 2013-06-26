@@ -74,7 +74,8 @@
 (push '("\\.[cC]$" flymake-c-init) flymake-allowed-file-name-masks)
 (push '("\\.\\(cc\\|cpp\\|CC\\|CPP\\)$" flymake-cc-init) flymake-allowed-file-name-masks)
 
-(add-hook 'c-mode-common-hook 'flymake-mode)
+(add-hook 'c-mode-hook 'flymake-mode)
+(add-hook 'c++-mode-hook 'flymake-mode)
 
 ;;;
 ;;; c/c++でif 0, if 1の偽部分を灰色にする
@@ -149,7 +150,7 @@
       ;; (setq ac-expand-on-auto-complete nil)
 
       ;; ac-auto-startに数値を入れるのは何故か効かない
-      (setq ac-auto-start nil)
+      (setq ac-auto-start 3)
       ;; (setq ac-clang-async-do-autocompletion-automatically t)
 
       (setq ac-clang-complete-executable "~/.emacs.d/etc/clang-complete")
