@@ -86,8 +86,11 @@
 
 ;;;
 ;;; emacsclient
+;;; serverが起動していなければ起動する。
+;;; どちらにしても、自分の名前は一意にしておく。（emacsclientを用いて指定したemacsにファイルをひらかせる需要がある）
 ;;;
 (require 'server)
+(setq server-name (concat "server-" (number-to-string (emacs-pid))))
 (unless (server-running-p) (server-start))
 
 ;;;
