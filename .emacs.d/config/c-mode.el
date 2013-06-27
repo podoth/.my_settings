@@ -151,7 +151,19 @@
 
       ;; ac-auto-startに数値を入れるのは何故か効かない
       (setq ac-auto-start 3)
-      ;; (setq ac-clang-async-do-autocompletion-automatically t)
+      (setq ac-clang-async-do-autocompletion-automatically t)
+      ;; ac-auto-startとac-clang-async-do-autocompletion-automaticallyを共存させるために、以下の関数を上書きする
+      ;; この設定をしないとac-auto-startをnilにしない限りac-clang-async-do-autocompletion-automaticallyが動作しない
+      ;; あと、sit-forをつけた
+      (defun ac-clang-async-preemptive ()
+        (interactive)
+        (self-insert-command 1)
+        ;; (if (eq ac-clang-status 'idle)
+        (if   (and (sit-for ac-delay)
+                   (eq ac-clang-status 'idle))
+            ;; (ac-start)
+            (auto-complete)
+          (setq ac-clang-status 'preempted)))
 
       (setq ac-clang-complete-executable "~/.emacs.d/etc/clang-complete")
 

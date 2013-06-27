@@ -50,9 +50,7 @@
 ;; gtagsをac-sourceに使わない（多すぎるので）
 (defun ac-cc-mode-setup ()
   (setq ac-sources (append '(ac-source-yasnippet) ac-sources)))
-;; eclimのドット補完時など、ここのrequiresが1になっているせいで上手く機能しないときがある。
-;; なので、書き換える
-;; version 1.4.0用
+;; version 1.4.0用修正
 (defun ac-prefix (requires ignore-list)
   (loop with current = (point)
         with point
@@ -60,8 +58,10 @@
         with sources
         for source in (ac-compiled-sources)
         for prefix = (assoc-default 'prefix source)
-        ;; for req = (or (assoc-default 'requires source) requires 1)
-        for req = (or (assoc-default 'requires source) requires 0)
+        for req = (or (assoc-default 'requires source) requires 1)
+        ;; eclimのドット補完時など、ここのrequiresが1になっているせいで上手く機能しないときがある。
+        ;; なので、ac-define-source時のrequiresを0にするかここを書き換えるしかない
+        ;; for req = (or (assoc-default 'requires source) requires 0)
 
         if (null prefix-def)
         do
@@ -84,6 +84,7 @@
                           (eval prefix))))
             (if (and point
                      (integerp req)
+                     ;; また、ac-auto-startオプションが効かないときがあるのでそれもここを書き換えるしかない
                      ;; (< (- current point) req))
                      (< (- current point)
                         (or (and requires (max req requires)) req)))
@@ -94,6 +95,15 @@
 
         finally return
         (and point (list prefix-def point (nreverse sources)))))
+;; "."で自動的にautocompleteを始めるようにセットする関数
+;; clang-complete-asyncから持ってきて、sit-forとか追加した
+(defun my-autocomplete-autotrigger ()
+  (interactive)
+  (self-insert-command 1)
+  (when (sit-for ac-delay)
+    (auto-complete)))
+(defun my-set-autocomplete-trigger (key)
+  (local-set-key key 'my-autocomplete-autotrigger))
 
 ;;;
 ;;; yasnippet

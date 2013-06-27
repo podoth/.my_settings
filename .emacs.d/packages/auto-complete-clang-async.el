@@ -593,7 +593,7 @@ set new cflags for ac-clang from shell command output"
   (interactive)
   (self-insert-command 1)
   (if (eq ac-clang-status 'idle)
-      (ac-start)
+      (auto-complete)
     (setq ac-clang-status 'preempted)))
 
 (defun ac-clang-launch-completion-process ()

@@ -38,7 +38,22 @@
 
 ;; eclimでautocomplete
 (require 'ac-emacs-eclim-source)
-(ac-emacs-eclim-config)
+;; requiresを0にしてやらないと、"."を打った時に補完ができない。
+;; また、色も嫌なので変える
+(ac-define-source emacs-eclim
+  '((candidates . eclim--completion-candidates)
+    (action . eclim--completion-action)
+    (prefix . eclim-completion-start)
+    (requires . 0)
+    (document . eclim--completion-documentation)
+    (cache)
+    ;; (selection-face . ac-emacs-eclim-selection-face)
+    ;; (candidate-face . ac-emacs-eclim-candidate-face)
+    (symbol . "f")))
+(add-hook 'eclim-mode-hook (lambda ()
+                             (ac-emacs-eclim-config)
+                             (setq ac-auto-start 3)
+                             (my-set-autocomplete-trigger (kbd "."))))
 
 ;; タグジャンプっぽいの
  (define-key eclim-mode-map "\M-t" 'eclim-java-find-declaration)
