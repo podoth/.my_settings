@@ -37,9 +37,14 @@
 ;;; jump window with C-,
 ;;; switch buffer with C-M-,
 ;;;
+(defun split-window-conditional ()
+  (interactive)
+  (if (> (* (window-height) 2) (window-width))
+      (split-window-vertically)
+    (split-window-horizontally)))
 (defun other-window-or-split ()
   (interactive)
-  (when (one-window-p)(split-window-horizontally))
+  (when (one-window-p)(split-window-conditional))
   (other-window 1))
 (global-set-key (kbd "C-,") 'other-window-or-split)
 (global-set-key (kbd "C-M-,") 'next-buffer)
