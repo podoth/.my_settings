@@ -336,6 +336,7 @@
 (load "config/java-mode")
 (load "config/linux-kernel-mode")
 (autoload 'LaTeX-mode-config "config/latex-mode-config" "" t)
+(autoload 'japanese-latex-mode "config/latex-mode-config" "" t)
 (add-to-list 'auto-mode-alist '("\\.tex\\'" . LaTeX-mode-config))
 (autoload 'python-mode "config/python-mode-config" "" t)
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode-config))
