@@ -13,10 +13,17 @@
 (setq load-path (cons "~/.emacs.d/packages/emacs-eclim" load-path))
 (require 'eclim)
 (require 'eclimd)
-; eclipse-dirs -> eclim-executable -> eclimd-executableの順に設定しないと検索が上手くいかない
+;; 出来るだけ自動で探せるようにする
+;; eclipse-dirs -> eclim-executable -> eclimd-executableの順に設定しないと検索が上手くいかない
 (custom-set-variables
  '(eclim-eclipse-dirs '("/opt/eclipse"))
  '(eclimd-default-workspace "~/workspace"))
+(defadvice eclim-executable-find (after treat-windows activate)
+  (when windows-p
+    (setq ad-return-value (concat ad-return-value ".bat"))))
+(defadvice eclimd--executable-path (after treat-windows activate)
+  (when windows-p
+    (setq ad-return-value (concat ad-return-value ".bat"))))
 (custom-set-variables `(eclim-executable ,(eclim-executable-find)))
 (custom-set-variables `(eclimd-executable ,(eclimd--executable-path)))
 
