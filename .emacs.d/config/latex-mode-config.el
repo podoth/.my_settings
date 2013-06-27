@@ -69,10 +69,17 @@
 ;;;
 ;;; auctex
 ;;;
-(setq auc-directory "~/.emacs.d/packages/auctex")
-(setq load-path (cons auc-directory load-path))
-(load (concat (file-name-as-directory auc-directory) "auctex"))
-(load (concat (file-name-as-directory auc-directory) "tex-jp"))
+(when linux-p
+  (setq load-path (cons "~/.emacs.d/packages/auctex" load-path))
+  (load "~/.emacs.d/packages/auctex/auctex")
+  (require 'tex-jp))
+(when windows-p
+  (setq load-path (cons "~/.emacs.d/packages/auctex-win" load-path))
+  (setq load-path (cons "~/.emacs.d/packages/auctex-win/site-start.d" load-path))
+  (setq load-path (cons "~/.emacs.d/packages/auctex-win/auctex" load-path))
+  (load "~/.emacs.d/packages/auctex-win/site-start.d/auctex")
+  (require 'tex-jp))
+
 (setq TeX-japanese-process-input-coding-system  'japanese-iso-8bit
       TeX-japanese-process-output-coding-system 'iso-2022-jp
       LaTeX-version			"2e"
@@ -121,7 +128,10 @@
 ;;;
 ;;; プレビュー
 ;;;
-(setq load-path (cons "~/.emacs.d/packages/auctex/preview" load-path))
+(when linux-p
+  (setq load-path (cons "~/.emacs.d/packages/auctex/preview" load-path)))
+(when windows-p
+  (setq load-path (cons "~/.emacs.d/packages/auctex-win/site-start.d" load-path)))
 (require 'preview-latex)
 
 
