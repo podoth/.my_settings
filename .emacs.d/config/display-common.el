@@ -8,29 +8,29 @@
 ;; Color
 ;;
 
-; 普通のテキスト
+;; 普通のテキスト
 (defvar my-foreground-color "#CCCCCC")
 (defvar my-background-color "#333333")
-(defface my-camouflage-face `((t (:foreground ,my-foreground-color :background ,my-background-color))) nil)
+(defface my-default-face `((t (:foreground ,my-foreground-color :background ,my-background-color))) nil)
 
-; 目立たせたくないものに使う迷彩色
+;; 目立たせたくないものに使う迷彩色
 (defvar my-foreground-camouflaged-color "#444444")
 (defface my-camouflaged-face `((t (:foreground ,my-foreground-camouflaged-color))) nil)
 
-; プラスの効果
+;; プラスの効果
 (defvar my-foreground-plus-color "#7F7FFF")
 (defface my-plus-face `((t (:foreground ,my-foreground-plus-color))) nil)
 
-; マイナスの効果
+;; マイナスの効果
 (defvar my-foreground-minus-color "#FF7F7F")
 (defface my-minus-face `((t (:foreground ,my-foreground-minus-color))) nil)
 
-; highlight & region
-; regionはhighlightの中にあっても輝く
+;; highlight & region
+;; regionはhighlightの中にあっても輝く
 (defvar my-background-region-color "#777777")
 (defvar my-background-highlight-color "#555555")
 
-
+;; flymake
 (defvar my-background-warning-color "light blue")
 (defvar my-foreground-warning-color "black")
 (defface my-warning-face `((t (:foreground ,my-foreground-warning-color :background ,my-background-warning-color))) nil)
@@ -39,14 +39,23 @@
 (defvar my-foreground-error-color "black")
 (defface my-error-face `((t (:foreground ,my-foreground-error-color :background ,my-background-error-color))) nil)
 
-(set-foreground-color my-foreground-color) ; 文字色
-(set-background-color my-background-color) ; 背景色
+;; modeline
+(defvar my-background-modeline-inactive-color "#333333")
+(defvar my-foreground-modeline-inactive-color "#CCCCCC")
+(defface my-modeline-inactive-face `((t (:foreground ,my-foreground-modeline-inactive-color :background ,my-background-modeline-inactive-color))) nil)
+
+(defvar my-background-modeline-color "#CCCCCC")
+(defvar my-foreground-modeline-color "#333333")
+(defface my-modeline-face `((t (:foreground ,my-foreground-modeline-color :background ,my-background-modeline-color))) nil)
+
+(set-foreground-color my-foreground-color)
+(set-background-color my-background-color)
 (set-cursor-color "#FF0000") ; カーソル色
 (set-face-background 'region my-background-region-color) ; リージョン
-(set-face-foreground 'modeline-inactive "#CCCCCC") ; モードライン文字
-(set-face-background 'modeline-inactive "#333333") ; モードライン背景
-(set-face-foreground 'mode-line "#333333") ; モードライン文字(非アクティブ)
-(set-face-background 'mode-line "#CCCCCC") ; モードライン背景(非アクティブ)
+(set-face-foreground 'mode-line my-foreground-modeline-color)
+(set-face-background 'mode-line my-background-modeline-color)
+(set-face-foreground 'modeline-inactive my-foreground-modeline-inactive-color)
+(set-face-background 'modeline-inactive my-background-modeline-inactive-color)
 (set-face-foreground 'font-lock-comment-delimiter-face "#CCCC55") ; コメントデリミタ
 (set-face-foreground 'font-lock-comment-face "#CCCC55") ; コメント
 (set-face-foreground 'font-lock-string-face "#7FFF7F") ; 文字列

@@ -11,6 +11,7 @@
 ;;;
 (which-func-mode 1)
 (setq which-func-modes t)
+(copy-face 'mode-line 'which-func)
 
 ;;;
 ;;; linum 行番号を表示する
