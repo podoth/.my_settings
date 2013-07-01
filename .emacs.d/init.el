@@ -15,6 +15,14 @@
       meadow-p  (featurep 'meadow)
       windows-p (or cygwin-p nt-p meadow-p))
 
+(setq emacs22-p (string-match "^22" emacs-version)
+	  emacs23-p (string-match "^23" emacs-version)
+	  emacs23.0-p (string-match "^23\.0" emacs-version)
+	  emacs23.1-p (string-match "^23\.1" emacs-version)
+	  emacs23.2-p (string-match "^23\.2" emacs-version)
+	  emacs24-p (string-match "^24" emacs-version))
+
+
 ;;;
 ;;; windowsのためのパス設定
 ;;;
@@ -275,6 +283,12 @@
 (global-set-key (kbd "C-x C-v") '(lambda () (interactive) (revert-buffer t t nil)))
 
 ;;;
+;;; emacs24からmake-local-hookが無くなったが、それに対応していないelispがたくさんあるので空定義する
+;;; make-local-hookを使っていた行はそのまま削除しても大丈夫らしいので
+;;;
+(when emacs24-p
+  (defun make-local-hook (hook) t))
+
 ;;;
 ;;; 文末の区切りを、"."の後に空白一つで認識するようにする（デフォだと空白が二つないといけない）
 ;;; 後、日本語用に"。"も追加する。
