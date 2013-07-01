@@ -161,8 +161,30 @@
 ;;; 邪魔なキーバインドを排除
 ;;;
 (define-key TeX-mode-map "\C-c\C-w" 'nil)
+(define-key LaTeX-mode-map "\C-c\C-j" 'nil)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Grammar
+;;;
+(require 'grammar)
+(copy-face 'my-info-face 'grammar-error-face)
+(add-hook 'LaTeX-mode-hook 'turn-on-grammar)
+
+(defun grammar-check-region (start end)
+  (interactive (list (point) (mark)))
+  (save-excursion
+    (goto-char start)
+    (while (<= (point) end)
+      (forward-sentence)
+      (when (and (grammar-sentence-end-char-p)
+                 (grammar-sentence-english-p))
+        (grammar-check)))))
+(global-set-key (kbd "C-z") 'grammar-check-region)
+(defun grammar-check-buffer ()
+  (interactive)
+  (grammar-check-region (point-min) (point-max)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; for require/autoload
 ;;;

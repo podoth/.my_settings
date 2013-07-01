@@ -39,6 +39,10 @@
 (defvar my-foreground-error-color "black")
 (defface my-error-face `((t (:foreground ,my-foreground-error-color :background ,my-background-error-color))) nil)
 
+(defvar my-background-info-color "light yellow")
+(defvar my-foreground-info-color "black")
+(defface my-info-face `((t (:foreground ,my-foreground-info-color :background ,my-background-info-color))) nil)
+
 ;; modeline
 (defvar my-background-modeline-inactive-color "#333333")
 (defvar my-foreground-modeline-inactive-color "#CCCCCC")

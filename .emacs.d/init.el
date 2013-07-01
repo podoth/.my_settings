@@ -286,6 +286,13 @@
 (global-set-key (kbd "C-x C-v") '(lambda () (interactive) (revert-buffer t t nil)))
 
 ;;;
+;;;
+;;; 文末の区切りを、"."の後に空白一つで認識するようにする（デフォだと空白が二つないといけない）
+;;; 後、日本語用に"。"も追加する。
+;;;
+(setq sentence-end "[.?!。．][]\"')]*\\($\\|\t\\| \\)[ \t\n]*")
+
+;;;
 ;;; 起動時間を計測
 ;;;
 (add-hook 'after-init-hook
