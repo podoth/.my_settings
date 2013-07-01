@@ -11,7 +11,8 @@
 ;;;
 (which-func-mode 1)
 (setq which-func-modes t)
-(copy-face 'mode-line 'which-func)
+(set-face-foreground 'which-func nil)
+(set-face-background 'which-func nil)
 
 ;;;
 ;;; linum 行番号を表示する
