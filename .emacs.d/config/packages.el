@@ -230,6 +230,7 @@
 ;;;
 (require 'ace-jump-mode)
 (global-set-key (kbd "C-c C-f") 'ace-jump-mode)
+(global-set-key (kbd "C-.") 'ace-jump-mode)
 
 ;;;
 ;;; sequential-command
