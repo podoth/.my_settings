@@ -322,3 +322,14 @@
 ;;;
 (add-to-list 'load-path "~/.emacs.d/packages/popup-el/")
 (require 'popup)
+
+;;;
+;;; multiple-cursors
+;;; カーソルを複製
+;;;
+(setq load-path (cons "~/.emacs.d/packages/multiple-cursors" load-path))
+(require 'multiple-cursors)
+(setq mc/list-file "~/.emacs.d/var/.mc-lists.el")
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C->") 'mc/mark-all-like-this)
