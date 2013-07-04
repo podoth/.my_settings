@@ -247,6 +247,7 @@
                     (local-set-key (kbd "M-R") 'helm-gtags-find-rtag)
                     (local-set-key (kbd "M-S") 'helm-gtags-find-symbol)
                     (local-set-key (kbd "C-T") 'helm-gtags-pop-stack)
+                    (local-set-key (kbd "C-c o") 'helm-gtags-parse-file)
                     ))
        ))
   )
