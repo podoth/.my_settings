@@ -19,6 +19,7 @@
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-c o") 'helm-imenu)
+(global-set-key (kbd "C-c C-M-s") 'helm-occur)
 (eval-after-load 'helm
   '(progn
      (define-key helm-map (kbd "C-w") 'backward-kill-word)
@@ -35,4 +36,5 @@
 (autoload 'helm-ag "helm-ag")
 (autoload 'helm-ag-this-file "helm-ag")
 (global-set-key (kbd "M-g .") 'helm-ag)
-(global-set-key (kbd "C-M-s") 'helm-ag-this-file)
+;; (global-set-key (kbd "C-M-s") 'helm-ag-this-file)
+
