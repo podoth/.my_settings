@@ -66,13 +66,21 @@
       (list flymake-kernel-script (list r-source-dir r-build-dir temp-file r-config-file)))
 ))
 
+(defun flymake-kernel-cleanup ()
+  (flymake-safe-delete-file flymake-temp-source-file-name)
+  (flymake-safe-delete-file (concat (file-name-directory flymake-temp-source-file-name) "." (file-name-sans-extension (file-name-nondirectory flymake-temp-source-file-name)) ".o.cmd"))
+  (setq flymake-last-change-time nil))
+
 (defun flymake-kernel-rebuild ()
   (interactive)
     (call-process flymake-kernel-script nil nil nil flymake-kernel-source-dir flymake-kernel-build-dir "clean" flymake-kernel-config-file))
 
-(push '("/nfs/repo/orthros/[^o].*\\.c$" (lambda () (flymake-kernel-init
-					 "/nfs/repo/orthros"
-					 "~/.emacs.d/etc/flymake-kernel.config"
-					 "ARCH=x86_64 KCFLAGS+=\"-Wall\" KCFLAGS+=\"-Wextra\" KCFLAGS+=\"-Wshadow\"")))
+(push '("/nfs/repo/orthros/[^o].*\\.c$" 
+        (lambda () (flymake-kernel-init
+                    "/nfs/repo/orthros"
+                    "~/.emacs.d/etc/flymake-kernel.config"
+                    "ARCH=x86_64 KCFLAGS+=\"-Wall\" KCFLAGS+=\"-Wextra\" KCFLAGS+=\"-Wshadow\""))
+        flymake-kernel-cleanup
+        )
       flymake-allowed-file-name-masks)
  ;; (setq flymake-log-level 3)
