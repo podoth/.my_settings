@@ -353,3 +353,21 @@
 (global-set-key [(f2)]                  'bc-previous)
 (global-set-key [(shift f2)]            'bc-next)
 (global-set-key [(meta f2)]             'bc-list)
+
+;;;
+;;; popwin
+;;;
+(setq load-path (cons "~/.emacs.d/packages/popwin-el" load-path))
+
+;;;
+;;; guide-key
+;;;
+(require 'guide-key)
+(setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c" "C-z" "C-q" "C-t"))
+(custom-set-variables
+ '(guide-key/polling-time 2)
+ '(guide-key/popup-window-position 'bottom)
+ '(guide-key/recursive-key-sequence-flag t)
+ )
+(guide-key-mode 1)
+
