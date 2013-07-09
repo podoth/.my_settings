@@ -338,3 +338,18 @@
 (global-set-key (kbd "C-c C-k C-d C-s") 'mc/mark-all-symbols-like-this-in-defun)
 (global-set-key (kbd "C-c C-k C-w") 'mc/mark-all-words-like-this-in-defun)
 (global-set-key (kbd "C-c C-k C-d C-w") 'mc/mark-all-words-like-this-in-defun)
+
+;;;
+;;; breadcrumb
+;;; パンくずリスト的なブックマーク。同じファイルの複数の場所を記録できる
+;;;
+(require 'breadcrumb)
+(custom-set-variables
+ '(bc-bookmark-limit 64)
+ '(bc-bookmark-file "~/.emacs.d/var/.breadcrumb")
+ '(bc-bookmark-hook-enabled nil)
+ )
+(global-set-key [(control f2)]          'bc-set)
+(global-set-key [(f2)]                  'bc-previous)
+(global-set-key [(shift f2)]            'bc-next)
+(global-set-key [(meta f2)]             'bc-list)
