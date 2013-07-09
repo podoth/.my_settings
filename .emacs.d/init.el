@@ -324,26 +324,30 @@
     (when (> time 0.05)
       (message "%s: %.3f sec" (ad-get-arg 0) time))))
 
-; 各設定の前提となる設定
+;; 各設定の前提となる設定
 (load "config/display-common")
 
-; 標準Elispの設定
+;; 標準Elispの設定
 (load "config/builtins")
-; 非標準Elispの設定
+
+;; 他のelispによって使われるelispの設定
+(load "config/framework-common")
+(load "config/helm-common") ; helm
+(load "config/completion-common") ; auto-complete
+
+;; 非標準Elispの設定
 (load "config/packages")
-; その他コマンドの設定
+;; その他コマンドの設定
 (load "config/functions")
 
-; 粒度の荒い設定達
-(load "config/completion-common")
+;; 粒度の荒い設定達
 (load "config/whitespace-common")
-(load "config/helm-common")
 (load "config/flymake-common")
 (when (executable-find "git")
   (load "config/git-common"))
 (load "config/english-common")
 
-; モード特有の設定達
+;; モード特有の設定達
 (load "config/c-mode")
 (load "config/java-mode")
 (load "config/linux-kernel-mode")
@@ -362,7 +366,8 @@
 ;;; idle-require 遅延起動と、autoloadを暇なときに詠みこむ
 ;;; これは非標準なので注意
 ;;;
-(require 'idle-require)
-(custom-set-variables
- '(idle-require-idle-delay 1200))
-(idle-require-mode 1)
+;; なんか動作が重くなるのでやっぱりやめ
+;; (require 'idle-require)
+;; (custom-set-variables
+;;  '(idle-require-idle-delay 1200))
+;; (idle-require-mode 1)

@@ -233,12 +233,6 @@
 (global-set-key (kbd "C-.") 'ace-jump-mode)
 
 ;;;
-;;; sequential-command
-;;; 連続したコマンドに意味を持たせるフレームワーク
-;;;
-(require 'sequential-command)
-
-;;;
 ;;; expand-region
 ;;; 微妙なさじかげんでリージョンを拡大していく
 ;;;
@@ -318,12 +312,6 @@
 (global-set-key (kbd "C-c p") 'highlight-symbol-prev)
 
 ;;;
-;;; popup
-;;;
-(add-to-list 'load-path "~/.emacs.d/packages/popup-el/")
-(require 'popup)
-
-;;;
 ;;; multiple-cursors
 ;;; カーソルを複製
 ;;;
@@ -353,11 +341,6 @@
 (global-set-key [(f2)]                  'bc-previous)
 (global-set-key [(shift f2)]            'bc-next)
 (global-set-key [(meta f2)]             'bc-list)
-
-;;;
-;;; popwin
-;;;
-(setq load-path (cons "~/.emacs.d/packages/popwin-el" load-path))
 
 ;;;
 ;;; guide-key
