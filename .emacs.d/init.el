@@ -72,8 +72,16 @@
 ;;; Key customize
 ;;;
 (global-set-key [(control h)]	'delete-backward-char)
-;(global-set-key [(meta g)]	'goto-line)
-(define-key global-map "\C-\\" nil)
+
+;;;
+;;; 修飾キーを増やすために、C-z, C-q, C-tをすげ替える
+;;;
+(global-unset-key (kbd "C-z"))
+(global-set-key (kbd "C-z C-z") 'suspend-frame)
+(global-unset-key (kbd "C-q"))
+(global-set-key (kbd "C-q C-q") 'quoted-insert)
+(global-unset-key (kbd "C-t"))
+(global-set-key (kbd "C-t C-t") 'transpose-chars)
 
 ;;;
 ;;; Mouse Wheel
@@ -178,12 +186,6 @@
 (global-set-key [(meta H)]	'shrink-window-horizontally)
 (global-set-key [(meta J)]	'enlarge-window)
 (global-set-key [(meta K)]	'shrink-window)
-
-;;;
-;;; C-zで休止状態に入ると厄介なので阻止
-;;; サイズ変更(xmonadでmod-右クリック)すると休止状態から戻るので不要になった。けどやっぱうざいのでいれとく
-;;;
-(global-set-key [(control z)]	'nil)
 
 
 ;;;

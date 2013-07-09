@@ -35,6 +35,6 @@
 ;;;
 (autoload 'helm-ag "helm-ag")
 (autoload 'helm-ag-this-file "helm-ag")
-(global-set-key (kbd "M-g .") 'helm-ag)
+(global-set-key (kbd "C-c /") 'helm-ag)
 ;; (global-set-key (kbd "C-M-s") 'helm-ag-this-file)
 
