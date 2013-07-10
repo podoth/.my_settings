@@ -111,6 +111,11 @@
           'executable-make-buffer-file-executable-if-script-p)
 
 ;;;
+;;; 起動時のスタートアップを出さない
+;;;
+(custom-set-variables '(inhibit-startup-screen t))
+
+;;;
 ;;; undo-limit
 ;;;
 (setq undo-limit 600000)

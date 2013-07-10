@@ -55,19 +55,7 @@
 (setq read-buffer-function 'iswitchb-read-buffer)
 (setq iswitchb-regexp nil)
 (setq iswitchb-prompt-newbuffer nil)
-(custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- '(inhibit-startup-screen t))
-(custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- )
-; *を入力されない限り*系のバッファを隠す
+;; *を入力されない限り*系のバッファを隠す
 (add-to-list 'iswitchb-buffer-ignore "\\`\\*")
 (setq iswitchb-buffer-ignore-asterisk-orig nil)
 (defadvice iswitchb-exhibit (before iswitchb-exhibit-asterisk activate)
@@ -83,7 +71,14 @@
       (setq iswitchb-buffer-ignore-asterisk-orig nil)
       (iswitchb-make-buflist iswitchb-default)
       (setq iswitchb-rescan t))))
-; 別のフレームでバッファを開いている時でも選択フレームで開く
+;; ただしscratchバッファだけは例外
+(setq iswitchb-buffer-ignore-exception '("*scratch*"))
+(defadvice iswitchb-ignore-buffername-p (around iswitchb-ignore-exception activate)
+  "iswitchb-buffer-ignore-exceptionで指定されているバッファは検査をパスする"
+  (if (member (ad-get-arg 0) iswitchb-buffer-ignore-exception)
+      t
+    ad-do-it))
+;; 別のフレームでバッファを開いている時でも選択フレームで開く
 (setq iswitchb-default-method 'samewindow)
 
 ;;;
