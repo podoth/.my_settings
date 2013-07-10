@@ -17,6 +17,7 @@
 (require 'helm-config)
 (global-set-key (kbd "C-c b") 'helm-mini)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
+(custom-set-variables '(helm-kill-ring-threshold 0))
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-c o") 'helm-imenu)
 (global-set-key (kbd "C-c C-M-s") 'helm-occur)

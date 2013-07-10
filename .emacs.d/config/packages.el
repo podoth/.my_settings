@@ -145,6 +145,8 @@
 
 ;;;
 ;;; マルチプロセスでsave-hist保存時に一番新しいsave-histを保存するようにしたsave-hist?
+;;; savehist and multiple Emacs sessions
+;;; http://lists.gnu.org/archive/html/emacs-devel/2005-12/msg01264.html
 ;;;
 (setq savehist-file "~/.emacs.d/var/history")
 (require 'savehist)
@@ -153,7 +155,10 @@
  '(history-length t)
  '(history-delete-duplicates t)
  )
-
+;; kill-ringも保存するようにする。
+;; (setq savehist-additional-variables '(kill-ring))
+;; でやってもいいが、それだと複数emacs sessionで使用した時に片方が上書きされてしまう
+(add-to-list 'savehist-minibuffer-history-variables 'kill-ring)
 
 ;;;
 ;;; minibuf-iserach。ミニバッファをインクリメンタル検索できるように
