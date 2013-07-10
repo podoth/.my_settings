@@ -84,13 +84,16 @@
 ;;;
 (require 'undo-tree)
 (global-undo-tree-mode t)
-
+;; popwinで管理
+(push '(" *undo-tree*" :width 0.2 :position auto) popwin:special-display-config)
 
 ;;;
 ;;; quickrun emacs上でプログラムのテスト実行
 ;;;
 (autoload 'quickrun "quickrun")
 (global-set-key (kbd "<f5>") 'quickrun)
+;; popwinで表示
+(push '("*quickrun*") popwin:special-display-config)
 
 
 ;;;
@@ -341,6 +344,11 @@
 (global-set-key [(f2)]                  'bc-previous)
 (global-set-key [(shift f2)]            'bc-next)
 (global-set-key [(meta f2)]             'bc-list)
+;; popwinで管理
+(defadvice bc-list (before bc-list-popup-window activate)
+  (popwin:popup-buffer (get-buffer-create bc--menu-buffer)))
+(defadvice bc-jump (before bc-jump-popup-window activate)
+  (popwin:close-popup-window))
 
 ;;;
 ;;; guide-key

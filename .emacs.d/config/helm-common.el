@@ -29,6 +29,9 @@
 ;; 自動補完を無効
 (custom-set-variables '(helm-ff-auto-update-initial-value nil))
 (setq helm-input-idle-delay 0.001)
+;; popwinで表示
+(setq helm-samewindow nil)
+(push '("\\*helm.*\\*" :regexp t :height 0.4 :stick t) popwin:special-display-config)
 
 ;;;
 ;;; helm-ag

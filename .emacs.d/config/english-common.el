@@ -80,14 +80,32 @@
 	 (undo-tree-mode -1)))
      )
   )
-
+;; popwinで表示
+(push '("*sdic*" :stick t) popwin:special-display-config)
+(defadvice sdic-display-buffer (around sdic-display-buffer-normalize activate)
+  "sdic のバッファ表示を普通にする。"
+  (setq ad-return-value (buffer-size))
+  (let ((p (or (ad-get-arg 0)
+               (point))))
+    (and sdic-warning-hidden-entry
+         (> p (point-min))
+         (message "この前にもエントリがあります。"))
+    (goto-char p)
+    (display-buffer (get-buffer sdic-buffer-name))
+    (set-window-start (get-buffer-window sdic-buffer-name) p)))
+(defadvice sdic-other-window (around sdic-other-normalize activate)
+  "sdic のバッファ移動を普通にする。"
+  (other-window 1))
+(defadvice sdic-close-window (around sdic-close-normalize activate)
+  "sdic のバッファクローズを普通にする。"
+  (bury-buffer sdic-buffer-name))
 
 ;;;
 ;;; text-translator
 ;;; webサービスを使ってリージョン翻訳
 ;;;
-(autoload 'text-translator-translate-by-auto-selection "text-translator")
-(autoload 'text-translator-translate-last-string "text-translator")
+(setq load-path (cons "~/.emacs.d/packages/text-translator" load-path))
+(require 'text-translator-load)
 (eval-after-load "text-translator"
   '(progn
      ;; 自動選択に使用する関数を設定
@@ -96,16 +114,79 @@
 ;; グローバルキーを設定
 (global-set-key "\C-c\C-a" 'text-translator-translate-by-auto-selection)
 (global-set-key "\C-ca" 'text-translator-translate-last-string)
+;; popwinで表示
+;; text-translator-clientのsave-selected-windowを無効化する必要がある
+(custom-set-variables
+ '(text-translator-auto-window-adjust nil)
+ )
+(push '("*translated*" :height 4) popwin:special-display-config)
 
 ;;;
 ;;; lookup
 ;;; 辞書検索
 ;;;
-(autoload 'lookup "lookup" nil t)
-(autoload 'lookup-region "lookup" nil t)
+;; (autoload 'lookup "lookup" nil t)
+;; (autoload 'lookup-region "lookup" nil t)
 (autoload 'lookup-pattern "lookup" nil t)
 (setq lookup-enable-splash nil)
 (setq lookup-window-height 3)
 (global-set-key "\C-c\C-y" 'lookup-pattern)
 (setq lookup-search-agents '((ndeb "/usr/share/epwing/GENIUS")))
 (setq lookup-default-dictionary-options '((:stemmer .  stem-english)))
+;; popwinで表示するために色々書き換える
+;; 内部動作を理解しているわけではないのでbuggy
+(push '(" *Entry*" :stick t) popwin:special-display-config)
+(push '(" *Content*" :stick t :noselect t) popwin:special-display-config)
+
+(setq lookup-my-entry-buffer-display t)
+(defalias 'lookup-pattern-without-entry 'lookup-pattern)
+(defadvice lookup-pattern (around lookup-patternfdsa activate)
+  ""
+  (let ((lookup-my-entry-buffer-display (not (equal this-command 'lookup-pattern-without-entry))))
+    ad-do-it))
+(global-set-key (kbd "C-c y") 'lookup-pattern-without-entry)
+
+(defadvice lookup-pop-to-buffer (around lookup-pop-to-buffer-normalize activate)
+  ""
+  (let ((buffer (ad-get-arg 0)))
+    (setq buffer (or (current-buffer)))
+    (if (and buffer lookup-my-entry-buffer-display)
+        (display-buffer buffer))
+    (if (and (window-live-p lookup-main-window)
+             (if (fboundp 'frame-visible-p)
+                 (frame-visible-p (window-frame lookup-main-window))))
+        (display-buffer (get-buffer-window lookup-main-window)))
+    buffer))
+(defadvice lookup-display-buffer (around lookup-display-buffer-normalize activate)
+  ""
+  (let ((buffer (ad-get-arg 0)))
+    (if (window-live-p lookup-sub-window)
+        (set-window-buffer lookup-sub-window buffer)
+      )    (display-buffer buffer)
+
+    buffer))
+(defadvice lookup-content-display (around lookup-content-display-normalize activate)
+  ""
+  (let ((entry (ad-get-arg 0)))
+    (let ((last-window (selected-window))
+          (last-buffer (current-buffer))
+          (buffer (lookup-open-buffer (lookup-content-buffer))))
+      (when (get-buffer-window buffer)
+        (select-window (get-buffer-window buffer)))
+      (set-buffer buffer)
+      (kill-all-local-variables)
+      (setq lookup-content-current-entry entry
+            lookup-content-line-heading (lookup-entry-heading entry))
+      (when (boundp 'nobreak-char-display)
+        (make-local-variable 'nobreak-char-display)
+        (setq nobreak-char-display nil))
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (if (lookup-reference-p entry)
+            (insert "(no contents)")
+          (lookup-vse-insert-content entry)))
+      (lookup-content-mode)
+      ;; (lookup-display-buffer (current-buffer))
+      (set-buffer last-buffer)
+      (select-window last-window)
+      )))

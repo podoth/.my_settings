@@ -40,7 +40,8 @@
 ;;; magit
 ;;;
 (setq load-path (cons "~/.emacs.d/packages/magit" load-path))
-(autoload 'magit-status "magit")
+(autoload 'magit-status "magit" nil t)
+(autoload 'magit-log "magit" nil t)
 (global-set-key (kbd "C-c g") 'magit-status)
 
 ;; rebase-mode
@@ -154,3 +155,9 @@ PREFIX が t の場合 (前置引数がある場合) は、これまでの選択
             (local-set-key (kbd "`") 'my-magit-clear-selected-files)))
 
 (global-set-key (kbd "C-c i") 'my-magit-insert-selected-files)
+
+;; popwinで表示
+(push '("*magit-commit*" :noselect t :position auto :width 0.5 :height 0.5) popwin:special-display-config)
+(push '("*magit-log*" :noselect t :position auto :width 0.5 :height 0.5) popwin:special-display-config)
+(push '("*magit-diff*" :noselect t :position auto :width 0.5 :height 0.5) popwin:special-display-config)
+(push '("*magit-process*" :noselect t :position auto :width 0.5 :height 0.5) popwin:special-display-config)

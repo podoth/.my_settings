@@ -233,7 +233,8 @@ specified site, and receives translation result."
       (message "Translating...")
       (unless (or all
                   text-translator-display-popup)
-        (save-selected-window
+        ;; (save-selected-window
+        (progn
           (pop-to-buffer text-translator-buffer)
           (setq buffer-read-only nil)
           (erase-buffer)
