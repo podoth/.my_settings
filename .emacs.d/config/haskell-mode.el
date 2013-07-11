@@ -12,4 +12,5 @@
 
 (setq load-path (cons "~/.emacs.d/packages/haskellmode-emacs" load-path))
 (require 'haskell-mode)
+(add-to-list 'auto-mode-alist '("\\.hs\\'" . haskell-mode))
 
