@@ -398,3 +398,11 @@
 ;; 遅さを感じ無い程度、ただし目で追える程度の速さ
 (setq smooth-scroll/vscroll-step-size 10)
 
+;;;
+;;; rainbow-mode
+;;; 色情報を表す文字列の背景色を変更
+;;;
+(require 'rainbow-mode)
+(define-global-minor-mode global-rainbow-mode rainbow-mode rainbow-mode)
+(global-rainbow-mode t)
+
