@@ -82,6 +82,14 @@
 (setq iswitchb-default-method 'samewindow)
 
 ;;;
+;;; ibuffer
+;;;
+(global-set-key (kbd "C-x C-b") 'ibuffer-list-buffers)
+;; ;; popwinで管理
+;; (push '("*Ibtuffer*") popwin:special-display-config)
+
+
+;;;
 ;;; ファイル名が重複していたらプロンプトにディレクトリ名を追加する。
 ;;;
 (require 'uniquify)

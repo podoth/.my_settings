@@ -332,14 +332,13 @@
 ;; 各設定の前提となる設定
 (load "config/display-common")
 
-;; 標準Elispの設定
-(load "config/builtins")
-
 ;; 他のelispによって使われるelispの設定
 (load "config/framework-common")
 (load "config/helm-common") ; helm
 (load "config/completion-common") ; auto-complete
 
+;; 標準Elispの設定
+(load "config/builtins")
 ;; 非標準Elispの設定
 (load "config/packages")
 ;; その他コマンドの設定
