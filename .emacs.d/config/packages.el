@@ -367,3 +367,25 @@
  )
 (guide-key-mode 1)
 
+;;;
+;;; elscreen
+;;;
+(setq elscreen-prefix-key "\C-z")
+(setq elscreen-display-tab nil)
+(setq elscreen-startup-command-line-processing nil)
+(require 'elscreen)
+(define-key elscreen-map (kbd "C-z") 'suspend-frame)
+
+;;;
+;;; helm-elscreen
+;;;
+(autoload 'helm-elscreen "helm-elscreen" nil t)
+(define-key elscreen-map (kbd "C-b") 'helm-elscreen)
+
+;;;
+;;; elscreen-buffer-list
+;;;
+;; (setq elscreen-buffer-list-enabled t)
+;; (require 'elscreen-buffer-list)
+(require 'jg-elscreen-buffer-list)
+
