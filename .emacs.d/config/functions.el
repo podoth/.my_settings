@@ -47,7 +47,17 @@
   (when (one-window-p)(split-window-conditional))
   (other-window 1))
 (global-set-key (kbd "C-,") 'other-window-or-split)
-(global-set-key (kbd "C-M-,") 'next-buffer)
+;; (global-set-key (kbd "C-M-,") 'next-buffer)
+
+;;;
+;;; copy window with C-M-,
+;;;
+(defun open-buffer-in-other-window-or-split ()
+  (interactive)
+  (let ((b (current-buffer)))
+    (other-window-or-split)
+    (switch-to-buffer b)))
+(global-set-key (kbd "C-M-,") 'open-buffer-in-other-window-or-split)
 
 ;;;
 ;;; open file as root
