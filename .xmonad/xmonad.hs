@@ -12,6 +12,9 @@ import XMonad.Actions.GridSelect
 import XMonad.Config.Desktop (desktopLayoutModifiers)
 import XMonad.Layout.Grid
 import XMonad.Layout.Tabbed
+import XMonad.Util.EZConfig (additionalKeys)
+-- バグ？Minimize.hsの最新版を.xmonad内に配置しないとminimizeWindowがないと怒られる
+import XMonad.Layout.Minimize
 
 getWellKnownName :: Connection -> IO ()
 getWellKnownName dbus = tryGetName `catchDyn` (\ (DBus.Error _ _) -> getWellKnownName dbus)
@@ -25,7 +28,9 @@ getWellKnownName dbus = tryGetName `catchDyn` (\ (DBus.Error _ _) -> getWellKnow
 
 ------------------------------------------------------------------------
 -- --Layouts:
-myLayout = tiled ||| Mirror tiled ||| Grid ||| simpleTabbed ||| Full
+-- minimizeしたウィンドウをウィンドウ移動対象から外したければboringAutoがあるが、Fullレイアウト使用時に何故か上手く動かない
+-- myLayout = minimize (tiled ||| Mirror tiled ||| Grid ||| simpleTabbed ||| Full)
+myLayout = minimize (tiled ||| Mirror tiled ||| Grid ||| simpleTabbed)
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled = Tall nmaster delta ratio
@@ -36,8 +41,14 @@ myLayout = tiled ||| Mirror tiled ||| Grid ||| simpleTabbed ||| Full
      -- Percent of screen to increment by when resizing panes
      delta = 3/100
 
-------------------------------------------------------------------------
+myKeys =
+  [
+  -- Minimize a window
+  ((mod3Mask, xK_z),               withFocused minimizeWindow)
+  , ((mod3Mask .|. shiftMask, xK_z), sendMessage RestoreNextMinimizedWin)
+  ]
 
+--------------------------------------------------------------------------
 
 main :: IO ()
 main = withConnection Session $ \ dbus -> do
@@ -67,9 +78,7 @@ main = withConnection Session $ \ dbus -> do
   , focusFollowsMouse = False
   , focusedBorderColor = "#00dd00"
   , borderWidth = 4
-  }
-
-
+  } `additionalKeys` myKeys
 
 pangoColor :: String -> String -> String
 pangoColor fg = wrap left right
