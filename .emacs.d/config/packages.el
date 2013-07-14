@@ -389,3 +389,12 @@
 ;; (require 'elscreen-buffer-list)
 (require 'jg-elscreen-buffer-list)
 
+
+;;;
+;;; smooth-scroll
+;;;
+(require 'smooth-scroll)
+(smooth-scroll-mode t)
+;; 遅さを感じ無い程度、ただし目で追える程度の速さ
+(setq smooth-scroll/vscroll-step-size 10)
+
