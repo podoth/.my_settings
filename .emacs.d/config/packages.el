@@ -296,14 +296,19 @@
 ;;; rfringe
 ;;; 色々使えるらしいが、とりあえずflymakeでのエラー行表示
 ;;;
-(require 'rfringe)
-(require 'fringe-helper)
-(fringe-helper-define 'rfringe-thin-dash '(top repeat)
-  ".XX...XX."
-  "..XX.XX.."
-  "...XXX..."
-  "..XX.XX.."
-  ".XX...XX.")
+;; (require 'rfringe)
+;; (require 'fringe-helper)
+;; (fringe-helper-define 'rfringe-thin-dash '(top repeat)
+;;   ".XX...XX."
+;;   "..XX.XX.."
+;;   "...XXX..."
+;;   "..XX.XX.."
+;;   ".XX...XX.")
+
+;;;
+;;; indicatorsを使って、flymakeでのエラー行を右fringeに細かく表示
+;;;
+(require 'scrap-flymake-indicators)
 
 ;;;
 ;;; auto-highlight-symbol
