@@ -116,4 +116,7 @@
 ;;;
 ;; 初回起動が遅いのでキャッシュを作成(更新は C-u を付けて woman を呼ぶ)
 (setq woman-cache-filename (expand-file-name "~/.emacs.d/var/woman_cache.el"))
-
+;; popwinで表示
+(push '("\\*WoMan.*\\*" :regexp t :height 0.5 :width 0.5 :position auto) popwin:special-display-config)
+(defadvice woman-really-find-file (before woman-popup-window activate)
+  (popwin:display-buffer (ad-get-arg 2)))

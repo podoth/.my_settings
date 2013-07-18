@@ -52,6 +52,11 @@
 (defvar my-foreground-modeline-color "#333333")
 (defface my-modeline-face `((t (:foreground ,my-foreground-modeline-color :background ,my-background-modeline-color))) nil)
 
+;; separator
+(defvar my-foreground-separator-color "#BF7FFF")
+(defface my-separator-face `((t (:foreground ,my-foreground-separator-color))) nil)
+
+
 (set-foreground-color my-foreground-color)
 (set-background-color my-background-color)
 (set-cursor-color "#FF0000") ; カーソル色

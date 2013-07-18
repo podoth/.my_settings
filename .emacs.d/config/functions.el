@@ -202,17 +202,17 @@
 ;;;
 ;;; yank時にIndentもする
 ;;;
-;; (defun yank-and-indent ()
-;;   "Yank and then indent the newly formed region according to mode."
-;;   (interactive)
-;;   (yank)
-;;   (call-interactively 'indent-region))
-;; (global-set-key [(control Y)]	'yank-and-indent)
-(defadvice yank (around yank-indent activate)
-      "Indents after yanking."
-      (let ((point-before (point)))
-        ad-do-it
-        (indent-region point-before (point))))
+(defun yank-and-indent ()
+  "Yank and then indent the newly formed region according to mode."
+  (interactive)
+  (yank)
+  (call-interactively 'indent-region))
+(global-set-key [(control Y)]	'yank-and-indent)
+;; (defadvice yank (around yank-indent activate)
+;;       "Indents after yanking."
+;;       (let ((point-before (point)))
+;;         ad-do-it
+;;         (indent-region point-before (point))))
 
 ;;;
 ;;; region内の検索と関数内の検索

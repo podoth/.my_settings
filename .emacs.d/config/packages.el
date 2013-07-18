@@ -76,8 +76,9 @@
 ;;;
 ;;; いきなりM-yでkill-ringをプレビュー表示
 ;;;
-(require 'browse-kill-ring)
-(browse-kill-ring-default-keybindings)
+;; helm-kill-ringがあるのでいらなくなった
+;; (require 'browse-kill-ring)
+;; (browse-kill-ring-default-keybindings)
 
 ;;;
 ;;; undo-tree
@@ -387,7 +388,7 @@
 ;;;
 ;; (setq elscreen-buffer-list-enabled t)
 ;; (require 'elscreen-buffer-list)
-(require 'jg-elscreen-buffer-list)
+;; (require 'jg-elscreen-buffer-list)
 
 
 ;;;
@@ -402,7 +403,8 @@
 ;;; rainbow-mode
 ;;; 色情報を表す文字列の背景色を変更
 ;;;
-(require 'rainbow-mode)
-(define-global-minor-mode global-rainbow-mode rainbow-mode rainbow-mode)
-(global-rainbow-mode t)
+;; 他のelispの着色に影響を与えてしまうので停止
+;; (require 'rainbow-mode)
+;; (define-global-minor-mode global-rainbow-mode rainbow-mode rainbow-mode)
+;; (global-rainbow-mode t)
 
