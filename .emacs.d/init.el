@@ -69,9 +69,13 @@
 (setq gc-cons-threshold 5000000)
 
 ;;;
-;;; Key customize
+;;; C-hでbackspace
 ;;;
-(global-set-key [(control h)]	'delete-backward-char)
+;; (global-set-key [(control h)]	'delete-backward-char)
+;; (define-key isearch-mode-map "\C-h" 'isearch-delete-char)
+(load "term/bobcat")
+(when (fboundp 'terminal-init-bobcat)
+  (terminal-init-bobcat))
 
 ;;;
 ;;; 修飾キーを増やすために、C-z, C-q, C-tをすげ替える
@@ -172,10 +176,6 @@
 ;;;
 (setq auto-save-default nil)
 
-;;;
-;;; i-search中にC-hでBackspace
-;;;
-(define-key isearch-mode-map "\C-h" 'isearch-delete-char)
 
 ;;;
 ;;; recentf。開いたファイルの履歴
@@ -265,13 +265,6 @@
 ;;; Symbol's value as variable is void: warning-suppress-types
 ;;;
 (setq warning-suppress-types nil)
-
-;;;
-;;; ミニバッファで C-h でヘルプでないようにする
-;;;
-(load "term/bobcat")
-(when (fboundp 'terminal-init-bobcat)
-  (terminal-init-bobcat))
 
 ;;;
 ;;; (yes/no) を (y/n)に
