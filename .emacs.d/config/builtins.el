@@ -120,3 +120,11 @@
 (push '("\\*WoMan.*\\*" :regexp t :height 0.5 :width 0.5 :position auto) popwin:special-display-config)
 (defadvice woman-really-find-file (before woman-popup-window activate)
   (popwin:display-buffer (ad-get-arg 2)))
+
+;;;
+;;; diffの色付け
+;;;
+(require 'diff-mode)
+(set-face-foreground 'diff-added my-foreground-added-color)
+(set-face-foreground 'diff-removed my-foreground-removed-color)
+(set-face-foreground 'diff-changed my-foreground-changed-color)

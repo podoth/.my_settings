@@ -17,13 +17,15 @@
 (defvar my-foreground-camouflaged-color "#444444")
 (defface my-camouflaged-face `((t (:foreground ,my-foreground-camouflaged-color))) nil)
 
-;; プラスの効果
-(defvar my-foreground-plus-color "#7F7FFF")
-(defface my-plus-face `((t (:foreground ,my-foreground-plus-color))) nil)
+;; diff関連
+(defvar my-foreground-added-color "#7F7FFF")
+(defface my-added-face `((t (:foreground ,my-foreground-added-color))) nil)
 
-;; マイナスの効果
-(defvar my-foreground-minus-color "#FF7F7F")
-(defface my-minus-face `((t (:foreground ,my-foreground-minus-color))) nil)
+(defvar my-foreground-removed-color "#FF7F7F")
+(defface my-removed-face `((t (:foreground ,my-foreground-removed-color))) nil)
+
+(defvar my-foreground-changed-color "#7FFF7F")
+(defface my-changed-face `((t (:foreground ,my-foreground-changed-color))) nil)
 
 ;; highlight & region
 ;; regionはhighlightの中にあっても輝く

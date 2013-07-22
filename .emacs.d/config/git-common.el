@@ -50,10 +50,12 @@
 ;; diffの色付け
 (eval-after-load 'magit
   '(progn
-     (set-face-foreground 'magit-diff-add my-foreground-plus-color)
-     (set-face-foreground 'magit-diff-del my-foreground-minus-color)
+     ;; (set-face-foreground 'magit-diff-add my-foreground-plus-color)
+     ;; (set-face-foreground 'magit-diff-del my-foreground-minus-color)
      (set-face-background 'magit-item-highlight my-background-highlight-color)
      ))
+
+
 
 ;; 複数選択可能にするための設定
 ;; http://d.hatena.ne.jp/ken_m/20111225/1324833439
