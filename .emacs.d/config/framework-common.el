@@ -40,3 +40,10 @@
                              (< h w))          ; 横長の時に
                         'right                 ; 右へ出す
                       'bottom)))))
+
+;;;
+;;; flex-autopair
+;;;
+(setq load-path (cons "~/.emacs.d/packages/flex-autopair" load-path))
+(require 'flex-autopair)
+(flex-autopair-mode 1)
