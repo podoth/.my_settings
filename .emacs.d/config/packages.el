@@ -178,6 +178,7 @@
 ;;; mozc
 ;;; モードラインが表示されないときは、uim-elをアンインストールすること
 ;;;
+;; frameをXで移動した時の動作がおかしい。cua-modeやmultiple-cursorsにも対応できない
 (when (require 'mozc nil t)
   (setq default-input-method "japanese-mozc")
   ;; (setq mozc-candidate-style 'overlay)
@@ -190,6 +191,16 @@
   ;;                     :background "white" :foreground "black"))
   )
 (define-key isearch-mode-map (kbd "S-SPC") 'isearch-edit-string)
+
+;;;
+;;; scim
+;;;
+;; (require 'scim-bridge)
+;; (add-hook 'after-init-hook 'scim-mode-on)
+;; (scim-define-common-key (kbd "s-SPC") t)
+;; (scim-define-common-key (kbd "C-SPC") nil)
+;; (scim-define-common-key (kbd "C-/") nil)
+;; (define-key isearch-mode-map (kbd "S-SPC") 'isearch-edit-string)
 
 ;;;
 ;;; point-undo.el
