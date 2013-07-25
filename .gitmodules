@@ -22,3 +22,6 @@
 [submodule ".emacs.d/packages/flex-autopair"]
 	path = .emacs.d/packages/flex-autopair
 	url = https://github.com/uk-ar/flex-autopair.git
+[submodule ".emacs.d/packages/dash.el"]
+	path = .emacs.d/packages/dash.el
+	url = https://github.com/magnars/dash.el.git

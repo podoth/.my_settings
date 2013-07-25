@@ -47,3 +47,9 @@
 (setq load-path (cons "~/.emacs.d/packages/flex-autopair" load-path))
 (require 'flex-autopair)
 (flex-autopair-mode 1)
+
+;;;
+;;; dash
+;;;
+(setq load-path (cons "~/.emacs.d/packages/dash.el" load-path))
+(require 'dash)

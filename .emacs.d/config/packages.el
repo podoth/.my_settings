@@ -424,3 +424,8 @@
 ;; (define-global-minor-mode global-rainbow-mode rainbow-mode rainbow-mode)
 ;; (global-rainbow-mode t)
 
+;;;
+;;; wrap-region
+;;;
+(require 'wrap-region)
+(wrap-region-global-mode)
