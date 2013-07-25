@@ -128,3 +128,8 @@
 (set-face-foreground 'diff-added my-foreground-added-color)
 (set-face-foreground 'diff-removed my-foreground-removed-color)
 (set-face-foreground 'diff-changed my-foreground-changed-color)
+
+;;;
+;;; ediff
+;;;
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)

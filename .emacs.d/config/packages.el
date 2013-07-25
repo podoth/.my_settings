@@ -160,6 +160,9 @@
 ;; (setq savehist-additional-variables '(kill-ring))
 ;; でやってもいいが、それだと複数emacs sessionで使用した時に片方が上書きされてしまう
 (add-to-list 'savehist-minibuffer-history-variables 'kill-ring)
+;; faceを保存しない
+(add-hook 'savehist-save-hook
+          (lambda () (setq kill-ring (mapcar 'substring-no-properties kill-ring))))
 
 ;;;
 ;;; minibuf-iserach。ミニバッファをインクリメンタル検索できるように
@@ -251,6 +254,7 @@
 (require 'ace-jump-mode)
 (global-set-key (kbd "C-c C-f") 'ace-jump-mode)
 (global-set-key (kbd "C-.") 'ace-jump-mode)
+(setq ace-jump-mode-move-keys (loop for i from ?a to ?z collect i))
 
 ;;;
 ;;; expand-region
