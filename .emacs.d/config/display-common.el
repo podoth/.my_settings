@@ -59,8 +59,10 @@
 (defface my-separator-face `((t (:foreground ,my-foreground-separator-color))) nil)
 
 
-(set-foreground-color my-foreground-color)
-(set-background-color my-background-color)
+(custom-set-faces
+ `(default ((t
+             (:background ,my-background-color :foreground ,my-foreground-color)
+             ))))
 (set-cursor-color "#FF0000") ; カーソル色
 (set-face-background 'region my-background-region-color) ; リージョン
 (set-face-foreground 'mode-line my-foreground-modeline-color)
