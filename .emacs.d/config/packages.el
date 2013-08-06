@@ -382,11 +382,14 @@
 (require 'guide-key)
 (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c" "C-z" "C-q" "C-t"))
 (custom-set-variables
- '(guide-key/polling-time 2)
+ ;; '(guide-key/polling-time 2)
  '(guide-key/popup-window-position 'bottom)
  '(guide-key/recursive-key-sequence-flag t)
  )
 (guide-key-mode 1)
+(defadvice guide-key/popup-guide-buffer-p (after sit-for-guide-key activate)
+  "入力がない場合のみ表示する"
+  (setq ad-return-value (and ad-return-value (sit-for 1))))
 
 ;;;
 ;;; elscreen
