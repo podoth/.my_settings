@@ -14,6 +14,7 @@
 ;;; sdic
 ;;; 翻訳
 ;;;
+(setq load-path (cons "~/.emacs.d/packages/sdic" load-path))
 (autoload 'sdic-describe-word-at-point "sdic" nil t)
 (autoload 'sdic-describe-word "sdic" nil t)
 (global-set-key "\C-c\C-w" 'sdic-describe-word-at-point)
@@ -26,13 +27,20 @@
      (autoload 'sdic-describe-word "sdic" "search word" t nil)
      (eval-after-load "sdic"
        '(progn
-	  (setq sdicf-array-command "/usr/bin/sary") ;; sary command path
+	  (setq sdicf-array-command "/usr/local/bin/sary") ;; sary command path
+	  ;; (setq sdic-eiwa-dictionary-list
+	  ;;   '((sdicf-client "/usr/share/dict/eijiro126.sdic"
+	  ;;   		(strategy array))))
+	  ;; (setq sdic-waei-dictionary-list
+	  ;;   '((sdicf-client "/usr/share/dict/waeijiro126.sdic"
+	  ;;   		(strategy array))))
 	  (setq sdic-eiwa-dictionary-list
-		'((sdicf-client "/usr/share/dict/eijiro126.sdic"
+		'((sdicf-client "/nfs/dict/sdic/eijiro126.sdic.utf8"
 				(strategy array))))
 	  (setq sdic-waei-dictionary-list
-		'((sdicf-client "/usr/share/dict/waeijiro126.sdic"
+		'((sdicf-client "/nfs/dict/sdic/waeijiro126.sdic.utf8"
 				(strategy array))))
+
 	  ;; saryを直接使用できるように sdicf.el 内に定義されている
 	  ;; arrayコマンド用関数を強制的に置換
 	  (fset 'sdicf-array-init 'sdicf-common-init)
