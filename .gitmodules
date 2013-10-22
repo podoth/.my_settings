@@ -28,3 +28,6 @@
 [submodule ".emacs.d/packages/emacs-clang-complete-async"]
 	path = .emacs.d/packages/emacs-clang-complete-async
 	url = https://github.com/Golevka/emacs-clang-complete-async
+[submodule ".emacs.d/packages/smartparens"]
+	path = .emacs.d/packages/smartparens
+	url = https://github.com/Fuco1/smartparens

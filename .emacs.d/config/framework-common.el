@@ -12,6 +12,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;
+;;; dash
+;;;
+(setq load-path (cons "~/.emacs.d/packages/dash.el" load-path))
+(require 'dash)
+
+;;;
 ;;; sequential-command
 ;;; 連続したコマンドに意味を持たせるフレームワーク
 ;;;
@@ -44,12 +50,13 @@
 ;;;
 ;;; flex-autopair
 ;;;
-(setq load-path (cons "~/.emacs.d/packages/flex-autopair" load-path))
-(require 'flex-autopair)
-(flex-autopair-mode 1)
+;; (setq load-path (cons "~/.emacs.d/packages/flex-autopair" load-path))
+;; (require 'flex-autopair)
+;; (flex-autopair-mode 1)
 
 ;;;
-;;; dash
+;;; smartparens
 ;;;
-(setq load-path (cons "~/.emacs.d/packages/dash.el" load-path))
-(require 'dash)
+(setq load-path (cons "~/.emacs.d/packages/smartparens" load-path))
+(require 'smartparens-config)
+(smartparens-global-mode)
