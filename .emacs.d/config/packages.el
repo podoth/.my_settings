@@ -486,3 +486,14 @@ This indicator is not shown when you don't use LEIM."
 ;;;
 (require 'wrap-region)
 (wrap-region-global-mode)
+
+;;;
+;;; anzu
+;;; 検索時に付加情報をモードラインに表示
+;;;
+(require 'anzu)
+(global-anzu-mode t)
+(setq anzu-use-migemo t)
+(defadvice migemo-toggle-isearch-enable (after anzu-midemo-toggle activate)
+  "toggle anzu-use-migemo"
+  (setq anzu-use-migemo (not anzu-use-migemo)))
