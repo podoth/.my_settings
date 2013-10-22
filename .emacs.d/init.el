@@ -290,10 +290,21 @@
   (defun make-local-hook (hook) t))
 
 ;;;
+;;; scrollbar
+;;;
+(set-scroll-bar-mode 'right)
+
+;;;
 ;;; 文末の区切りを、"."の後に空白一つで認識するようにする（デフォだと空白が二つないといけない）
 ;;; 後、日本語用に"。"も追加する。
 ;;;
 (setq sentence-end "[.?!。．][]\"')]*\\($\\|\t\\| \\)[ \t\n]*")
+
+;;;
+;;; find-fileの補完時に大文字小文字を無視する
+;;;
+(custom-set-variables
+ '(read-file-name-completion-ignore-case t))
 
 ;;;
 ;;; 起動時間を計測

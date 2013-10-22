@@ -99,7 +99,7 @@ ulimit -c 0
 #
 case $OSTYPE in
 linux-gnu*)
-    export PATH=/bin:/usr/bin:/usr/X11R6/bin:/usr/local/bin
+    export PATH=/bin:/usr/bin:/usr/X11R6/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin:/opt/bin
     alias ls='ls -F --color=auto'
     # echo -n '[31m'
     # /usr/bin/quota -q
@@ -132,7 +132,7 @@ alias rdesktoponionslowmid='rdesktop onion -K -g 1000x700+0-0 -x modem -z'
 alias rdesktoppersil='rdesktop persil -K -g 1900x1100'
 alias rdesktopbasilic='rdesktop basilic -K -g 1900x1100+0-0'
 
-xset -b
+#xset -b
 
 #openofficeでuimが使えるように
 # export GTK_IM_MODULE=uim
@@ -163,11 +163,13 @@ setopt list_types
 ## 補完候補のカーソル選択を有効に
 zstyle ':completion:*:default' menu select=1
 
-## colorgccを使用（あれば
-if [ -e /usr/bin/colorgcc ]; then
-    export CC="colorgcc"
-    alias gcc='colorgcc'
-fi
+# ## colorgccを使用（あれば
+# if [ -e /usr/bin/colorgcc ]; then
+#     export CC="colorgcc"
+#     alias gcc='colorgcc'
+# fi
+export PATH=/usr/lib/colorgcc/bin:$PATH
+
 
 #容量がでかいのを表示
 alias filesumcurrent='du -sk * | sort -nr | head -n 10'
@@ -176,7 +178,7 @@ alias filesumcurrent='du -sk * | sort -nr | head -n 10'
 setopt dotglob
 
 #scim+GTKには必要
-export GTK_IM_MODULE=scim-bridge
+# export GTK_IM_MODULE=scim-bridge
 
 #emacsclientを使用。serverの立ち上げはgnomeの設定で
 # alias emacs="${HOME}/.emacs.d/emacsclient.sh"
@@ -203,12 +205,13 @@ if is-at-least 4.3.11; then
   zstyle ":completion:*" recent-dirs-insert always
 fi
 
-#履歴ジャンプ
-_Z_CMD=j
-source ~/.zsh.plugin/z/z.sh
-precmd() {
-  _z --add "$(pwd -P)"
-}
+# 起動が糞重くなる
+# #履歴ジャンプ
+# _Z_CMD=j
+# source ~/.zsh.plugin/z/z.sh
+# precmd() {
+#   _z --add "$(pwd -P)"
+# }
 
 #コマンドラインスタックを可視化。C-qでスタック
 show_buffer_stack() {
@@ -225,4 +228,23 @@ export UBUNTU_MENUPROXY=
 export GTK_MODULES=
 
 # 独自ビルドを使う＆＆ubuntuの設定ファイルを読み込まない
-alias emacs='emacs-snapshot -no-site-file'
+#alias emacs='emacs-snapshot -no-site-file'
+
+
+# vcs関係も起動が糞重くなる
+# # VCSの情報を取得するzshの便利関数 vcs_infoを使う
+# autoload -Uz vcs_info
+
+# # 表示フォーマットの指定
+# # %b ブランチ情報
+# # %a アクション名(mergeなど)
+# zstyle ':vcs_info:*' formats '[%r:%b]'
+# zstyle ':vcs_info:*' actionformats '[%r:%b|%a]'
+# precmd () {
+#     psvar=()
+#     LANG=en_US.UTF-8 vcs_info
+#     [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
+# }
+
+# # バージョン管理されているディレクトリにいれば表示，そうでなければ非表示
+# RPROMPT="%1(v|%F{green}%1v%f|)"

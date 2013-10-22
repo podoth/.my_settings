@@ -2,7 +2,7 @@
 if [ -z "$PS1" ]; then
     return
 fi
-# zshが存在するときだけzsh
+#zshが存在するときだけzsh
 if [ -e /bin/zsh ]; then
     exec zsh
 fi
@@ -71,7 +71,7 @@ export HISTSIZE=10000
 
 alias rdesktopfull='rdesktop onion -g 1280x1024'
 
-xset -b
+#xset -b
 
 #export PATH=/bin:/usr/bin:/usr/X11R6/bin:/usr/local/bin:/home/uchida/tmp
 #export PATH=/bin:/usr/bin:/usr/X11R6/bin:/usr/local/bin:/home/uchida/tmp

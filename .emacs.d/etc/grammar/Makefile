@@ -4,7 +4,7 @@
 # $Id$
 #
 
-INCDIRS = -I. -I/usr/local/include/link-grammar
+INCDIRS = -I. -I/usr/include/link-grammar
 
 objects := grammar.o
 

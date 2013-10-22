@@ -5,11 +5,17 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;
+;; font
+;;
+
+(set-default-font "Ricty-12")
+
+;;
 ;; Color
 ;;
 
 ;; 普通のテキスト
-(defvar my-foreground-color "#CCCCCC")
+(defvar my-foreground-color "#DDDDDD")
 (defvar my-background-color "#333333")
 (defface my-default-face `((t (:foreground ,my-foreground-color :background ,my-background-color))) nil)
 

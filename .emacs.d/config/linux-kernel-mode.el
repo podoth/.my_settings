@@ -80,6 +80,7 @@
                     "/nfs/repo/orthros"
                     "~/.emacs.d/etc/flymake-kernel.config"
                     "ARCH=x86_64 KCFLAGS+=\"-Wall\" KCFLAGS+=\"-Wextra\" KCFLAGS+=\"-Wshadow\""))
+                    ;; "KCFLAGS+=\"-Wall\" KCFLAGS+=\"-Wextra\" KCFLAGS+=\"-Wshadow\""))
         flymake-kernel-cleanup
         )
       flymake-allowed-file-name-masks)

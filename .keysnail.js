@@ -7,32 +7,62 @@
 key.setEditKey(['C-i'], function (ev, arg) {
     ext.exec("edit_text",  arg,ev);
 }, "外部エディタで編集", true);
-plugins.options["K2Emacs.editor"] = "/usr/bin/emacs-snapshot -no-site-file";
+// plugins.options["K2Emacs.editor"] = "/usr/bin/emacs-snapshot -no-site-file";
 // plugins.options["K2Emacs.editor"] = "/usr/bin/emacsclient -c -a \"\"";
+plugins.options["K2Emacs.editor"] = "/usr/bin/emacs";
 plugins.options["K2Emacs.ext"]  = "txt";
 plugins.options["K2Emacs.encode"] = "UTF-8";
 plugins.options["K2Emacs.sep"] = "/";
 plugins.options["tanything_opt.keymap"] = {
-    "C-z"   : "prompt-toggle-edit-mode",
-    "SPC"   : "prompt-next-page",
-    "b"     : "prompt-previous-page",
-    "j"     : "prompt-next-completion",
-    "k"     : "prompt-previous-completion",
-    "g"     : "prompt-beginning-of-candidates",
-    "G"     : "prompt-end-of-candidates",
-    "D"     : "prompt-cancel",
-    // Tanything specific actions
-    "O"     : "localOpen",
-    "q"     : "localClose",
-    "p"     : "localLeftclose",
-    "n"     : "localRightclose",
-    "a"     : "localAllclose",
-    "d"     : "localDomainclose",
-    "c"     : "localClipUT",
-    "C"     : "localClipU",
-    "e"     : "localMovetoend"
+    // "C-z"   : "prompt-toggle-edit-mode",
+    // "SPC"   : "prompt-next-page",
+    // "b"     : "prompt-previous-page",
+    // "j"     : "prompt-next-completion",
+    // "k"     : "prompt-previous-completion",
+    // "g"     : "prompt-beginning-of-candidates",
+    // "G"     : "prompt-end-of-candidates",
+    // "D"     : "prompt-cancel",
+    // // Tanything specific actions
+    // "O"     : "localOpen",
+    // "q"     : "localClose"
+    // "p"     : "localLeftclose",
+    // "n"     : "localRightclose",
+    // "a"     : "localAllclose",
+    // "d"     : "localDomainclose",
+    // "c"     : "localClipUT",
+    // "C"     : "localClipU",
+    // "e"     : "localMovetoend"
+    "SPC"     : "localClose",
 };
+
+
 //}}%PRESERVE%
+
+key.setViewKey(['b'], function (ev, arg) {
+    ext.exec("bmany-list-all-bookmarks", arg, ev);
+}, "bmany - ブックマークを一覧表示");
+
+// style.register(<><![CDATA[
+//   #keysnail-prompt-textbox *|input {
+//   ime-mode : inactive !important;
+//   }
+// ]]></>);
+
+// style.register(['#keysnail-prompt-textbox *|input {',
+// 'ime-mode : inactive !important;',
+// '}'].join("\n"));
+
+function disableIme(){
+    var file = Components.classes["@mozilla.org/file/local;1"]
+        .createInstance(Components.interfaces.nsILocalFile);
+    file.initWithPath("/usr/bin/xvkbd");
+    var process = Components.classes["@mozilla.org/process/util;1"]
+        .createInstance(Components.interfaces.nsIProcess);
+    process.init(file);
+    var args = ["-text",  "\\[Control]\\[Shift] "];
+    process.run(false, args, args.length);
+}
+
 // ========================================================================= //
 
 // ========================= Special key settings ========================== //
@@ -268,6 +298,7 @@ key.setViewKey(['g', 'i'], function (ev) {
 }, '最初のインプットエリアへフォーカス', true);
 
 key.setViewKey(['g', 'o'], function (ev, arg) {
+    disableIme();
     ext.exec("quickmark-open-page", arg, ev);
 }, 'Open Page (QuickMark)', true);
 
@@ -637,18 +668,22 @@ key.setCaretKey('i', function (ev, arg) {
 }, 'Toggle caret mode', true);
 
 key.setCaretKey('t', function (ev, arg) {
+    disableIme();
     shell.input("tabopen google ");
 }, 'Tab open google', true);
 
 key.setCaretKey('T', function (ev, arg) {
+    disableIme();
     shell.input("tabopen! google ");
 }, 'Tab open google', true);
 
 key.setCaretKey('o', function (ev, arg) {
+    disableIme();
     shell.input("open google ");
 }, 'Open Google', true);
 
 key.setCaretKey('O', function (ev, arg) {
+    disableIme();
     shell.input("open! google ");
 }, 'Open Google', true);
 
@@ -657,10 +692,10 @@ key.setCaretKey('y', function (ev, arg) {
     display.echoStatusBar("Yanked " + content.document.location.href);
 }, 'Yank current page address', true);
 
-key.setCaretKey('p', function (ev, arg) {
-    var url = command.getClipboardText();
-    if (url.match(/\s/) || url.indexOf("://") === -1) {
-        url = "http://www.google.com/search?q=" + encodeURIComponent(url) + "&ie=utf-8&oe=utf-8&aq=t";
-    }
-    gBrowser.loadOneTab(url, null, null, null, false);
-}, 'Open yanked address or google it', true);
+// key.setCaretKey('p', function (ev, arg) {
+//     var url = command.getClipboardText();
+//     if (url.match(/\s/) || url.indexOf("://") === -1) {
+//         url = "http://www.google.com/search?q=" + encodeURIComponent(url) + "&ie=utf-8&oe=utf-8&aq=t";
+//     }
+//     gBrowser.loadOneTab(url, null, null, null, false);
+// }, 'Open yanked address or google it', true);
