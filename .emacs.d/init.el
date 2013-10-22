@@ -71,11 +71,12 @@
 ;;;
 ;;; C-hでbackspace
 ;;;
-;; (global-set-key [(control h)]	'delete-backward-char)
-;; (define-key isearch-mode-map "\C-h" 'isearch-delete-char)
-(load "term/bobcat")
-(when (fboundp 'terminal-init-bobcat)
-  (terminal-init-bobcat))
+(global-set-key [(control h)]	'delete-backward-char)
+(define-key isearch-mode-map "\C-h" 'isearch-delete-char)
+; ibus.elとの競合を起こすため下記の方法（キーマップを入れ替え）は封印
+;; (load "term/bobcat")
+;; (when (fboundp 'terminal-init-bobcat)
+;;   (terminal-init-bobcat))
 
 ;;;
 ;;; 修飾キーを増やすために、C-z, C-q, C-tをすげ替える

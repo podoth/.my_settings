@@ -177,23 +177,69 @@
 ;; ;; C-c o で起動。
 ;; (global-set-key "\C-co" 'ee-outline)
 
+;; ;;;
+;; ;;; mozc
+;; ;;; モードラインが表示されないときは、uim-elをアンインストールすること
+;; ;;;
+;; ;; frameをXで移動した時の動作がおかしい。cua-modeやmultiple-cursorsにも対応できない
+;; (when (require 'mozc nil t)
+;;   (setq default-input-method "japanese-mozc")
+;;   ;; (setq mozc-candidate-style 'overlay)
+;;   (setq mozc-candidate-style 'echo-area)
+;;   (global-set-key (kbd "S-SPC") 'toggle-input-method) 
+;;   ;; faces
+;;   ;; (set-face-attribute 'mozc-cand-overlay-even-face 'nil
+;;   ;;                     :background "white" :foreground "black")
+;;   ;; (set-face-attribute 'mozc-cand-overlay-odd-face 'nil
+;;   ;;                     :background "white" :foreground "black"))
+;;   )
+;; (define-key isearch-mode-map (kbd "S-SPC") 'isearch-edit-string)
+
 ;;;
-;;; mozc
-;;; モードラインが表示されないときは、uim-elをアンインストールすること
+;;; ibus
 ;;;
-;; frameをXで移動した時の動作がおかしい。cua-modeやmultiple-cursorsにも対応できない
-(when (require 'mozc nil t)
-  (setq default-input-method "japanese-mozc")
-  ;; (setq mozc-candidate-style 'overlay)
-  (setq mozc-candidate-style 'echo-area)
-  (global-set-key (kbd "S-SPC") 'toggle-input-method) 
-  ;; faces
-  ;; (set-face-attribute 'mozc-cand-overlay-even-face 'nil
-  ;;                     :background "white" :foreground "black")
-  ;; (set-face-attribute 'mozc-cand-overlay-odd-face 'nil
-  ;;                     :background "white" :foreground "black"))
-  )
-(define-key isearch-mode-map (kbd "S-SPC") 'isearch-edit-string)
+(setq load-path (cons "~/.emacs.d/packages/ibus" load-path))
+(require 'ibus)
+(add-hook 'after-init-hook 'ibus-mode-on)
+(setq ibus-prediction-window-position t)
+(ibus-define-common-key [?\C-\  ?\C-/]  nil)
+;; (define-key isearch-mode-map (kbd "S-SPC") 'isearch-edit-string)
+(define-key isearch-mode-map (kbd "S-SPC") 'ibus-toggle)
+(ibus-disable-isearch)
+;; (add-hook 'minibuffer-setup-hook 'ibus-disable)
+;; leimで使うための設定。mozc.elからもってきただけ
+(ibus-define-common-key (kbd "S-SPC") nil)
+(defgroup ibus nil
+  "Ibus - Japanese input mode package."
+  :group 'leim)
+
+(require 'mule)
+
+(defun ibus-leim-activate (input-method)
+  "Activate ibus-mode via LEIM.
+INPUT-METHOD is not used."
+  (setq inactivate-current-input-method-function 'ibus-leim-inactivate)
+  (ibus-enable))
+
+(defun ibus-leim-inactivate ()
+  "Inactivate ibus-mode via LEIM."
+  (ibus-disable))
+
+(defcustom ibus-leim-title "[Ibus]"
+  "Mode line string shown when ibus-mode is enabled.
+This indicator is not shown when you don't use LEIM."
+  :type '(choice (const :tag "No indicator" nil)
+                 (string :tag "Show an indicator"))
+  :group 'ibus)
+
+(register-input-method
+ "japanese-ibus"
+ "Japanese"
+ 'ibus-leim-activate
+ ibus-leim-title
+ "Japanese input method with Ibus Input.")
+(setq default-input-method "japanese-ibus")
+(global-set-key (kbd "S-SPC") 'toggle-input-method) 
 
 ;;;
 ;;; scim
@@ -211,10 +257,14 @@
 ;;;
 (require 'point-undo)
 ;; 上下左右の単純移動はカウントしないようにする
+;; ibus-handle-eventが邪魔するのでこれも無視する
 (defun point-undo-pre-command-hook ()
   "Save positions before command."
   (unless (or (eq this-command 'point-undo)
               (eq this-command 'point-redo)
+
+              (eq this-command 'ibus-handle-event)
+
 	      (eq this-command 'next-line)
 	      (eq this-command 'previous-line)
 	      (eq this-command 'forward-char)
