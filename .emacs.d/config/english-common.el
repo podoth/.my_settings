@@ -133,13 +133,15 @@
 ;;; lookup
 ;;; 辞書検索
 ;;;
+(setq load-path (cons "~/.emacs.d/packages/lookup" load-path))
 ;; (autoload 'lookup "lookup" nil t)
 ;; (autoload 'lookup-region "lookup" nil t)
 (autoload 'lookup-pattern "lookup" nil t)
 (setq lookup-enable-splash nil)
 (setq lookup-window-height 3)
 (global-set-key "\C-c\C-y" 'lookup-pattern)
-(setq lookup-search-agents '((ndeb "/usr/share/epwing/GENIUS")))
+;; (setq lookup-search-agents '((ndeb "/usr/share/epwing/GENIUS")))
+(setq lookup-search-agents '((ndeb "/nfs/dict/lookup/GENIUS")))
 (setq lookup-default-dictionary-options '((:stemmer .  stem-english)))
 ;; popwinで表示するために色々書き換える
 ;; 内部動作を理解しているわけではないのでbuggy
