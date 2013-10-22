@@ -354,6 +354,7 @@
 (autoload 'python-mode-config "config/python-mode-config" "" t)
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode-config))
 (load "config/perl-mode")
+(load "config/ruby-mode")
 (load "config/emacs-lisp-mode")
 (load "config/bash-mode")
 (load "config/octave-mode")
