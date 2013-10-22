@@ -143,6 +143,7 @@
 (when (executable-find "clang")
   (progn
     (defun my-auto-complete-clang-async-config ()
+      (add-to-list 'load-path "~/.emacs.d/packages/emacs-clang-complete-async")
       (require 'auto-complete-clang-async)
 
       ;; (setq ac-auto-start nil)
@@ -165,7 +166,7 @@
             (auto-complete)
           (setq ac-clang-status 'preempted)))
 
-      (setq ac-clang-complete-executable "~/.emacs.d/etc/clang-complete")
+      (setq ac-clang-complete-executable "~/.emacs.d/packages/emacs-clang-complete-async/clang-complete")
 
       (setq ac-quick-help-delay 0.1)
 
@@ -176,14 +177,25 @@
       (ac-clang-launch-completion-process)
 
       ;; clangのインクルードパスベタがきの仕様により、C++の方はインクルードパスを指定してやらないといけない
+      ;; g++ -vで調べる
+      ;; (setq ac-clang-cflags
+      ;;       (mapcar (lambda (item) (concat "-I" item))
+      ;;               (list "/usr/include/c++/4.5"
+      ;;                     "/usr/include/c++/4.5/i486-linux-gnu"
+      ;;                     "/usr/include/c++/4.5/i686-linux-gnu"
+      ;;                     "/usr/lib/i386-linux-gnu/gcc/i686-linux-gnu/4.5/include"
+      ;;                     "/usr/local/include"
+      ;;                     "/usr/include")))
       (setq ac-clang-cflags
             (mapcar (lambda (item) (concat "-I" item))
-                    (list "/usr/include/c++/4.5"
-                          "/usr/include/c++/4.5/i486-linux-gnu"
-                          "/usr/include/c++/4.5/i686-linux-gnu"
-                          "/usr/lib/i386-linux-gnu/gcc/i686-linux-gnu/4.5/include"
+                    (list "/usr/lib/gcc/i686-pc-linux-gnu/4.7.3/include/g++-v4"
+                          "/usr/lib/gcc/i686-pc-linux-gnu/4.7.3/include/g++-v4/i686-pc-linux-gnu"
+                          "/usr/lib/gcc/i686-pc-linux-gnu/4.7.3/include/g++-v4/backward"
+                          "/usr/lib/gcc/i686-pc-linux-gnu/4.7.3/include"
                           "/usr/local/include"
+                          "/usr/lib/gcc/i686-pc-linux-gnu/4.7.3/include-fixed"
                           "/usr/include")))
+
       (ac-clang-update-cmdlineargs)
       )
     (add-hook 'c-mode-hook 'my-auto-complete-clang-async-config)

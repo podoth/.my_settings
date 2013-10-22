@@ -25,3 +25,6 @@
 [submodule ".emacs.d/packages/dash.el"]
 	path = .emacs.d/packages/dash.el
 	url = https://github.com/magnars/dash.el.git
+[submodule ".emacs.d/packages/emacs-clang-complete-async"]
+	path = .emacs.d/packages/emacs-clang-complete-async
+	url = https://github.com/Golevka/emacs-clang-complete-async
