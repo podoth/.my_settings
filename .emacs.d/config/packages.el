@@ -107,11 +107,12 @@
     '(progn
        (setq migemo-command "cmigemo")
        (setq migemo-options '("-q" "--emacs"))
-       (setq migemo-dictionary "/usr/local/share/migemo/utf-8/migemo-dict")
+       (setq migemo-dictionary "/usr/share/migemo/migemo-dict")
        (setq migemo-user-dictionary nil)
        (setq migemo-regex-dictionary nil)
        (setq migemo-coding-system 'utf-8-unix)
        (define-key isearch-mode-map (kbd "RET") 'migemo-toggle-isearch-enable)
+       (setq migemo-isearch-min-length 2) ;; regular expression too big回避用
        (migemo-init)
        )))
 
