@@ -311,13 +311,13 @@ This indicator is not shown when you don't use LEIM."
 ;;; expand-region
 ;;; 微妙なさじかげんでリージョンを拡大していく
 ;;;
-(setq load-path (cons "~/.emacs.d/packages/expand-region" load-path))
-(require 'expand-region)
-;; C-SPC連続実行で発動。
-;; 何回やればいいのか分からないので、とりあえず並べまくる
-(define-sequential-command seq-SPC
-  cua-set-mark er/expand-region er/expand-region er/expand-region er/expand-region er/expand-region er/expand-region)
-(global-set-key (kbd "C-SPC") 'seq-SPC)
+;; (setq load-path (cons "~/.emacs.d/packages/expand-region" load-path))
+;; (require 'expand-region)
+;; ;; C-SPC連続実行で発動。
+;; ;; 何回やればいいのか分からないので、とりあえず並べまくる
+;; (define-sequential-command seq-SPC
+;;   cua-set-mark er/expand-region er/expand-region er/expand-region er/expand-region er/expand-region er/expand-region)
+;; (global-set-key (kbd "C-SPC") 'seq-SPC)
 
 ;;;
 ;;; auto-install

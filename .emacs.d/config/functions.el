@@ -214,6 +214,17 @@
 ;;         ad-do-it
 ;;         (indent-region point-before (point))))
 
+
+;;;
+;;; yank時にコメントする
+;;;
+(defun yank-and-comment ()
+  "Yank and then comment-or-uncomment."
+  (interactive)
+  (yank)
+  (call-interactively 'comment-or-uncomment-region))
+(global-set-key [(control \;)]	'yank-and-comment)
+
 ;;;
 ;;; region内の検索と関数内の検索
 ;;; http://www.jaist.ac.jp/~n-yoshi/tips/elisp_tips.html#cskip

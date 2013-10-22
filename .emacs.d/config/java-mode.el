@@ -19,13 +19,16 @@
  '(eclim-eclipse-dirs '("/opt/eclipse"))
  '(eclimd-default-workspace "~/workspace"))
 (defadvice eclim-executable-find (after treat-windows activate)
+  ""
   (when windows-p
     (setq ad-return-value (concat ad-return-value ".bat"))))
-(defadvice eclimd--executable-path (after treat-windows activate)
-  (when windows-p
-    (setq ad-return-value (concat ad-return-value ".bat"))))
+;; (defadvice eclimd--executable-path (after treat-windows activate)
+;;   ""
+;;   (when windows-p
+;;     (setq ad-return-value (concat ad-return-value ".bat"))))
 (custom-set-variables `(eclim-executable ,(eclim-executable-find)))
-(custom-set-variables `(eclimd-executable ,(eclimd--executable-path)))
+(when eclim-executable
+  (custom-set-variables `(eclimd-executable ,(eclimd--executable-path))))
 
 ;; eclimdを起動かつ対象プロジェクトの場合のみモードを有効化
 ;; eclimdのデフォルトディレクトリかつeclimdを起動していない場合は警告

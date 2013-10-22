@@ -13,6 +13,11 @@
 (setq which-func-modes t)
 (set-face-foreground 'which-func nil)
 (set-face-background 'which-func nil)
+;; texなどの時、先頭に空白が付くのを抑制
+(defadvice which-function (after left-trim activate)
+  ""
+  (when (string-match "\\`[ \t\n\r]+" ad-return-value)
+      (setq ad-return-value  (replace-match "" t t ad-return-value))))
 
 ;;;
 ;;; linum 行番号を表示する

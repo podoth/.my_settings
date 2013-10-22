@@ -69,7 +69,7 @@
 
 (defun flymake-cc-init ()
   (flymake-simple-make-or-generic-init
-   "g++" (list "-Wall" "-Wextra" "-Wshadow" "-fsyntax-only" "-lpthread")))
+   "g++" (list "-Wall" "-Wextra" "-Wshadow" "-fsyntax-only" "-lpthread" "-std=c++0x")))
 
 (push '("\\.[cC]$" flymake-c-init) flymake-allowed-file-name-masks)
 (push '("\\.\\(cc\\|cpp\\|CC\\|CPP\\)$" flymake-cc-init) flymake-allowed-file-name-masks)

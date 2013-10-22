@@ -59,6 +59,12 @@
 (prefer-coding-system 'utf-8)
 
 ;;;
+;;; 環境変数で基本英語にする
+;;;
+(setenv "LANG" "C")
+(setenv "LC_ALL" "C")
+
+;;;
 ;;; ホームディレクトリで作業する
 ;;;
 (cd "~")
