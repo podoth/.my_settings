@@ -19,7 +19,7 @@
                       rct-method-completion-table))))))
 
 (defun ac-ruby-setup ()
-  ;(setq ac-sources (append ac-sources ac-ruby-sources))
+  (setq ac-sources (append ac-sources ac-ruby-sources))
   (setq ac-omni-completion-sources (list (cons "\\." ac-ruby-sources)
                                          (cons "::" ac-ruby-sources))))
 

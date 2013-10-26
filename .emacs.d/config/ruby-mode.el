@@ -42,6 +42,7 @@
 ;;;
 (require 'rcodetools)
 (require 'auto-complete-ruby)
+(ac-ruby-init)
 
 ;;;
 ;;; flymake

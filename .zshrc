@@ -248,3 +248,6 @@ export GTK_MODULES=
 
 # # バージョン管理されているディレクトリにいれば表示，そうでなければ非表示
 # RPROMPT="%1(v|%F{green}%1v%f|)"
+
+# ruby gems path
+export PATH=${HOME}/.gem/ruby/1.9.1/bin:$PATH
