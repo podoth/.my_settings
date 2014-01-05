@@ -498,3 +498,10 @@ This indicator is not shown when you don't use LEIM."
 (defadvice migemo-toggle-isearch-enable (after anzu-midemo-toggle activate)
   "toggle anzu-use-migemo"
   (setq anzu-use-migemo (not anzu-use-migemo)))
+
+;;;
+;;; visual-regexp
+;;; regexp時のマッチに色を付ける
+;;;
+(require 'visual-regexp)
+(define-key global-map (kbd "C-M-%") 'vr/query-replace)
