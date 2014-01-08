@@ -11,30 +11,47 @@
   (progn
     (require 'flymake)
 
-    ;; for latex
-    (defun flymake-tex-init ()
-      (let* ((temp-file   (flymake-init-create-temp-buffer-copy
-                           'flymake-create-temp-inplace))
-             (local-dir   (file-name-directory buffer-file-name))
-             (local-file  (file-relative-name
-                           temp-file
-                           local-dir)))
-        (list "platex" (list "-file-line-error" "-interaction=nonstopmode" local-file))))
-    (defun flymake-tex-cleanup-custom ()
-      (let* ((base-file-name (file-name-sans-extension (file-name-nondirectory flymake-temp-source-file-name)))
+    ;; 複数ファイル設定していると、platexの出力をパースしきれずにエラーになる
+    ;; egrepにパイプして余計な出力を取り除く
+    ;; platex -file-line-error -interaction=nonstopmode $1|egrep ".+:.+:.+"
+    (defun flymake-get-tex-args (file-name)
+      ;; (list "platex" (list "-file-line-error" "-interaction=nonstopmode" file-name)))
+      (list "~/.emacs.d/etc/flymake-platex.sh" (list file-name)))
+
+    ;; クリーンアップ用関数を賢くする
+    (defun flymake-clean-latex-files (file-name)
+      (let* ((base-file-name (file-name-sans-extension (file-name-nondirectory file-name)))
              (regexp-base-file-name (concat "^" base-file-name "\\.")))
         (mapcar '(lambda (filename)
                    (when (string-match regexp-base-file-name filename)
                      (flymake-safe-delete-file filename)))
-                (split-string (shell-command-to-string "ls"))))
-      (setq flymake-last-change-time nil))
-    (push '("\\.tex$" flymake-tex-init flymake-tex-cleanup-custom) flymake-allowed-file-name-masks)
+                (split-string (shell-command-to-string "ls")))))
 
-    (add-hook
-     'TeX-mode-hook
-     '(lambda ()
-        (flymake-mode t)
-        (define-key LaTeX-mode-map "\C-cd" 'credmp/flymake-display-err-minibuf)))
+    (defun flymake-tex-cleanup-custom ()
+      (flymake-clean-latex-files flymake-temp-source-file-name)
+      (setq flymake-last-change-time nil))
+
+    (push '("\\.tex$" flymake-simple-tex-init flymake-tex-cleanup-custom) flymake-allowed-file-name-masks)
+
+    ;; 複数ファイルに分けたtexファイルの扱いが上手く行かないようなので、改めて設定しなおす
+    ;; 先頭が数字またはsub_で始まるファイルは子ファイルと見なすようにする
+    ;; また、クリーンアップ用関数を賢くする
+    (defun flymake-master-cleanup-custom ()
+      (flymake-clean-latex-files flymake-temp-source-file-name)
+      (flymake-clean-latex-files flymake-temp-master-file-name)
+      (setq flymake-last-change-time nil))
+    (push '("[0-9]+.*\\.tex$" flymake-master-tex-init flymake-master-cleanup-custom) flymake-allowed-file-name-masks)
+    (push '("sub_.*\\.tex$" flymake-master-tex-init flymake-master-cleanup-custom) flymake-allowed-file-name-masks)
+
+    ;; masterファイルの\include{0-title} を \include{0-title_flymake.tex} に変換してしまうバグがある
+    ;; \include{0-title_flymake}にするようにする
+    (defadvice flymake-check-patch-master-file-buffer (before deal-include-command activate)
+      ""
+      (when (string-equal (file-name-extension (ad-get-arg 4)) "tex")
+        (ad-set-arg 4 (file-name-sans-extension (ad-get-arg 4)))))
+
+    ;; hook設定
+    (add-hook 'TeX-mode-hook 'flymake-mode)
     ))
 
 ;;;
@@ -100,6 +117,14 @@
 (eval-after-load "auctex"
   '(when window-system
      (require 'font-latex)))
+
+;; autoディレクトリの名前を変える
+(setq TeX-auto-local ".auctex")
+;; latexmkdへの対応
+(require 'auctex-latexmk)
+(auctex-latexmk-setup)
+;; pdfモード
+(add-hook 'LaTeX-mode-hook 'TeX-PDF-mode)
 
 ;;;
 ;;; bibtex
