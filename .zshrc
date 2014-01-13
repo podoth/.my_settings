@@ -124,7 +124,7 @@ esac
 alias la='ls -A'
 alias ll='ls -laBh'
 alias du='du -hk'
-alias less='less -M'
+alias less='less -MR'
 #alias rdesktopfull='rdesktop onion -g 1280x1024'
 alias rdesktoponion='rdesktop onion -K -g 1900x1100+0-0'
 alias rdesktoponionslow='rdesktop onion -K -g 800x600+0-0 -x modem -z'
@@ -187,7 +187,10 @@ alias e='emacsclient --alternate-editor="" -c'
 
 alias ack='ack-grep'
 alias gitwebtmp='git instaweb --httpd=webrick'
-alias lv='lv -c'
+
+# lessでソースハイライト
+export LESSOPEN='| /usr/bin/src-hilite-lesspipe.sh %s'
+function lv() { if [ -f $1 ]; then less $1 | /usr/bin/lv -c; fi; }
 
 #anythingみたいなの。C-x;で起動
 source ${HOME}/.zsh.plugin/zaw/zaw.zsh
@@ -273,12 +276,13 @@ autoload -U add-zsh-hook 2>/dev/null || return
 #  * Parameters: \1
 #
 
-__timetrack_threshold=500 # seconds
+__timetrack_threshold=60 # seconds
 read -r -d '' __timetrack_ignore_progs <<EOF
-less
+less lv man
 emacs vi vim
 ssh mosh telnet nc netcat
 gdb
+firefox thunderbird rdesktop
 EOF
 
 export __timetrack_threshold
@@ -294,7 +298,8 @@ function __my_preexec_start_timetrack() {
 function __my_preexec_end_timetrack() {
     local exec_time
     local command=$__timetrack_command
-    local prog=$(echo $command|awk '{print $1}')
+    # local prog=$(echo $command|awk '{print $1}')
+    local prog=$(echo $command|head -n1|awk '{print $1}')
     local notify_method
     local message
 
