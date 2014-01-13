@@ -59,6 +59,13 @@
 (prefer-coding-system 'utf-8)
 
 ;;;
+;;; customize の出力先を変更する
+;;;
+(setq custom-file "~/.emacs.d/var/custom.el")
+(if (file-exists-p (expand-file-name custom-file))
+    (load (expand-file-name custom-file) t nil nil))
+
+;;;
 ;;; 環境変数で基本英語にする
 ;;;
 (setenv "LANG" "C")
