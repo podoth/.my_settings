@@ -314,6 +314,23 @@
  '(read-file-name-completion-ignore-case t))
 
 ;;;
+;;; find-fileで無視するファイルを追加
+;;;
+(setq completion-ignored-extensions (append completion-ignored-extensions '("#")))
+
+;;;
+;;; completion-ignored-extensionsをfind-fileのタブ補完時に現れるバッファにも適用
+;;;
+(defadvice completion-file-name-table (after ignoring-backups-f-n-completion activate)
+  "filter out results when the have completion-ignored-extensions"
+  (let ((res ad-return-value))
+    (if (and (listp res)
+          (stringp (car res))
+          (cdr res)) ; length > 1, don't ignore sole match
+        (setq ad-return-value
+          (completion-pcm--filename-try-filter res)))))
+
+;;;
 ;;; 起動時間を計測
 ;;;
 (add-hook 'after-init-hook
