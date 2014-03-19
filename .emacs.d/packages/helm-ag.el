@@ -4,8 +4,8 @@
 
 ;; Author: Syohei YOSHIDA <syohex@gmail.com>
 ;; URL: https://github.com/syohex/emacs-helm-ag
-;; Version: 0.06
-;; Package-Requires: ((helm "1.0"))
+;; Version: 0.10
+;; Package-Requires: ((helm "1.5.6"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -46,6 +46,12 @@
   :type 'symbol
   :group 'helm-ag)
 
+(defcustom helm-ag-source-type 'one-line
+  "Style of candidates"
+  :type '(choice (const :tag "Show file:line number:content in one line" one-line)
+                 (const :tag "Helm file-line style" file-line))
+  :group 'helm-ag)
+
 (defvar helm-ag-command-history '())
 (defvar helm-ag-context-stack nil)
 (defvar helm-ag-default-directory nil)
@@ -71,9 +77,10 @@
              " "))))
 
 (defun helm-ag-init ()
-  (let* ((cmd (read-string "Ag: "
-                           (helm-ag-initial-command)
-                           'helm-ag-command-history)))
+  (let ((cmd (read-string "Ag: "
+                          (helm-ag-initial-command)
+                          'helm-ag-command-history))
+        (buf-coding buffer-file-coding-system))
     (helm-attrset 'recenter t)
     (with-current-buffer (helm-candidate-buffer 'global)
       (let* ((default-directory (or helm-ag-default-directory
@@ -81,8 +88,9 @@
              (full-cmd (helm-aif (helm-attr 'search-this-file)
                            (format "%s %s" cmd it)
                          cmd))
-             (ret (call-process-shell-command full-cmd nil t)))
-        (unless (zerop ret)
+             (coding-system-for-read buf-coding)
+             (coding-system-for-write buf-coding))
+        (unless (zerop (call-process-shell-command full-cmd nil t))
           (error "Failed: '%s'" cmd))
         (when (zerop (length (buffer-string)))
           (error "No output: '%s'" cmd))
@@ -102,15 +110,37 @@
     (goto-char (point-min))
     (forward-line (1- line))))
 
+(defun helm-ag-persistent-action (candidate)
+  (let* ((elems (split-string candidate ":"))
+         (search-this-file (helm-attr 'search-this-file))
+         (filename (or search-this-file (first elems)))
+         (line (string-to-number (if search-this-file
+                                     (first elems)
+                                   (second elems))))
+         (default-directory (or helm-ag-default-directory
+                                helm-ag-last-default-directory)))
+    (find-file filename)
+    (goto-char (point-min))
+    (forward-line (1- line))
+    (helm-highlight-current-line)))
+
 (defvar helm-ag-source
   '((name . "the silver searcher")
     (init . helm-ag-init)
     (candidates-in-buffer)
+    (persistent-action . helm-ag-persistent-action)
     (action . (("Open File" . (lambda (c)
                                 (helm-ag-find-file-action c 'find-file)))
                ("Open File Other Window" .
                 (lambda (c)
                   (helm-ag-find-file-action c 'find-file-other-window)))))
+    (candidate-number-limit . 9999)))
+
+(defvar helm-ag-source-grep
+  '((name . "the silver searcher")
+    (init . helm-ag-init)
+    (candidates-in-buffer)
+    (type . file-line)
     (candidate-number-limit . 9999)))
 
 ;;;###autoload
@@ -129,13 +159,18 @@
   (interactive)
   (setq helm-ag-context-stack nil))
 
+(defun helm-ag--select-source ()
+  (if (eq helm-ag-source-type 'file-line)
+      '(helm-ag-source-grep)
+    '(helm-ag-source)))
+
 ;;;###autoload
 (defun helm-ag-this-file ()
   (interactive)
   (let ((filename (file-name-nondirectory (buffer-file-name))))
     (helm-attrset 'search-this-file (buffer-file-name) helm-ag-source)
     (helm-attrset 'name (format "Search at %s" filename) helm-ag-source)
-    (helm :sources '(helm-ag-source) :buffer "*helm-ag*")))
+    (helm :sources (helm-ag--select-source) :buffer "*helm-ag*")))
 
 ;;;###autoload
 (defun helm-ag ()
@@ -146,7 +181,7 @@
          (header-name (format "Search at %s" helm-ag-default-directory)))
     (helm-attrset 'search-this-file nil helm-ag-source)
     (helm-attrset 'name header-name helm-ag-source)
-    (helm :sources '(helm-ag-source) :buffer "*helm-ag*")))
+    (helm :sources (helm-ag--select-source) :buffer "*helm-ag*")))
 
 (provide 'helm-ag)
 

@@ -30,8 +30,10 @@
      (define-key helm-map (kbd "TAB") 'helm-next-line)
      (define-key helm-map (kbd "C-l") 'helm-recenter-top-bottom-other-window)
      (define-key helm-map (kbd "C-h") 'delete-backward-char)
-     (define-key helm-map (kbd "C-S-n") (lambda () (interactive) (helm-next-line)(helm-next-line)(helm-next-line)))
-     (define-key helm-map (kbd "C-S-p") (lambda () (interactive) (helm-previous-line)(helm-previous-line)(helm-previous-line)))
+     (define-key helm-map (kbd "C-S-n") '(lambda () (interactive) (helm-next-line)(helm-next-line)(helm-next-line)))
+     (define-key helm-map (kbd "C-S-p") '(lambda () (interactive) (helm-previous-line)(helm-previous-line)(helm-previous-line)))
+     (custom-set-variables
+      '(helm-mp-matching-method 'multi3p))
      ))
 
 ;; multilineのseparatorの長さをウインドウに併せて変える
@@ -65,3 +67,25 @@
   '(progn
      (setq helm-descbinds-window-style 'split-window)
      ))
+
+;;;
+;;; helm-migemo
+;;;
+(eval-after-load "helm"
+  '(progn
+     (require 'helm-migemo)
+     (helm-migemize-command helm-imenu)))
+
+;;;
+;;; all-ext
+;;;
+;; なんか使えない
+;; (eval-after-load "helm"
+;;   '(progn
+;;      (require 'all-ext)
+;;      (require 'view)
+;;      (defun all-mode-quit ()
+;;        (interactive)
+;;        (view-mode 1) (View-quit))
+
+;;      (define-key all-mode-map (kbd "C-c C-q") 'all-mode-quit)))

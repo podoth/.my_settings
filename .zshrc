@@ -358,3 +358,19 @@ if which growlnotify >/dev/null 2>&1 ||
     add-zsh-hook preexec __my_preexec_start_timetrack
     add-zsh-hook precmd __my_preexec_end_timetrack
 fi
+
+#
+# 特定ディレクトリの特定拡張子の特定時刻前以降に更新されたファイルに特定コマンドを叩く
+#
+function my_find_and_exec(){
+    local LANG=C
+    local LC_ALL=C
+    find -L $1 -newermt "$(date --date $2)" -name $3 | while read file; do
+    # for file in $(find -L $1 -newermt "$(date --date $2)" -name $3); do
+        echo $4 $file
+        $4 $file
+    done
+}
+function ft(){my_find_and_exec "${HOME}/Dropbox" '5minutes ago' '*' 'touch'}
+function ftt(){my_find_and_exec "${HOME}/Dropbox" '2hours ago' '*.pptx' 'touch'}
+function fttt(){my_find_and_exec "${HOME}/Dropbox" '6hours ago' '*.pptx' 'touch'}

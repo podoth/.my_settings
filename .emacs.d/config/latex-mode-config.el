@@ -5,6 +5,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;
+;;; find-fileで無視するファイル追加
+;;;
+(setq completion-ignored-extensions (append completion-ignored-extensions '(".synctex.gz")))
+
+;;;
 ;;; flymake
 ;;;
 (when (executable-find "platex")
@@ -111,8 +116,6 @@
       LaTeX-figure-label		"fig:"
       LaTeX-table-label			"tab:"
       LaTeX-section-label		"sec:")
-;; (when (not (shell-command "which pxdvi"))
-;;   (setq TeX-output-view-style '(("^dvi$" "." "pxdvi %d"))))
 
 (eval-after-load "auctex"
   '(when window-system
@@ -120,11 +123,27 @@
 
 ;; autoディレクトリの名前を変える
 (setq TeX-auto-local ".auctex")
-;; latexmkdへの対応
+;; latexmkへの対応
 (require 'auctex-latexmk)
 (auctex-latexmk-setup)
+(add-hook 'TeX-mode-hook
+          (function (lambda () (setq TeX-command-default "LatexMk"))))
 ;; pdfモード
 (add-hook 'LaTeX-mode-hook 'TeX-PDF-mode)
+(add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+;; View時のフォーカスを変更しないようにする
+(defun focus-emacs ()
+  (call-process-shell-command (format "xdotool windowactivate `xdotool search --onlyvisible --pid %d --name emacs`" (emacs-pid))))
+
+(when (executable-find "xdotool")
+  (defadvice TeX-evince-sync-view (after return-focus activate)
+    "Viewの後にフォーカスが戻ってくるようにする"
+    (focus-emacs))
+  ;; (defadvice TeX-view (after return-focus activate)
+  ;;   "Viewの後にフォーカスが戻ってくるようにする"
+  ;;   (focus-emacs))
+  )
+
 
 ;;;
 ;;; bibtex
@@ -138,12 +157,18 @@
 ;;;
 (setq reftex-texpath-environment-variables	'("TEXMFHOME")
       reftex-bibpath-environment-variables	'("~/texmf//")
-      reftex-plug-into-AUCTeX			t
-      reftex-label-alist
-      '(("figure"       ?F "fig:" "\\figref{%s}" caption nil)
-	("figure*"      ?F nil nil caption)
-	("table"        ?T "tab:" "\\tabref{%s}" caption nil)
-	("table*"       ?T nil nil caption)))
+      reftex-plug-into-AUCTeX			t)
+(setq reftex-label-alist
+      '(
+        ("section" ?s "%S" "~\\secref{%s}" (nil . t)
+         (regexp "parts?""chapter" "chap." "sections?" "sect?\\." "paragraphs?" "par\\." "\\\\S" "\247" "Teile?" "Kapitel" "Kap\\." "Abschnitte?" "appendi\\(x\\|ces\\)" "App\\." "Anh\"?ange?" "Anh\\."))
+        ("figure" ?f "fig:" "~\\ref{%s}" caption
+         (regexp "figure?[sn]?" "figs?\\." "Abbildung\\(en\\)?" "Abb\\."))
+        ("figure*" ?f nil nil caption)
+        ("table" ?t "tab:" "~\\ref{%s}" caption
+         (regexp "tables?" "tab\\." "Tabellen?"))
+        ("table*" ?t nil nil caption)
+        ))
 (autoload 'reftex-mode     "reftex" "RefTeX Minor Mode" t)
 (autoload 'turn-on-reftex  "reftex" "RefTeX Minor Mode" nil)
 (autoload 'reftex-citation "reftex-cite" "Make citation" nil)
@@ -187,27 +212,29 @@
 ;;;
 (define-key TeX-mode-map "\C-c\C-w" 'nil)
 (define-key LaTeX-mode-map "\C-c\C-j" 'nil)
+(eval-after-load "reftex"
+  '(define-key reftex-mode-map "\C-c/" 'nil))
 
 ;;;
 ;;; Grammar
 ;;;
-(require 'grammar)
-(copy-face 'my-info-face 'grammar-error-face)
-(add-hook 'LaTeX-mode-hook 'turn-on-grammar)
+;; (require 'grammar)
+;; (copy-face 'my-info-face 'grammar-error-face)
+;; (add-hook 'LaTeX-mode-hook 'turn-on-grammar)
 
-(defun grammar-check-region (start end)
-  (interactive (list (point) (mark)))
-  (save-excursion
-    (goto-char start)
-    (while (<= (point) end)
-      (forward-sentence)
-      (when (and (grammar-sentence-end-char-p)
-                 (grammar-sentence-english-p))
-        (grammar-check)))))
-(global-set-key (kbd "C-z") 'grammar-check-region)
-(defun grammar-check-buffer ()
-  (interactive)
-  (grammar-check-region (point-min) (point-max)))
+;; (defun grammar-check-region (start end)
+;;   (interactive (list (point) (mark)))
+;;   (save-excursion
+;;     (goto-char start)
+;;     (while (<= (point) end)
+;;       (forward-sentence)
+;;       (when (and (grammar-sentence-end-char-p)
+;;                  (grammar-sentence-english-p))
+;;         (grammar-check)))))
+;; (global-set-key (kbd "C-z") 'grammar-check-region)
+;; (defun grammar-check-buffer ()
+;;   (interactive)
+;;   (grammar-check-region (point-min) (point-max)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

@@ -9,6 +9,11 @@
 ;;;
 (require 'flymake)
 
+;; 終了前にflymakeを止める
+(defadvice kill-terminal (before kill-flymake activate)
+  (when (flymake-compilation-is-running) (flymake-stop-all-syntax-checks)))
+;; (add-hook 'kill-emacs-hook 'flymake-stop-all-syntax-checks)
+
 ;; 色設定
 (copy-face  'my-error-face 'flymake-errline)
 (copy-face  'my-warning-face 'flymake-warnline)

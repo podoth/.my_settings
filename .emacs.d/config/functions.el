@@ -34,8 +34,10 @@
 (global-set-key [(control c)(control e)]	'reload-emacs-settings)
 
 ;;;
-;;; jump window with C-,
-;;; switch buffer with C-M-,
+;;; split or jump window with C-,
+;;; split or copy window with C-M-,
+;;; force split and jump window with C-S-,
+;;; kill window with C-u C-,
 ;;;
 (defun split-window-conditional ()
   (interactive)
@@ -46,18 +48,26 @@
   (interactive)
   (when (one-window-p)(split-window-conditional))
   (other-window 1))
-(global-set-key (kbd "C-,") 'other-window-or-split)
-;; (global-set-key (kbd "C-M-,") 'next-buffer)
-
-;;;
-;;; copy window with C-M-,
-;;;
+(defun other-window-or-split-or-close (arg)
+  "画面が1つなら分割、2つ以上なら移動。
+C-uをつけるとウィンドウを閉じる。"
+  (interactive "p")
+  (case arg
+    (4  (delete-window))
+    (t  (other-window-or-split))))
+(global-set-key (kbd "C-,") 'other-window-or-split-or-close)
 (defun open-buffer-in-other-window-or-split ()
   (interactive)
   (let ((b (current-buffer)))
     (other-window-or-split)
     (switch-to-buffer b)))
 (global-set-key (kbd "C-M-,") 'open-buffer-in-other-window-or-split)
+(defun other-window-and-split ()
+  (interactive)
+  (split-window-conditional)
+  (other-window 1))
+(global-set-key (kbd "C-<") 'other-window-and-split)
+;; (global-set-key (kbd "C-M-<") 'delete-window)
 
 ;;;
 ;;; open file as root
@@ -102,7 +112,7 @@
 ;;; プリント用コマンド
 ;;; http://www-section.cocolog-nifty.com/blog/2008/11/emacs-b4fb.html
 ;;;
-(setq my-print-command-format "nkf -e | e2ps -a4 -p -nh | lpr -P ")
+(setq my-print-command-format "nkf -e | a2ps -a4 -p -nh | lpr -P ")
 (defun my-print-region (begin end)
    (interactive "r")
    (setq printer-string (read-from-minibuffer "Printer:" "atlas"))

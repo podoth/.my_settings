@@ -51,10 +51,11 @@
 
 ;;;
 ;;; Language
+;;; prefere-coding-systemは何故か他のelisp(mozcとか)によって乱されるようなので、ここと最後で二度設定するようにする
 ;;;
 (set-language-environment "Japanese")
 (set-default-coding-systems 'utf-8)
-(set-terminal-coding-system	'utf-8)
+(set-terminal-coding-system 'utf-8)
 (setq default-file-name-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 
@@ -301,7 +302,7 @@
 ;;; make-local-hookを使っていた行はそのまま削除しても大丈夫らしいので
 ;;;
 (when emacs24-p
-  (defun make-local-hook (hook) t))
+  (defun make-local-hook (hook) nil))
 
 ;;;
 ;;; scrollbar
@@ -395,6 +396,7 @@
 (add-to-list 'auto-mode-alist '("\\.tex\\'" . LaTeX-mode-config))
 (autoload 'python-mode-config "config/python-mode-config" "" t)
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode-config))
+(load "config/rest-mode")
 (load "config/perl-mode")
 (load "config/ruby-mode")
 (load "config/emacs-lisp-mode")
@@ -411,3 +413,8 @@
 ;; (custom-set-variables
 ;;  '(idle-require-idle-delay 1200))
 ;; (idle-require-mode 1)
+
+;;;
+;;; Language
+;;;
+(prefer-coding-system 'utf-8)

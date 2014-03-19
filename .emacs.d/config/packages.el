@@ -178,69 +178,70 @@
 ;; ;; C-c o で起動。
 ;; (global-set-key "\C-co" 'ee-outline)
 
-;; ;;;
-;; ;;; mozc
-;; ;;; モードラインが表示されないときは、uim-elをアンインストールすること
-;; ;;;
-;; ;; frameをXで移動した時の動作がおかしい。cua-modeやmultiple-cursorsにも対応できない
-;; (when (require 'mozc nil t)
-;;   (setq default-input-method "japanese-mozc")
-;;   ;; (setq mozc-candidate-style 'overlay)
-;;   (setq mozc-candidate-style 'echo-area)
-;;   (global-set-key (kbd "S-SPC") 'toggle-input-method) 
-;;   ;; faces
-;;   ;; (set-face-attribute 'mozc-cand-overlay-even-face 'nil
-;;   ;;                     :background "white" :foreground "black")
-;;   ;; (set-face-attribute 'mozc-cand-overlay-odd-face 'nil
-;;   ;;                     :background "white" :foreground "black"))
-;;   )
-;; (define-key isearch-mode-map (kbd "S-SPC") 'isearch-edit-string)
-
 ;;;
-;;; ibus
+;;; mozc
+;;; モードラインが表示されないときは、uim-elをアンインストールすること
 ;;;
-(setq load-path (cons "~/.emacs.d/packages/ibus" load-path))
-(require 'ibus)
-(add-hook 'after-init-hook 'ibus-mode-on)
-(setq ibus-prediction-window-position t)
-(ibus-define-common-key [?\C-\  ?\C-/]  nil)
-;; (define-key isearch-mode-map (kbd "S-SPC") 'isearch-edit-string)
-(define-key isearch-mode-map (kbd "S-SPC") 'ibus-toggle)
-(ibus-disable-isearch)
-;; (add-hook 'minibuffer-setup-hook 'ibus-disable)
-;; leimで使うための設定。mozc.elからもってきただけ
-(ibus-define-common-key (kbd "S-SPC") nil)
-(defgroup ibus nil
-  "Ibus - Japanese input mode package."
-  :group 'leim)
+;; frameをXで移動した時の動作がおかしい。cua-modeやmultiple-cursorsにも対応できない
+(when (require 'mozc nil t)
+  (set-language-environment "Japanese")
+  (setq default-input-method "japanese-mozc")
+  ;; (setq mozc-candidate-style 'overlay)
+  (setq mozc-candidate-style 'echo-area)
+  (global-set-key (kbd "S-SPC") 'toggle-input-method) 
+  ;; faces
+  ;; (set-face-attribute 'mozc-cand-overlay-even-face 'nil
+  ;;                     :background "white" :foreground "black")
+  ;; (set-face-attribute 'mozc-cand-overlay-odd-face 'nil
+  ;;                     :background "white" :foreground "black"))
+  )
+(define-key isearch-mode-map (kbd "S-SPC") 'isearch-edit-string)
 
-(require 'mule)
+;; ;;;
+;; ;;; ibus
+;; ;;;
+;; (setq load-path (cons "~/.emacs.d/packages/ibus" load-path))
+;; (require 'ibus)
+;; (add-hook 'after-init-hook 'ibus-mode-on)
+;; (setq ibus-prediction-window-position t)
+;; (ibus-define-common-key [?\C-\  ?\C-/]  nil)
+;; ;; (define-key isearch-mode-map (kbd "S-SPC") 'isearch-edit-string)
+;; (define-key isearch-mode-map (kbd "S-SPC") 'ibus-toggle)
+;; (ibus-disable-isearch)
+;; ;; (add-hook 'minibuffer-setup-hook 'ibus-disable)
+;; ;; leimで使うための設定。mozc.elからもってきただけ
+;; (ibus-define-common-key (kbd "S-SPC") nil)
+;; (defgroup ibus nil
+;;   "Ibus - Japanese input mode package."
+;;   :group 'leim)
 
-(defun ibus-leim-activate (input-method)
-  "Activate ibus-mode via LEIM.
-INPUT-METHOD is not used."
-  (setq inactivate-current-input-method-function 'ibus-leim-inactivate)
-  (ibus-enable))
+;; (require 'mule)
 
-(defun ibus-leim-inactivate ()
-  "Inactivate ibus-mode via LEIM."
-  (ibus-disable))
+;; (defun ibus-leim-activate (input-method)
+;;   "Activate ibus-mode via LEIM.
+;; INPUT-METHOD is not used."
+;;   (setq inactivate-current-input-method-function 'ibus-leim-inactivate)
+;;   (ibus-enable))
 
-(defcustom ibus-leim-title "[Ibus]"
-  "Mode line string shown when ibus-mode is enabled.
-This indicator is not shown when you don't use LEIM."
-  :type '(choice (const :tag "No indicator" nil)
-                 (string :tag "Show an indicator"))
-  :group 'ibus)
+;; (defun ibus-leim-inactivate ()
+;;   "Inactivate ibus-mode via LEIM."
+;;   (ibus-disable))
 
-(register-input-method
- "japanese-ibus"
- "Japanese"
- 'ibus-leim-activate
- ibus-leim-title
- "Japanese input method with Ibus Input.")
-(setq default-input-method "japanese-ibus")
-(global-set-key (kbd "S-SPC") 'toggle-input-method) 
+;; (defcustom ibus-leim-title "[Ibus]"
+;;   "Mode line string shown when ibus-mode is enabled.
+;; This indicator is not shown when you don't use LEIM."
+;;   :type '(choice (const :tag "No indicator" nil)
+;;                  (string :tag "Show an indicator"))
+;;   :group 'ibus)
+
+;; (register-input-method
+;;  "japanese-ibus"
+;;  "Japanese"
+;;  'ibus-leim-activate
+;;  ibus-leim-title
+;;  "Japanese input method with Ibus Input.")
+;; (setq default-input-method "japanese-ibus")
+;; (global-set-key (kbd "S-SPC") 'toggle-input-method) 
 
 ;;;
 ;;; scim
@@ -395,17 +396,17 @@ This indicator is not shown when you don't use LEIM."
 ;;; multiple-cursors
 ;;; カーソルを複製
 ;;;
-(setq load-path (cons "~/.emacs.d/packages/multiple-cursors" load-path))
-(require 'multiple-cursors)
-(setq mc/list-file "~/.emacs.d/var/.mc-lists.el")
-(global-set-key (kbd "C->") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-(global-set-key (kbd "C-c C-k C-r") 'mc/mark-all-like-this)
-(global-set-key (kbd "C-c C-k C-d C-r") 'mc/mark-all-like-this-in-defun)
-(global-set-key (kbd "C-c C-k C-s") 'mc/mark-all-symbols-like-this-in-defun)
-(global-set-key (kbd "C-c C-k C-d C-s") 'mc/mark-all-symbols-like-this-in-defun)
-(global-set-key (kbd "C-c C-k C-w") 'mc/mark-all-words-like-this-in-defun)
-(global-set-key (kbd "C-c C-k C-d C-w") 'mc/mark-all-words-like-this-in-defun)
+;; (setq load-path (cons "~/.emacs.d/packages/multiple-cursors" load-path))
+;; (require 'multiple-cursors)
+;; (setq mc/list-file "~/.emacs.d/var/.mc-lists.el")
+;; (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+;; (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+;; (global-set-key (kbd "C-c C-k C-r") 'mc/mark-all-like-this)
+;; (global-set-key (kbd "C-c C-k C-d C-r") 'mc/mark-all-like-this-in-defun)
+;; (global-set-key (kbd "C-c C-k C-s") 'mc/mark-all-symbols-like-this-in-defun)
+;; (global-set-key (kbd "C-c C-k C-d C-s") 'mc/mark-all-symbols-like-this-in-defun)
+;; (global-set-key (kbd "C-c C-k C-w") 'mc/mark-all-words-like-this-in-defun)
+;; (global-set-key (kbd "C-c C-k C-d C-w") 'mc/mark-all-words-like-this-in-defun)
 
 ;;;
 ;;; breadcrumb
@@ -505,3 +506,29 @@ This indicator is not shown when you don't use LEIM."
 ;;;
 (require 'visual-regexp)
 (define-key global-map (kbd "C-M-%") 'vr/query-replace)
+
+;;;
+;;; ag
+;;;
+(require 'ag)
+(custom-set-variables
+ '(ag-highlight-search t)
+ '(ag-reuse-window 'nil)
+ '(ag-reuse-buffers 'nil))
+
+;;;
+;;; wgrep-ag
+;;;
+(autoload 'wgrep-ag-setup "wgrep-ag")
+(add-hook 'ag-mode-hook 'wgrep-ag-setup)
+;; agの検索結果バッファで"r"で編集モードに。
+;; C-x C-sで保存して終了、C-x C-kで保存せずに終了
+(define-key ag-mode-map (kbd "r") 'wgrep-change-to-wgrep-mode)
+
+;;;
+;;; move-text
+;;; 行・リージョンを上下に移動
+;;;
+(require 'move-text)
+; meta+up/downで移動
+(move-text-default-bindings)

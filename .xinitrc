@@ -1,3 +1,3 @@
-xmodmap $HOME/.Xmodmap
+#xmodmap $HOME/.Xmodmap
 xrdb -merge $HOME/.Xresources
-
+xterm
